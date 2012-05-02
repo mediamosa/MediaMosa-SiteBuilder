@@ -1,0 +1,20 @@
+TODO list
+---------
+
+Just a list so we know what still needs to be done in the future.
+
+MediaMosa-SB:
+
+- Test if default profile can be found for status page.
+- upload/edit asset etc roles->access in menu hook.
+- Add setting for collapsed state of metadata fieldsets in upload steps.
+- Metadata form must be build using the metadata description taken from
+  mediamosa_ck::get_metadata_fields().
+- All urls should be able to be prefixed by a setting.
+- Need to check if inherit ACL is on mediafiles.
+
+MediaMosa-CK Views;
+- Caching needs development. Caching should be off for now.
+- Fields like created/changed need a filter class for searching on dates.
+
+

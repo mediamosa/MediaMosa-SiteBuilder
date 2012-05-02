@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the MediaMosa Site Builder feature.
+ */
+
+include_once('mediamosa_sb_feature.features.inc');

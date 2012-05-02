@@ -1,0 +1,7 @@
+
+Mediamosa SB, 7.x-1.x-dev
+-------------------------
+- Added permissions and made edit/delete asset, edit/delete collection
+  functional with new permissions.
+- Moved code in MediaMosaCkConnectorStillWrapper::still_create() to
+  MediaMosaSbConnectorWrapper::create_mediafile_still().

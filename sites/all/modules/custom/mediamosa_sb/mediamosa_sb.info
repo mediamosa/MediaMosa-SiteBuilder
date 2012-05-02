@@ -1,0 +1,20 @@
+name = "MediaMosa Site Builder"
+description = "MediaMosa Site Builer is a standard front-end application for MediaMosa with very powerful tools to customize your MediaMosa website."
+package = "MediaMosa Site Builder"
+version = "7.x-1.0"
+core = 7.x
+
+; Dependencies (mediamosa CK)
+dependencies[] = mediamosa_ck (>=1.99)
+dependencies[] = media_mediamosa
+dependencies[] = mediamosa_ck_access
+dependencies[] = mediamosa_ck_stats
+dependencies[] = mediamosa_ck_still
+dependencies[] = mediamosa_ck_transcode
+dependencies[] = mediamosa_ck_views
+
+files[] = mediamosa_sb.asset.forms.class.inc
+files[] = mediamosa_sb.class.inc
+files[] = mediamosa_sb.connector.wrapper.class.inc
+
+configure = admin/config/media/media_mediamosa

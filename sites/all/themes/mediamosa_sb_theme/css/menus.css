@@ -1,0 +1,92 @@
+/**********************************************************
+ * Main navigation
+ *********************************************************/
+
+#block-system-main-menu {
+  margin-top: 48px;
+  float: left;
+}
+
+#block-system-main-menu li {
+  border-right: 1px #e1e1e1 solid;
+  list-style: none;
+  margin:0;
+  padding: 0 14px 0 14px;
+  float: left;
+}
+
+#block-system-main-menu li.last {
+  border: none;
+}
+
+#block-system-main-menu a {
+  text-decoration: none;
+}
+
+
+/**********************************************************
+ * User login
+ *********************************************************/
+
+.user-login-button {
+  padding: 9px 8px 10px 8px;
+  position: absolute;
+  top: 38px;
+  right: 150px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  background: url('../images/btn_bg.png') repeat-x 0 100%;
+}
+
+.user-custom-navigation {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  font-size: 12px;
+}
+
+a.user-custom-navigation {
+  font-size: 12px;
+  text-decoration: underline;
+}
+/**********************************************************
+ * User login
+ *********************************************************/
+
+#language-picker {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  font-size: 11px;
+  height: auto;
+  width: auto;
+}
+
+
+/**********************************************************
+ * Footer menu
+ *********************************************************/
+
+#footer .menu {
+  padding-top: 6px;
+  float: right;
+}
+
+#footer .menu li {
+  border-right: 1px solid #e1e1e1;
+  list-style: none;
+  margin:0;
+  padding: 0 14px 0 14px;
+  float: left;
+}
+
+#footer .menu .last {
+  border: none;
+}
+
+#footer .menu a {
+  text-decoration: none;
+  font-size: 12px;
+  color: #6f6f6f;
+}

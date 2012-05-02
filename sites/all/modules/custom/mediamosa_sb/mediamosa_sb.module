@@ -1,0 +1,498 @@
+<?php
+/**
+ * MediaMosa is a Full Featured, Webservice Oriented Media Management and
+ * Distribution platform (http://mediamosa.org)
+ *
+ * Copyright (C) 2012 SURFnet BV (http://www.surfnet.nl)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, you can find it at:
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ */
+
+/**
+ * @file
+ * The main module file for MediaMosa Site Builder.
+ */
+
+
+/**
+ * Implements hook_permission().
+ */
+function mediamosa_sb_permission() {
+  return array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS =>  array(
+      'title' => t('Allow user to edit any asset.'),
+      'description' => t('Users with this permission may edit any asset, even when they are not owner.'),
+    ),
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_DELETE_ASSETS =>  array(
+      'title' => t('Allow user to delete any asset.'),
+      'description' => t('Users with this permission may delete any asset, even when they are not owner.'),
+    ),
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_COLLECTIONS =>  array(
+      'title' => t('Allow user to edit any collection.'),
+      'description' => t('Users with this permission may edit any collection, even when they are not owner.'),
+    ),
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_DELETE_COLLECTIONS =>  array(
+      'title' => t('Allow user to admin the collections.'),
+      'description' => t('Users with this permission may delete any collection, even when they are not owner.'),
+    ),
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ALTER_FEATURED => array(
+      'title' => t('Allow user to change the featured status of any asset.'),
+      'description' => t('Users with this permission can change the featured status of any asset. Featured assets are shown in the featured view & block.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function mediamosa_sb_menu() {
+  $items = array();
+
+//  $items['admin/config/media/mediamosa_sb/config'] = array(
+//    'title' => 'MediaMosa site builder',
+//    'description' => 'Configuration settings of the MediaMosa site builder.',
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('mediamosa_sb_configuration_form'),
+//    'access arguments' => array(MEDIAMOSA_SB_PERMISSION_ADMIN_CONFIGURATION),
+//    'file' => 'mediamosa_sb.admin.inc',
+//  );
+
+  $items['asset/upload'] = array(
+    'title' => 'Upload',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_upload_form'),
+    'description' => 'Upload a new video.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.asset.inc',
+    'access callback' => '_mediamosa_sb_may_upload',
+  );
+
+  $items['asset/upload/edit/%/%'] = array(
+    'title' => 'Edit asset',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_upload_steps_form', 3, 4),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(3),
+    'description' => 'Edit the properties of the video',
+    'type' => MENU_CALLBACK,
+    'visible' => FALSE,
+    'file' => 'mediamosa_sb.asset.inc',
+  );
+
+  $items['asset/edit/%'] = array(
+    'title' => 'Info',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_edit_metadata_form', 2),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
+    'description' => 'Edit metadata of the asset.',
+    'type' => MENU_CALLBACK,
+    'file' => 'mediamosa_sb.asset.inc',
+    'weight' => -6,
+  );
+  $items['asset/edit/%/info'] = array(
+    'title' => 'Info',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -6,
+  );
+
+  $items['asset/edit/%/access'] = array(
+    'title' => 'Access',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_edit_access_form', 2),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
+    'description' => 'Edit metadata of the asset.',
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'mediamosa_sb.asset.inc',
+    'weight' => -4,
+  );
+
+  $items['asset/edit/%/media'] = array(
+    'title' => 'Video',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_edit_media_form', 2),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
+    'description' => 'Control the transcode and stills of the asset.',
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'mediamosa_sb.asset.inc',
+    'weight' => -4,
+  );
+
+  $items['asset/delete/%'] = array(
+    'title' => 'Delete asset',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_delete_confirm_form', 2),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
+    'description' => 'Delete the asset.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.asset.inc',
+  );
+
+  $items['collection/add'] = array(
+    'title' => 'Add collection',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_collection_add_form'),
+    'access callback' => TRUE,
+    'description' => 'Add a new collection.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.collection.inc',
+  );
+
+  $items['collection/edit/%'] = array(
+    'title' => 'Edit collection',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_collection_edit_form', 2),
+    'access callback' => '_mediamosa_sb_access_collection_edit',
+    'access arguments' => array(2),
+    'description' => 'Edit the properties of the collection.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.collection.inc',
+  );
+
+  $items['collection/delete/%'] = array(
+    'title' => 'Delete collection',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_collection_delete_confirm_form', 2),
+    'access callback' => '_mediamosa_sb_access_collection_edit',
+    'access arguments' => array(2),
+    'description' => 'Delete the collection, but not the assets.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.collection.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function mediamosa_sb_block_info() {
+  $blocks['powered-by-mediamosa'] = array(
+    'info' => t('Powered by MediaMosa'),
+    'weight' => '10',
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * Generate a block with a promotional link to MediaMosa.org and
+ * all system menu blocks.
+ */
+function mediamosa_sb_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'powered-by-mediamosa':
+      $block['subject'] = NULL;
+      $block['content'] = theme('mediamosa_sb_powered_by_mediamosa');
+      return $block;
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function mediamosa_sb_theme() {
+  return array(
+    'mediamosa_sb_profile_select' => array(
+      'render element' => 'element',
+      'file' => 'mediamosa_sb.theme.inc'
+    ),
+    'mediamosa_sb_upload_quota' => array(
+      'render element' => 'element',
+      'file' => 'mediamosa_sb.theme.inc'
+    ),
+    'mediamosa_sb_quota_bar' => array(
+      'variables' => array('percent' => NULL, 'message' => NULL, 'used' => NULL, 'total' => NULL),
+    ),
+    'mediamosa_sb_title_header' => array(
+      'render element' => 'element',
+      'file' => 'mediamosa_sb.theme.inc'
+    ),
+    'mediamosa_sb_powered_by_mediamosa' => array(
+       'arguments' => array('element' => NULL)
+    ),
+  );
+}
+
+/**
+ * Check if user is allowed to upload. Must be logged in.
+ */
+function _mediamosa_sb_may_upload() {
+  return user_is_logged_in();
+}
+
+/**
+ * Access function for editing asset.
+ *
+ * @param $mixed
+ *   Object or asset ID.
+ *
+ * @return
+ *   Returns TRUE when current user can edit asset, or FALSE.
+ */
+function _mediamosa_sb_access_asset_edit($mixed) {
+  return mediamosa_sb::access_asset_edit($mixed);
+}
+
+/**
+ * Access function for deleting asset.
+ *
+ * @param $mixed
+ *   Object or asset ID.
+ *
+ * @return
+ *   Returns TRUE when current user can delete asset, or FALSE.
+ */
+function _mediamosa_sb_access_asset_delete($mixed) {
+  return mediamosa_sb::access_asset_delete($mixed);
+}
+
+/**
+ * Implements hook_mediamosa_asset_view_object_alter().
+ */
+function mediamosa_sb_mediamosa_asset_view_object_alter($object) {
+  $object->access_edit = _mediamosa_sb_access_asset_edit($object);
+}
+
+/**
+ * Access function for editing collection.
+ *
+ * @param $mixed
+ *   Object or collection ID.
+ *
+ * @return
+ *   Returns TRUE when current user can edit collection, or FALSE.
+ */
+function _mediamosa_sb_access_collection_edit($mixed) {
+  return mediamosa_sb::access_collection_edit($mixed);
+}
+
+/**
+ * Access function for deleting collection.
+ *
+ * @param $mixed
+ *   Object or collection ID.
+ *
+ * @return
+ *   Returns TRUE when current user is owner of collection, or FALSE.
+ */
+function _mediamosa_sb_access_collection_delete($mixed) {
+  return mediamosa_sb::access_collection_delete($mixed);
+}
+
+/**
+ * Implements hook_mediamosa_collection_view_object_alter().
+ */
+function mediamosa_sb_mediamosa_collection_view_object_alter($object) {
+  $object->access_edit = _mediamosa_sb_access_collection_edit($object);
+}
+
+/**
+ * Implements hook_search_info().
+ *
+ * Define a custom search type.
+ */
+function mediamosa_sb_search_info() {
+  return array(
+    'title' => 'Videos',
+  );
+}
+
+/**
+ * Implements hook_search_page().
+ *
+ * Override the rendering of search results.
+ */
+function mediamosa_sb_search_page($results) {
+
+  $view = views_get_view('mediamosa_asset_search_page');
+  if (!$view || !$view->access('mediamosa_asset_search_block')) {
+    return array();
+  }
+
+  // Setup args.
+  $args = isset($results['cql']) ? array('cql' => $results['cql']) : array();
+
+  $output = array(
+    '#markup' => $view->preview('mediamosa_asset_search_block', $args),
+  );
+
+  return $output;
+}
+
+/**
+ * Implements hook_search_execute().
+ *
+ * Execute a search for a set of key words.
+ *
+ * Code partly based on parseSearchExpression() from search.extender.inc.
+ */
+function mediamosa_sb_search_execute($keys = NULL, $conditions = NULL) {
+
+  $keywords = array();
+
+  // Matchs words optionally prefixed by a dash. A word in this case is
+  // something between two spaces, optionally quoted.
+  preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' .  $keys, $keywords, PREG_SET_ORDER);
+
+  if (count($keywords) ==  0) {
+    return;
+  }
+
+  $negatives = array();
+  $positives = array();
+
+  // Classify tokens.
+  $or = FALSE;
+  $warning = '';
+  foreach ($keywords as $match) {
+    $phrase = FALSE;
+    // Strip off phrase quotes.
+    if ($match[2]{0} == '"') {
+      $match[2] = substr($match[2], 1, -1);
+      $phrase = TRUE;
+    }
+    // Simplify keyword according to indexing rules and external
+    // preprocessors. Use same process as during search indexing, so it
+    // will match search index.
+    $words = search_simplify($match[2]);
+    // Re-explode in case simplification added more words, except when
+    // matching a phrase.
+    $words = $phrase ? array($words) : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
+    // Negative matches.
+    if ($match[1] == '-') {
+      $negatives = array_merge($negatives, $words);
+    }
+    // OR operator: instead of a single keyword, we store an array of all
+    // OR'd keywords.
+    elseif ($match[2] == 'OR' && count($positives)) {
+      $last = array_pop($positives);
+      // Starting a new OR?
+      if (!is_array($last)) {
+        $last = array($last);
+      }
+      $positives[] = $last;
+      $or = TRUE;
+      continue;
+    }
+    // AND operator: implied, so just ignore it.
+    elseif ($match[2] == 'AND' || $match[2] == 'and') {
+      $warning = $match[2];
+      continue;
+    }
+
+    // Plain keyword.
+    else {
+      if ($match[2] == 'or') {
+        $warning = $match[2];
+      }
+      if ($or) {
+        // Add to last element (which is an array).
+        $positives[count($positives) - 1] = array_merge($positives[count($positives) - 1], $words);
+      }
+      else {
+        $positives = array_merge($positives, $words);
+      }
+    }
+    $or = FALSE;
+  }
+
+  if ($warning == 'or') {
+    drupal_set_message(t('Search for either of the two terms with uppercase <strong>OR</strong>. For example, <strong>cats OR dogs</strong>.'));
+  }
+
+  // Get the search fields.
+  $search_fields = mediamosa_ck::get_metadata_search_fields();
+
+  $cql = array();
+  foreach ($positives as $positive) {
+    // Group of or's.
+    if (is_array($positive)) {
+      $cql_positives = array();
+      foreach ($positive as $positive_child) {
+        foreach ($search_fields as $search_field) {
+          $cql_positives[] = $search_field . '="' . addslashes($positive_child) . '"';
+        }
+      }
+      $cql[] = count($cql_positives) > 1 ? '(' . implode(' OR ', $cql_positives) . ')' : implode('', $cql_positives);
+    }
+    else {
+      $cql_positives = array();
+      foreach ($search_fields as $search_field) {
+        $cql_positives[] = $search_field . '="' . addslashes($positive) . '"';
+      }
+      $cql[] = count($cql_positives) > 1 ? '(' . implode(' OR ', $cql_positives) . ')' : implode('', $cql_positives);
+    }
+  }
+
+  foreach ($negatives as $negative) {
+    $cql_negatives = array();
+    foreach ($search_fields as $search_field) {
+      $cql_negatives[] = $search_field . ' NOT "' . addslashes($negative) . '"';
+    }
+    $cql[] = count($cql_negatives) > 1 ? '(' . implode(' OR ', $cql_negatives) . ')' : implode('', $cql_negatives);
+  }
+
+  // Rebuild into CQL.
+  $cql = implode(' AND ', $cql);
+
+  // Because we use a view, we pass this as results for the page hook.
+  return array('cql' => $cql, 'keys' => $keys, 'conditions' => $conditions);
+}
+
+/**
+ * Returns HTML for the Powered by MediaMosa text.
+ *
+ * @ingroup themeable
+ */
+function theme_mediamosa_sb_powered_by_mediamosa() {
+  $output = '<div class="mediamosa_logo">';
+  $output .= '<div>' . theme('image', array('path' => drupal_get_path('module', 'mediamosa_sb') . '/logo.png')) . '</div>';
+  $output .= t('<small>Powered by<br /><a href="@poweredby">MediaMosa</a>', array('@poweredby' => 'http://mediamosa.org')) . '</small>';
+  $output .= '</div>';
+
+  return $output;
+}
+
+/**
+ * Implements hook_mediamosa_ck_acl_alter.
+ *
+ * @param $acl
+ *   Array contains the basic ACL settings for viewer;
+ *  - acl_domain
+ *    The domain of the user.
+ *  - acl_realm
+ *    Realm information of the user.
+ *  - acl_user_id
+ *    The current user.
+ *  - acl_group_id[]
+ *    Array of group ids.
+ *
+ */
+function mediamosa_sb_mediamosa_ck_acl_alter(&$acl, $type) {
+
+  $hostname = &drupal_static('mediamosa_ck_hostname');
+  if (empty($hostname)) {
+    $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+  }
+
+  // Set the host name as our domain.
+  $acl['acl_domain'] = $hostname;
+}

@@ -1,0 +1,24 @@
+name = MediaMosa Site Builder
+description = A theme for MediaMosa Site Builder
+version = VERSION
+core = 7.x
+
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/defaults.css
+stylesheets[all][] = css/layout.css
+stylesheets[all][] = css/views.css
+stylesheets[all][] = css/nodes.css
+stylesheets[all][] = css/sprite.css
+stylesheets[all][] = css/menus.css
+stylesheets[all][] = css/forms.css
+stylesheets[all][] = css/misc.css
+stylesheets[all][] = css/colors.css
+
+regions[header] = Header
+regions[highlighted] = Highlighted
+regions[help] = Help
+regions[content] = Content
+regions[sidebar_first] = Right sidebar
+regions[footer] = Footer
+
+scripts[] = js/mediamosa_sb_theme.js

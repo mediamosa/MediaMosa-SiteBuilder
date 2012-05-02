@@ -1,0 +1,135 @@
+
+/* ---------- Color form ----------- */
+#color_scheme_form #palette .form-item {
+  width: 25em;
+}
+#color_scheme_form #palette .form-item label {
+  width: 15em;
+}
+
+/* ---------- Preview Styles ----------- */
+#preview {
+  font-family: Arial;
+}
+
+#preview-header {
+  background: url("../images/grad_bg.png") repeat-x scroll center top transparent;
+  border-bottom: 1px solid #E1E1E1;
+  height: 88px;
+  width: 100%;
+  padding: 1px 10px 5px;
+}
+
+#preview-logo {
+  float: left;
+}
+
+#preview-main-menu {
+  margin-top: 48px;
+  margin-left: 60px;
+  float: left;
+}
+
+#preview-main-menu li {
+  border-right: 1px #e1e1e1 solid;
+  list-style: none;
+  margin: 0;
+  padding: 0 14px 0 14px;
+  float: left; 
+}
+
+#preview-main-menu li a {
+  color: #000000;
+  font-size: 14px;
+}
+
+#preview-slogan {
+  clear: left;
+  width: 100%;
+  padding-left: 10px;
+  height: 46px;
+  padding-top: 10px;
+}
+
+#preview-slogan h1 {
+  font-weight: normal;
+}
+
+#preview-featured {
+  clear: left;
+  width: 100%;
+  padding: 1px 10px 5px 10px;
+  height: 35px;
+}
+
+#preview-featured h2 {
+  border-bottom: 1px solid #D9D9D9;
+  font-size: 14px;
+}
+
+#preview-video {
+  padding: 10px;
+  float: left;
+  margin-top: 20px;
+  width: 100%;
+  border: 1px solid #eeeeee;
+  position: relative;
+}
+
+#preview-video-item {
+  float: left;
+  width: 210px;
+  height: 132px;
+  background: url("../images/video_dummy.jpg") no-repeat;  
+}
+
+#preview-video-overlay {
+  position: absolute;
+  width: 210px;
+  height: 132px;
+  background-color: #eeeeee;
+  opacity: 0.7;
+  filter: alpha(opacity=70); /* For IE8 and earlier */
+}
+
+#preview-content-item {
+  margin-left: 25px;
+  float: left;
+  width: 210px;
+  height: 132px;
+  line-height: 16px;
+}
+
+.preview-views-count {
+  font-size:18px;
+  float:left;
+}
+
+.preview-meta {
+  float:left;
+  clear:left;
+  font-size:12px;
+  width:400px;
+  padding-top:5px;
+}
+.preview-meta span {
+  float:left;
+}
+
+.preview-meta p {
+  float:left;
+  margin:0px 5px;
+}
+
+#preview-content-item a {
+  font-size: 16px;
+}
+
+#preview-main {
+  clear: left;
+}
+
+
+
+
+

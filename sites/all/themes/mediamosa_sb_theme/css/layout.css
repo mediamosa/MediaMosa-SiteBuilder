@@ -1,0 +1,46 @@
+/**********************************************************
+ * Header
+ *********************************************************/
+
+#header {
+  border-bottom: 1px solid #e1e1e1;
+  height: 88px;
+  width: 100%;
+  background: url(../images/grad_bg.png) repeat-x top;
+}
+
+#header .header_content {
+  width: 960px;
+  height: 88px;
+  margin: auto;
+  position: relative;
+}
+
+#header .site_logo {
+  float: left;
+  width: 170px;
+  height: 88px;
+}
+
+#header .region-header {
+  display: block;
+  float: right;
+  width: 788px;
+}
+
+#header .region-header .block-search {
+  float: left;
+}
+
+/**********************************************************
+ * Spotlight / Featured
+ *********************************************************/
+
+#content #spotlight {
+  width: 100%;
+}
+
+#content #spotlight .region {
+  width: 960px;
+  margin: auto;
+}

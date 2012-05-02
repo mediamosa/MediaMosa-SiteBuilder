@@ -1,0 +1,49 @@
+/* ---------- Color Module Styles ----------- */
+
+#header {
+  background-color: #f1f1f1;
+}
+
+body, span {
+  color: #888;
+}
+
+a {
+  color: #f1761e;
+}
+
+.block h2 {
+  color: #595959;
+}
+
+.slogan {
+  background-color: #ffffff;
+}
+
+.slogan h1 {
+  color: #555;
+}
+
+#spotlight,
+#breadcrumbs,
+.asset-technical-information #asset-tabs li {
+  background-color: #eaeaf3;
+}
+
+.views-exposed-form,
+.page-asset #content form,
+.page-collection #content form,
+.asset-technical-information .tab,
+.asset-technical-information .tab h2,
+.asset-technical-information .tab table tr td {
+  border-color: #eaeaf3;
+}
+
+.page-asset .asset-detail-information,
+.asset-detail-information .information-row {
+  border-color: #eaeaf3;
+}
+
+.videohover {
+  background-color: #fdd5b3;
+}

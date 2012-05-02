@@ -1,0 +1,321 @@
+/**********************************************************
+ * Default form layout
+ *********************************************************/
+
+.page-asset-edit #content #page_content,
+.page-asset-upload #content #page_content,
+.page-collection-add #content #page_content,
+.page-collection-edit #content #page_content,
+.page-user #content #page_content {
+  width: 824px;
+  position: relative;
+}
+
+.page-asset #content form,
+.page-collection #content form,
+.page-user #content form {
+  padding: 10px;
+  border: 10px solid;
+}
+
+.page-asset #content form .form-wrapper,
+.page-collection #content form .form-wrapper {
+  padding: 0 50px;
+}
+
+.page-asset #content form .form-item,
+.page-collection #content form .form-item {
+  margin: 0 inherit;
+  padding: 1em inherit;
+}
+
+.page-asset #content form .form-wrapper .description,
+.page-collection #content form .form-wrapper .description {
+  margin-left: 120px;
+  margin-top: 9px;
+}
+
+.page-asset #content form .form-type-checkbox .description,
+.page-collection #content form .form-type-checkbox .description {
+  margin-left: 0;
+  display: inline-block;
+}
+
+.page-asset #content form .form-wrapper .form-wrapper,
+.page-collection #content form .form-wrapper .form-wrapper {
+  padding: 0;
+}
+
+.page-asset #content form .form-wrapper legend .fieldset-legend,
+.page-collection #content form .form-wrapper legend .fieldset-legend {
+  width: 700px;
+  margin-bottom: 13px;
+  padding-bottom: 13px;
+  color: #000;
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid #eaeaf3;
+}
+
+.page-asset #content form .form-wrapper .fieldset-legend span,
+.page-collection #content form .form-wrapper .fieldset-legend span {
+  font-size: 12px;
+  color: #000;
+  font-weight: normal;
+}
+
+.page-asset #content form .form-wrapper label,
+.page-collection #content form .form-wrapper label {
+  width: 120px;
+  float: left;
+  color: #000;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.page-asset #content form .form-wrapper input[type="text"],
+.page-asset #content form .form-wrapper textarea,
+.page-collection #content form .form-wrapper input[type="text"],
+.page-collection #content form .form-wrapper textarea {
+  width: 460px;
+  border: 1px solid #ccc;
+  box-shadow: inset -1px 1px 3px 0 #c3c3c3;
+}
+
+.page-asset #content form .form-wrapper .grippie,
+.page-collection #content form .form-wrapper .grippie {
+  margin-left: 120px;
+  width: 458px;
+}
+
+/**********************************************************
+ * Table in form
+ *********************************************************/
+
+.page-asset #content form .form-wrapper table,
+.page-collection #content form .form-wrapper table {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.page-asset #content form .form-wrapper table tr td,
+.page-asset #content form .form-wrapper table tr th,
+.page-collection #content form .form-wrapper table tr td,
+.page-collection #content form .form-wrapper table tr th {
+  padding: 8px 5px;
+}
+
+/**********************************************************
+ * Collapsible fieldsets
+ *********************************************************/
+
+fieldset.collapsible {
+  margin-bottom: 5px;
+}
+
+html.js .page-asset #content form .form-wrapper fieldset.collapsible,
+html.js .page-collection #content form .form-wrapper fieldset.collapsible {
+  width: 629px;
+  padding: 14px 35px 0 35px;
+  float: left;
+  clear: both;
+  border: 1px solid #eaeaf3;
+  margin-bottom: 30px;
+}
+
+html.js .page-asset #content form .form-wrapper fieldset.collapsible .fieldset-legend,
+html.js .page-collection #content form .form-wrapper fieldset.collapsible .fieldset-legend {
+  width: 701px;
+  height: 36px;
+  margin-right: -37px;
+  margin-bottom: -15px;
+  margin-left: -36px;
+  padding: 0;
+  border-bottom: none;
+  clear: both;
+  background-image: url('../images/sprite.png');
+  background-color: #ccc;
+  background-position: 219px -1480px;
+}
+
+html.js .page-asset #content form .form-wrapper fieldset.collapsed .fieldset-legend,
+html.js .page-collection #content form .form-wrapper fieldset.collapsed .fieldset-legend {
+  background-position: 182px -1540px;
+}
+
+html.js .page-asset #content form .form-wrapper fieldset.collapsible .fieldset-legend a,
+html.js .page-collection #content form .form-wrapper fieldset.collapsible .fieldset-legend a {
+  margin: 0;
+  padding: 12px;
+  color: #404040;
+  font-size: 12px;
+  display: block;
+}
+
+/**********************************************************
+ * Asset upload
+ *********************************************************/
+
+.page-asset form#mediamosa-sb-asset-upload-form,
+.page-asset form#mediamosa-sb-asset-upload-steps-form {
+  padding-top: 125px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form .mediamosasb-title-header,
+.page-asset form#mediamosa-sb-asset-upload-steps-form .mediamosasb-title-header {
+  width: 778px;
+  padding: 10px 13px;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid #ededf5;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form .mediamosasb-title-header .mediamosasb-title-header-next,
+.page-asset form#mediamosa-sb-asset-upload-steps-form .mediamosasb-title-header .mediamosasb-title-header-next {
+  font-size: 18px;
+  color: #b5b5b5;
+  float: right;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form .mediamosasb-title-header .mediamosasb-title-header-step,
+.page-asset form#mediamosa-sb-asset-upload-steps-form .mediamosasb-title-header .mediamosasb-title-header-step {
+  color: #404040;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form label {
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form .mediamosasb-title-header .mediamosasb-title-header-steps,
+.page-asset form#mediamosa-sb-asset-upload-steps-form .mediamosasb-title-header .mediamosasb-title-header-steps {
+  padding: 6px 0;
+  overflow: hidden;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form .mediamosasb-title-header .mediamosasb-title-header-steps .step,
+.page-asset form#mediamosa-sb-asset-upload-steps-form .mediamosasb-title-header .mediamosasb-title-header-steps .step {
+  background: #f5f5f5;
+  margin-right: 3px;
+  padding: 5px 10px;
+  color: #000;
+  font-size: 14px;
+  border-radius: 250px;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form .mediamosasb-title-header .mediamosasb-title-header-steps .step.active,
+.page-asset form#mediamosa-sb-asset-upload-steps-form .mediamosasb-title-header .mediamosasb-title-header-steps .step.active {
+  color: #fff;
+  background: #000;
+}
+
+
+
+.page-asset form#mediamosa-sb-asset-upload-form #edit-file {
+  margin-bottom: 20px;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form label[for="edit-file"] {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form div {
+  width: 350px;
+  margin: 0 auto;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form div div {
+  width: auto;
+  margin: 0;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form input[type="file"] {
+  width: 300px;
+  float: left;
+}
+
+.page-asset form#mediamosa-sb-asset-upload-form #edit-submit {
+  margin-top: 10px;
+  float: left;
+  clear: both;
+}
+
+/**********************************************************
+ * Asset upload - quota
+ *********************************************************/
+
+.page-asset form #quota {
+  width: 337px;
+  padding-bottom: 20px;
+  padding-top: 7px;
+  display: block;
+}
+
+.page-asset form #quota .quota-used,
+.page-asset form #quota .quota-total {
+  color: #000;
+  font-size: 10px;
+}
+
+.page-asset form #quota .quota-used {
+  position: absolute;
+  bottom: 0;
+  right: 7px;
+}
+
+.page-asset form #quota .almost_everything .quota-used {
+  right: 47px;
+}
+
+.page-asset form #quota .almost_nothing .quota-used {
+  right: -42px;
+}
+
+.page-asset form #quota .quota-total {
+  margin-top: -10px;
+  margin-right: 9px;
+  float: right;
+}
+
+.page-asset form #quota .bar {
+  height: 33px;
+  border: none;
+  border-radius: 0;
+  border-left: 1px solid #c6c6c6;
+  border-right: 1px solid #c6c6c6;
+  background: url('../images/quota_bg.png') repeat-x 0 0;
+}
+
+.page-asset form #quota .bar .filled {
+  height: 33px;
+  border-right: 1px solid #c6c6c6;
+  position: relative;
+  background: url('../images/quota_filler.png') repeat-x 0 0;
+}
+
+.page-asset form #quota .bar .filled.almost-everything {
+  border-right: none;
+}
+
+.page-asset form #edit-next {
+  margin-left: 300px;
+}
+
+/**********************************************************
+ * Collection delete
+ *********************************************************/
+
+.page-collection-delete #content form .form-actions {
+  padding: 0;
+}
+
+#edit-cancel {
+  margin-left: 10px;
+}
