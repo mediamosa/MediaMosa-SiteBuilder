@@ -11,26 +11,9 @@ connected to MediaMosa. Some features:
 - metadata,
 - many more.
 
-all in a nice interface. An example site can be viewed at:
+An example site can be viewed at:
 
 https://sitebuilder.mediamosa.surfnet.nl/
-
-GIT instructions
-================
-
-Clone Sitebuilder as normal from github using any of the provided
-url's, for example
-
-$ git clone https://github.com/mediamosa/MediaMosa-SiteBuilder.git
-
-Sitebuilder uses 2 submodules (MediaMosa SDK and CK), you must include
-them to get it working:
-
-$ cd mediamosa_sb/
-$ git submodule init
-$ git submodule update
-
-Sitebuilder will not work without the submodules.
 
 
 System Requirements
@@ -40,10 +23,10 @@ The minimal requirements are:
 
 Disk space: 15 Megabytes
 
-  The sitebuilder stores small caches of images on it's own site, so
-  as the number of assets increase, so will the required disk space.
+SiteBuilder stores small caches of images on it's own site, so as the number of
+assets increase, so will the required disk space.
 
-Web server: Apache 1.3, Apache 2.x, or Microsoft IIS
+Web server: Apache 1.3, Apache 2.x, nginx, or Microsoft IIS
 
 Database server: MySQL (or MariaDB) 5.0.15 or higher with PDO.
 
@@ -54,6 +37,15 @@ Drupal requirements.
 
 MediaMosa 3.1 or higher. You will need a running MediaMosa
 installation, version 3.1 and up is supported.
+
+
+GIT instructions
+================
+
+Clone Sitebuilder as normal from github using any of the provided
+url's, for example
+
+$ git clone git://github.com/mediamosa/MediaMosa-SiteBuilder.git
 
 
 Installation
