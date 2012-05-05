@@ -26,6 +26,9 @@ Disk space: 15 Megabytes
 SiteBuilder stores small caches of images on it's own site, so as the number of
 assets increase, so will the required disk space.
 
+MediaMosa 3.1 or higher. You will need a running MediaMosa installation,
+version 3.1 and up is required.
+
 Web server: Apache 1.3, Apache 2.x, nginx, or Microsoft IIS
 
 Database server: MySQL (or MariaDB) 5.0.15 or higher with PDO.
@@ -47,6 +50,23 @@ url's, for example
 
 $ git clone git://github.com/mediamosa/MediaMosa-SiteBuilder.git
 
+Because SiteBuilder is depended on the correct version of SDK and CK, you need
+to pull them using git-submodule;
+
+$ git submodule init
+$ git submodule update
+
+When SiteBuilder is updated, make sure you not only do
+$ git pull
+
+but also
+
+$ git submodule update
+
+This will update any updates to the submodules. SiteBuilder will be released 
+under a new version number when one of the submodules has been updated, even 
+when SiteBuilder has not changed.
+
 
 Installation
 ============
@@ -54,5 +74,3 @@ Installation
 The Sitebuilder is packaged as a Drupal distribution. See
 http://drupal.org/documentation/install for instructions how to install
 Drupal.
-
-
