@@ -28,11 +28,11 @@ class surfconext_exception extends Exception {
   const SEVERITY_NORMAL = 50;
   const SEVERITY_LOW = 20;
 
-  public function __construct($msg = '', $severity = self::MEDIAMOSA_EXCEPTION_SEVERITY_NORMAL, $log = TRUE) {
+  public function __construct($msg = '', $severity = self::SEVERITY_NORMAL, $log = TRUE) {
     $msg = empty($msg) ? 'SURFconext exception was thrown.' : $msg;
 
     if ($severity >= SEVERITY_NORMAL || mediamosa_debug::is_debug()) {
-      $log_serverity = $severity >= SEVERITY_HIGH ? WATCHDOG_CRITICAL : WATCHDOG_NOTICE;
+      $log_serverity = $severity >= self::SEVERITY_HIGH ? WATCHDOG_CRITICAL : WATCHDOG_NOTICE;
 
       $levels = watchdog_severity_levels();
 
