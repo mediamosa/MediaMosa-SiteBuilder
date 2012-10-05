@@ -410,7 +410,7 @@ function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
   );
 
   // Has delete rights?
-  if (_mediamosa_sb_access_collection_delete($asset_id)) {
+  if (_mediamosa_sb_access_asset_delete($asset_id)) {
     $form['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
