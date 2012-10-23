@@ -153,6 +153,29 @@
  * @endcode
  * NOTE: MySQL and SQLite's definition of a schema is a database.
  *
+ * Advanced users can add or override initial commands to execute when
+ * connecting to the database server, as well as PDO connection settings. For
+ * example, to enable MySQL SELECT queries to exceed the max_join_size system
+ * variable, and to reduce the database connection timeout to 5 seconds:
+ *
+ * @code
+ * $databases['default']['default'] = array(
+ *   'init_commands' => array(
+ *     'big_selects' => 'SET SQL_BIG_SELECTS=1',
+ *   ),
+ *   'pdo' => array(
+ *     PDO::ATTR_TIMEOUT => 5,
+ *   ),
+ * );
+ * @endcode
+ *
+ * WARNING: These defaults are designed for database portability. Changing them
+ * may cause unexpected behavior, including potential data loss.
+ *
+ * @see DatabaseConnection_mysql::__construct
+ * @see DatabaseConnection_pgsql::__construct
+ * @see DatabaseConnection_sqlite::__construct
+ *
  * Database configuration format:
  * @code
  *   $databases['default']['default'] = array(
@@ -196,10 +219,10 @@ $update_free_access = FALSE;
  * Salt for one-time login links and cancel links, form tokens, etc.
  *
  * This variable will be set to a random value by the installer. All one-time
- * login links will be invalidated if the value is changed.  Note that this
- * variable must have the same value on every web server.  If this variable is
- * empty, a hash of the serialized database credentials will be used as a
- * fallback salt.
+ * login links will be invalidated if the value is changed. Note that if your
+ * site is deployed on a cluster of web servers, you must ensure that this
+ * variable has the same value on each server. If this variable is empty, a hash
+ * of the serialized database credentials will be used as a fallback salt.
  *
  * For enhanced security, you may set this variable to a value using the
  * contents of a file outside your docroot that is never saved together
@@ -239,7 +262,7 @@ $drupal_hash_salt = '';
  * To see what PHP settings are possible, including whether they can be set at
  * runtime (by using ini_set()), read the PHP documentation:
  * http://www.php.net/manual/en/ini.list.php
- * See drupal_initialize_variables() in includes/bootstrap.inc for required
+ * See drupal_environment_initialize() in includes/bootstrap.inc for required
  * runtime settings and the .htaccess file for non-runtime settings. Settings
  * defined there should not be duplicated here so as to avoid conflict issues.
  */
