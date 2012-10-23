@@ -4,6 +4,3 @@
 [submodule "sites/all/modules/custom/mediamosa_ck"]
 	path = sites/all/modules/custom/mediamosa_ck
 	url = git://github.com/mediamosa/mediamosa-ck.git
-[submodule "sites/all/modules/custom/surfconext"]
-	path = sites/all/modules/custom/surfconext
-	url = https://github.com/OpenConextApps/OpenConextApps-Drupal.git
