@@ -1,5 +1,5 @@
 name = MediaMosa Site Builder
-description = A theme for MediaMosa Site Builder
+description = Default theme for MediaMosa Site Builder
 version = VERSION
 core = 7.x
 

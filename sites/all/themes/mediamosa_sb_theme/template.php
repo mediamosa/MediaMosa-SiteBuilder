@@ -61,3 +61,16 @@ function mediamosa_sb_theme_breadcrumb($variables) {
 
   return '<ul class="breadcrumb">' . implode($items) . '</ul>';
 }
+
+/**
+ * Implements hook_page_alter().
+ */
+function mediamosa_sb_theme_page_alter(&$page) {
+
+  // Hide the admin menu on our iframe asset/player page.
+  if (arg(0) == 'asset' && arg(1) == 'player') {
+    if (!empty($page['page_bottom']['admin_toolbar'])) {
+      hide($page['page_bottom']['admin_toolbar']);
+    }
+  }
+}
