@@ -1,9 +1,13 @@
 Mediamosa SiteBuilder 1.x-dev
 -----------------------------
+
+Mediamosa SiteBuilder 1.1, 10/23/2012
+-------------------------------------
 - Fixed edit form asset, returned wrong error on collection not found when
   editing asset with owner.
+- Added template to default SiteBuilder theme for display of single player.
+- Added new view for displaying player on /asset/player/[asset_id].
 
-
-Mediamosa SiteBuilder 1.0.0, 2012-05-01
----------------------------------------
+Mediamosa SiteBuilder 1.0, 01/05/2012
+-------------------------------------
 - Initial release
