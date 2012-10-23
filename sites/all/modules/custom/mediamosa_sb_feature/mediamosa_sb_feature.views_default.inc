@@ -2909,6 +2909,81 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $export['mediamosa_my_assets'] = $view;
 
   $view = new view;
+  $view->name = 'mediamosa_player_block';
+  $view->description = 'Can be used to include player using IFRAME on an external page. Can only play videos that are publc.';
+  $view->tag = 'player';
+  $view->base_table = 'mediamosa_asset_get';
+  $view->human_name = 'Mediamosa Player Page';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Mediamosa Player';
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: MediaMosa: Asset ID */
+  $handler->display->display_options['fields']['asset_id']['id'] = 'asset_id';
+  $handler->display->display_options['fields']['asset_id']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['asset_id']['field'] = 'asset_id';
+  $handler->display->display_options['fields']['asset_id']['label'] = '';
+  $handler->display->display_options['fields']['asset_id']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['asset_id']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['asset_id']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['asset_id']['alter']['more_link'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['asset_id']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['asset_id']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['asset_id']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['asset_id']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['asset_id']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['asset_id']['hide_alter_empty'] = 1;
+  /* Field: MediaMosa: Video player */
+  $handler->display->display_options['fields']['player']['id'] = 'player';
+  $handler->display->display_options['fields']['player']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['player']['field'] = 'player';
+  $handler->display->display_options['fields']['player']['label'] = '';
+  $handler->display->display_options['fields']['player']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['player']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['player']['alter']['more_link'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['player']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['player']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['player']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['player']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['player']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['player']['hide_alter_empty'] = 1;
+  $handler->display->display_options['fields']['player']['player_autostart'] = '0';
+
+  /* Display: Asset Page */
+  $handler = $view->new_display('page', 'Asset Page', 'page');
+  $handler->display->display_options['path'] = 'asset/player';
+  $export['mediamosa_player_block'] = $view;
+
+  $view = new view;
   $view->name = 'my_collections';
   $view->description = 'Show a listing of the users collections.';
   $view->tag = 'collection, my, listing';
