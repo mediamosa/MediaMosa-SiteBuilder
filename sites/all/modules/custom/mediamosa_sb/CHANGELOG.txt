@@ -1,6 +1,3 @@
-Mediamosa SiteBuilder 1.x-dev
------------------------------
-
 Mediamosa SiteBuilder 1.1, 10/24/2012
 -------------------------------------
 - Fixed edit form asset, returned wrong error on collection not found when
