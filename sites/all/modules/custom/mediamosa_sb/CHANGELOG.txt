@@ -1,13 +1,16 @@
 Mediamosa SiteBuilder 1.x-dev
 -----------------------------
 
-Mediamosa SiteBuilder 1.1, 10/23/2012
+Mediamosa SiteBuilder 1.1, 10/24/2012
 -------------------------------------
 - Fixed edit form asset, returned wrong error on collection not found when
   editing asset with owner.
-- Added template to default SiteBuilder theme for display of single player.
+- Added template to default SiteBuilder theme for display of single player. Use
+  /asset/player/[asset_id] for embedding player in external source.
 - Added new view for displaying player on /asset/player/[asset_id].
+- Removed surfconext module from release. Make sure its turned off before
+  upgrading to 1.1.
 
-Mediamosa SiteBuilder 1.0, 01/05/2012
+Mediamosa SiteBuilder 1.0, 05/01/2012
 -------------------------------------
 - Initial release
