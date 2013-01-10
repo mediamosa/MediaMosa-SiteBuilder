@@ -31,6 +31,7 @@ class mediamosa_sb {
   const MEDIAMOSA_SB_PERMISSION_EDIT_COLLECTIONS = 'mediamosa-sb edit collections';
   const MEDIAMOSA_SB_PERMISSION_DELETE_COLLECTIONS = 'mediamosa-sb delete collections';
   const MEDIAMOSA_SB_PERMISSION_ALTER_FEATURED = 'mediamosa-sb alter featured';
+  const MEDIAMOSA_SB_PERMISSION_UPLOAD_MEDIAFILES = 'mediamosa-sb upload media';
 
   // ---------------------------------------------------------------- Functions.
   /**
@@ -804,5 +805,15 @@ class mediamosa_sb {
         MediaMosaSbConnectorWrapper::delete_mediafile_asset($asset_id, $profile['mediafile_id'], mediamosa_ck::session_user_id());
       }
     }
+  }
+
+  /**
+   * Test if user is allowed to upload.
+   *
+   * @return boolean
+   *   Returns TRUE when user may upload.
+   */
+  public static function access_may_upload() {
+    return user_is_logged_in() && user_access(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_UPLOAD_MEDIAFILES);
   }
 }

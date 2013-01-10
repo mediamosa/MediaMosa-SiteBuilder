@@ -23,7 +23,6 @@
  * The main module file for MediaMosa Site Builder.
  */
 
-
 /**
  * Implements hook_permission().
  */
@@ -48,6 +47,10 @@ function mediamosa_sb_permission() {
     mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ALTER_FEATURED => array(
       'title' => t('Allow user to change the featured status of any asset.'),
       'description' => t('Users with this permission can change the featured status of any asset. Featured assets are shown in the featured view & block.'),
+    ),
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_UPLOAD_MEDIAFILES=> array(
+      'title' => t('Allow user to upload new media.'),
+      'description' => t('Users with this permission can upload media using the MediaMosa upload form.'),
     ),
   );
 }
@@ -235,7 +238,7 @@ function mediamosa_sb_theme() {
  * Check if user is allowed to upload. Must be logged in.
  */
 function _mediamosa_sb_may_upload() {
-  return user_is_logged_in();
+  return mediamosa_sb::access_may_upload();
 }
 
 /**
