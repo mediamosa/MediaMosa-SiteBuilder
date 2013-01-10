@@ -93,36 +93,24 @@ function theme_media_admin_thumbnail($variables) {
     return '';
   }
   $output = '';
-  if (module_exists('styles')) {
-    $thumbnail = theme('styles',
+  // Display a thumbnail for images.
+  if (strstr($file->filemime, 'image')) {
+    $thumbnail = theme('image_style',
       array(
-        'field_type' => 'file',
-        'style_name' => $style_name,
-        'uri' => $file->uri,
-        'description' => t('Thumbnail for !filename.', array('!filename' => $file->filename)),
-        'object' => $variables['file'],
-    ));
+        'style_name' => 'thumbnail',
+        'path' => $file->uri,
+        'alt' => t('Thumbnail for !filename.', array('!filename' => $file->filename)),
+      )
+    );
   }
+  // Display the 'unknown' icon for other file types.
   else {
-    // Display a thumbnail for images.
-    if (strstr($file->filemime, 'image')) {
-      $thumbnail = theme('image_style',
-        array(
-          'style_name' => 'thumbnail',
-          'path' => $file->uri,
-          'alt' => t('Thumbnail for !filename.', array('!filename' => $file->filename)),
-        )
-      );
-    }
-    // Display the 'unknown' icon for other file types.
-    else {
-      $thumbnail = theme('image',
-        array(
-          'path' => $path . '/images/file-unknown.png',
-          'alt' => t('Thumbnail for !filename.', array('!filename' => $file->filename)),
-          'attributes' => array('class' => 'file-unknown'),
-        ));
-    }
+    $thumbnail = theme('image',
+      array(
+        'path' => $path . '/images/file-unknown.png',
+        'alt' => t('Thumbnail for !filename.', array('!filename' => $file->filename)),
+        'attributes' => array('class' => 'file-unknown'),
+      ));
   }
   $output .= l($thumbnail,
     $file_url,
@@ -130,17 +118,6 @@ function theme_media_admin_thumbnail($variables) {
       'html' => TRUE,
       'attributes' => array('class' => 'media-thumbnail'),
     ));
-  return $output;
-}
-
-
-/**
- * Theme operations for a thumbnail.
- */
-function theme_media_admin_thumbnail_operations($variables) {
-  $destination = drupal_get_destination();
-  $file = $variables['file'];
-  $output = l(t('edit'), 'file/' . $file->fid . '/edit', array('query' => $destination));
   return $output;
 }
 
@@ -194,40 +171,6 @@ function theme_media_browser_control_result_limit($variables) {
   return theme('item_list', array('items' => $per_display, 'attributes' => array('class' => 'result_limit')));
 }
 
-
-/**
- * Stolen from file.module theme_file_link
- *
- * @param $variables
- *   An associative array containing:
- *   - file: A file object to which the link will be created.
- */
-function theme_media_link($variables) {
-  $file = $variables['file'];
-
-  $url = 'file/' . $file->fid;
-  $icon = theme('file_icon', array('file' => $file));
-
-  // Set options as per anchor format described at
-  // http://microformats.org/wiki/file-format-examples
-  $options = array(
-    'attributes' => array(
-      'type' => $file->filemime . '; length=' . $file->filesize,
-    ),
-  );
-
-  // Use the description as the link text if available.
-  if (empty($file->description)) {
-    $link_text = check_plain($file->filename);
-  }
-  else {
-    $link_text = check_plain($file->description);
-    $options['attributes']['title'] = check_plain($file->filename);
-  }
-
-  return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
-}
-
 /**
  * Adds a wrapper around a preview of a media file.
  * @param unknown_type $element
@@ -239,7 +182,7 @@ function theme_media_thumbnail($variables) {
   $destination = drupal_get_destination();
 
   // Wrappers to go around the thumbnail
-  $prefix = '<div class="media-item"><div class="media-thumbnail">';
+  $prefix = '<div class="media-item" title="' . $element['#name'] . '"><div class="media-thumbnail">';
   $suffix = '</div></div>';
 
   // Arguments for the thumbnail link
@@ -280,7 +223,7 @@ function template_preprocess_media_thumbnail(&$variables) {
 function theme_media_formatter_large_icon($variables) {
   $file = $variables['file'];
   $icon_dir = media_variable_get('icon_base_directory') . '/' . media_variable_get('icon_set');
-  $icon = file_icon_path((object)$file, $icon_dir);
+  $icon = file_icon_path($file, $icon_dir);
   $variables['path'] = $icon;
   // theme_image() requires the 'alt' attribute passed as its own variable.
   // @see http://drupal.org/node/999338

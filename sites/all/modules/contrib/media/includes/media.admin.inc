@@ -11,131 +11,6 @@
 require_once dirname(__FILE__) . '/media.pages.inc';
 
 /**
- *  The administration form for managing media types.
- */
-function media_admin_type_manage_form($form, &$form_state, $media_type) {
-  $form = array();
-  $form['media_type'] = array(
-    '#type' => 'value',
-    '#value' => $media_type->name,
-  );
-
-  // If this Media type is handled by us, then we can put in some default
-  // options. Otherwise, we leave it to the implementing module to form_alter.
-  if ($media_type->type_callback == 'media_is_type') {
-    // Options for match_type.
-    $options = array(
-      'all' => t('All'),
-      'any' => t('Any'),
-      'other' => t('Other'),
-    );
-    if ($media_type->type_callback_args['match_type'] && isset($options[$media_type->type_callback_args['match_type']])) {
-      $default_value = $media_type->type_callback_args['match_type'];
-      $other_default_value = '';
-    }
-    else {
-      $default_value = 'other';
-      $other_default_value = $media_type->type_callback_args['match_type'];
-    }
-    $form['match_type'] = array(
-      '#type' => 'radios',
-      '#title' => t('Match type'),
-      '#options' => $options,
-      '#default_value' => $default_value,
-    );
-    $form['match_type_other'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Other match type value'),
-      '#default_value' => $other_default_value,
-      '#attached' => array(
-        'js' => array(drupal_get_path('module', 'media') . '/js/media.admin.js'),
-      ),
-    );
-
-    // Options for allowed Streams.
-    $options = array('public' => t('Public files'), 'private' => t('Private files'));
-    foreach (file_get_stream_wrappers() as $stream => $wrapper) {
-      $options[$stream] = $wrapper['name'];
-    }
-    unset($options['temporary']);
-    $default_value = array();
-    if (isset($media_type->type_callback_args['streams'])) {
-      foreach ($media_type->type_callback_args['streams'] as $stream) {
-        $default_value[$stream] = $stream;
-      }
-    }
-    $form['streams'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Allowed streams'),
-      '#options' => $options,
-      '#default_value' => $default_value,
-    );
-
-    // Options for allowed mimetypes & extensions.
-    $default_value = isset($media_type->type_callback_args['mimetypes']) ? implode(' ', $media_type->type_callback_args['mimetypes']) : '';
-    $form['mimetypes'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Allowed mimetypes'),
-      '#description' => t('You may optionally enter one or more allowed file mimetypes for this Media type, if appropriate, separating each with a space. You may use a regular expression for matching, such as %image_match (which would match any mimetype beginning with %image) or %any_match, which would match any file mimetype.', array('%image_match' => '/^image/', '%image' => t('image'), '%any_match' => '/.*/')),
-      '#default_value' => check_plain($default_value),
-    );
-    $default_value = isset($media_type->type_callback_args['extensions']) ? implode(' ', $media_type->type_callback_args['extensions']) : '';
-    $form['extensions'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Allowed extensions'),
-      '#description' => t('You may optionally enter one or more allowed file extensions for this Media type, if appropriate, separating each with a space (and no dots).'),
-      '#default_value' => check_plain($default_value),
-    );
-  }
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-    '#weight' => 100,
-  );
-  return $form;
-}
-
-function media_admin_type_manage_form_submit($form, &$form_state) {
-  $media_type = media_type_load($form_state['values']['media_type']);
-  // Reset all values to empty.
-  $media_type->type_callback_args = array();
-
-  // What is the logic of the match (AND / OR).
-  if ($form_state['values']['match_type']) {
-    $media_type->type_callback_args['match_type'] = $form_state['values']['match_type'];
-  }
-  else {
-    $media_type->type_callback_args['match_type'] = $form_state['values']['match_type_other'];
-  }
-
-  // Which streams are valid for this type.
-  $media_type->type_callback_args['streams'] = array();
-  foreach ($form_state['values']['streams'] as $stream) {
-    if ($stream) {
-      $media_type->type_callback_args['streams'][] = $stream;
-    }
-  }
-
-  // Which mimetypes are valid for this type.
-  if (trim($form_state['values']['mimetypes'])) {
-    $media_type->type_callback_args['mimetypes'] = explode(' ', $form_state['values']['mimetypes']);
-    array_walk($media_type->type_callback_args['mimetypes'], 'trim');
-    array_filter($media_type->type_callback_args['mimetypes']);
-  }
-
-  // Which file extensions are valid for this type.
-  if (trim($form_state['values']['extensions'])) {
-    $media_type->type_callback_args['extensions'] = explode(' ', $form_state['values']['extensions']);
-    array_walk($media_type->type_callback_args['extensions'], 'trim');
-    array_filter($media_type->type_callback_args['extensions']);
-  }
-
-  media_type_save($media_type);
-  drupal_set_message(t('The @label media type has been saved.', array('@label' => $media_type->label)));
-}
-
-/**
  * Form callback for mass import.
  */
 function media_import($form, &$form_state) {
@@ -151,7 +26,7 @@ function media_import($form, &$form_state) {
     $form['pattern'] = array(
       '#type' => 'textfield',
       '#title' => t('Pattern'),
-      '#description' => 'Only files matching this pattern will be imported.',
+      '#description' => 'Only files matching this pattern will be imported. For example, to import all jpg and gif files, the pattern would be <em>*.jpg|*.gif</em>.',
     );
 
     $form['actions'] = array('#type' => 'actions');
@@ -242,7 +117,7 @@ function media_import_batch_import_files($files, &$context) {
         // @todo Is this load step really necessary? When there's time, test
         //   this, and either remove it, or comment why it's needed.
         $loaded_file = file_load($file_obj->fid);
-        $image_in_message = file_view_file($loaded_file, 'media_preview');
+        $image_in_message = file_view_file($loaded_file, 'preview');
       }
     }
     catch (Exception $e) {
@@ -291,10 +166,54 @@ function media_admin_config_browser($form, &$form_state) {
 
   $form[media_variable_name('file_extensions')] = array(
     '#type' => 'textfield',
-    '#title' => 'Allowed file extensions',
+    '#title' => t('Allowed file extensions'),
     '#default_value' => media_variable_get('file_extensions'),
     '#description' => t('File extensions which are accepted in the media browser.  Use spaces to separate (e.g. "jpg gif pdf doc"). <br/><em>Note that this can be overriden on a per-field basis when creating multimedia asset fields and files of certain extensions cannot be embedded at this time.</em>'),
+    '#maxlength' => 255,
   );
+
+  // Additional configuration if the WYSIWYG module is enabled.
+  $form['wysiwyg'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('WYSIWYG configuration'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#access' => module_exists('wysiwyg'),
+  );
+  $plugins = media_get_browser_plugin_info();
+  $form['wysiwyg'][media_variable_name('wysiwyg_browser_plugins')] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Enabled browser plugins'),
+    '#options' => array(),
+    '#required' => FALSE,
+    '#default_value' => media_variable_get('wysiwyg_browser_plugins'),
+    '#description' => t('If no plugins are selected, they will all be available.'),
+  );
+  foreach ($plugins as $key => $plugin) {
+    $form['wysiwyg'][media_variable_name('wysiwyg_browser_plugins')]['#options'][$key] = !empty($plugin['title']) ? $plugin['title'] : $key;
+  }
+  $form['wysiwyg'][media_variable_name('wysiwyg_upload_directory')] = array(
+    '#type' => 'textfield',
+    '#title' => t("File directory for uploaded media"),
+    '#default_value' => media_variable_get('wysiwyg_upload_directory'),
+    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
+  );
+
+  if (module_exists('token')) {
+    $form['wysiwyg'][media_variable_name('wysiwyg_upload_directory')]['#description'] .= t('This field supports tokens.');
+    $form['wysiwyg']['tokens'] = array(
+      '#theme' => 'token_tree',
+      '#dialog' => TRUE,
+    );
+  }
+
+  $form['wysiwyg'][media_variable_name('wysiwyg_allowed_types')] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Allowed types in WYSIWYG'),
+    '#options' => file_entity_type_get_names(),
+    '#default_value' => media_variable_get('wysiwyg_allowed_types'),
+  );
+  $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
 
   $form['#submit'][] = 'media_admin_config_browser_pre_submit';
   return system_settings_form($form);
@@ -304,5 +223,10 @@ function media_admin_config_browser_pre_submit(&$form, &$form_state) {
   if (!$form_state['values'][media_variable_name('dialog_theme')]) {
     media_variable_del('dialog_theme');
     unset($form_state['values'][media_variable_name('dialog_theme')]);
+  }
+  $wysiwyg_browser_plugins = array_unique(array_values($form_state['values'][media_variable_name('wysiwyg_browser_plugins')]));
+  if (empty($wysiwyg_browser_plugins[0])) {
+    media_variable_del('wysiwyg_browser_plugins');
+    unset($form_state['values'][media_variable_name('wysiwyg_browser_plugins')]);
   }
 }
