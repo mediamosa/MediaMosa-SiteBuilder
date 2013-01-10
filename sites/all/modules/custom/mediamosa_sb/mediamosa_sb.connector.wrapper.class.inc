@@ -247,6 +247,23 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
   }
 
   /**
+   * Delete asset.
+   *
+   * @param $asset_id
+   *   The asset ID.
+   * @param $user_id
+   *   The user ID.
+   */
+  static public function delete_asset($asset_id, $user_id) {
+    // Need delete asset right.
+    if (mediamosa_sb::access_asset_delete($asset_id)) {
+      $user_id = mediamosa_sb::get_owner_asset($asset_id);
+    }
+
+    return parent::delete_asset($asset_id, $user_id);
+  }
+
+  /**
    * Delete still(s) from a asset.
    *
    * @param $asset_id
@@ -257,7 +274,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    *   The REST call options.
    */
   static public function delete_asset_still($asset_id, $user_id, array $options = array()) {
-    // Need edit right.
+    // Need edit right (delete still = edit asset).
     if (mediamosa_sb::access_asset_edit($asset_id)) {
       $user_id = mediamosa_sb::get_owner_asset($asset_id);
     }
@@ -268,7 +285,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
   /**
    * Mediafile delete.
    *
-    * @param $asset_id
+   * @param $asset_id
    *   The asset ID.
    * @param $mediafile_id
    *   The ID of the mediafile.

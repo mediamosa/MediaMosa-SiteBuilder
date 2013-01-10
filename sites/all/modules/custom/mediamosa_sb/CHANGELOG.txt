@@ -8,6 +8,8 @@ MediaMosa SiteBuilder 7.x-1.x-dev
 - Updated ctools module to 7.x-1.2 (from 7.x-1.0).
 - Updated file_entity module to 7.x-2.0-unstable7 (from 7.x-2.0-unstable3).
 - Updated featured module to 7.x-1.0 (from 7.x-1.0-RC1).
+- Fixed asset delete while being administrator (or have permission and not being
+  owner).
 
 MediaMosa SiteBuilder 7.x-1.1, 10/24/2012
 -----------------------------------------
