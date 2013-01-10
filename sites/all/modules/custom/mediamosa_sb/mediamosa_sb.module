@@ -48,7 +48,7 @@ function mediamosa_sb_permission() {
       'title' => t('Allow user to change the featured status of any asset.'),
       'description' => t('Users with this permission can change the featured status of any asset. Featured assets are shown in the featured view & block.'),
     ),
-    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_UPLOAD_MEDIAFILES=> array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_UPLOAD_MEDIAFILES => array(
       'title' => t('Allow user to upload new media.'),
       'description' => t('Users with this permission can upload media using the MediaMosa upload form.'),
     ),
