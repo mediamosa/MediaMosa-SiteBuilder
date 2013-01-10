@@ -1,5 +1,16 @@
-Mediamosa SiteBuilder 1.1, 10/24/2012
--------------------------------------
+MediaMosa SiteBuilder 7.x-1.x-dev
+---------------------------------
+- Added new permission for users to upload to mediamosa. If permission is denied
+  on the user, then the 'upload' button will not be shown for this user.
+- Added update 7000; Give 'authenticated user' upload rights.
+- Updated media module to 7.x-2.0-unstable7 (from 7.x-2.0-unstable3).
+- Updated views module to 7.x-3.5 (from 7.x-3.3).
+- Updated ctools module to 7.x-1.2 (from 7.x-1.0).
+- Updated file_entity module to 7.x-2.0-unstable7 (from 7.x-2.0-unstable3).
+- Updated featured module to 7.x-1.0 (from 7.x-1.0-RC1).
+
+MediaMosa SiteBuilder 7.x-1.1, 10/24/2012
+-----------------------------------------
 - Fixed edit form asset, returned wrong error on collection not found when
   editing asset with owner.
 - Added template to default SiteBuilder theme for display of single player. Use
@@ -8,6 +19,6 @@ Mediamosa SiteBuilder 1.1, 10/24/2012
 - Removed surfconext module from release. Make sure its turned off before
   upgrading to 1.1.
 
-Mediamosa SiteBuilder 1.0, 05/01/2012
--------------------------------------
-- Initial release
+MediaMosa SiteBuilder 7.x-1.0, 05/01/2012
+-----------------------------------------
+- Initial release.
