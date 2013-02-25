@@ -17,7 +17,7 @@ function mediamosa_sb_feature_views_api() {
 function mediamosa_sb_feature_image_default_styles() {
   $styles = array();
 
-  // Exported image style: mediamosa_sb_large
+  // Exported image style: mediamosa_sb_large.
   $styles['mediamosa_sb_large'] = array(
     'name' => 'mediamosa_sb_large',
     'effects' => array(
@@ -39,7 +39,7 @@ function mediamosa_sb_feature_image_default_styles() {
     ),
   );
 
-  // Exported image style: mediamosa_sb_normal
+  // Exported image style: mediamosa_sb_normal.
   $styles['mediamosa_sb_normal'] = array(
     'name' => 'mediamosa_sb_normal',
     'effects' => array(
@@ -61,7 +61,7 @@ function mediamosa_sb_feature_image_default_styles() {
     ),
   );
 
-  // Exported image style: mediamosa_sb_small
+  // Exported image style: mediamosa_sb_small.
   $styles['mediamosa_sb_small'] = array(
     'name' => 'mediamosa_sb_small',
     'effects' => array(
