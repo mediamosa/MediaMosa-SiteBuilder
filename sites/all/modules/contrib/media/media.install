@@ -96,10 +96,7 @@ function media_update_dependencies() {
     'rules' => 7205,
   );
   // Those updates require {file_type} table created.
-  $dependencies['media'][7208] = array(
-    'file_entity' => 7201,
-  );
-  $dependencies['media'][7209] = array(
+  $dependencies['media'][7200] = array(
     'file_entity' => 7201,
   );
   return $dependencies;
@@ -202,7 +199,7 @@ function media_update_7002() {
   drupal_load('module', 'media');
   $old_types = variable_get('media_types');
   foreach ($old_types as $type) {
-    // Was an error in the original creation
+    // Was an error in the original creation.
     if (isset($type->callbacks)) {
       unset($type->callbacks);
     }
@@ -476,6 +473,8 @@ function media_update_7016() {
 }
 
 /**
+ * Move file display configuration.
+ *
  * Move file display configurations from the 'file_displays' variable to the
  * {file_display} table.
  */
@@ -497,7 +496,10 @@ function media_update_7018() {
 }
 
 /**
- * Update old per-view-mode media field formatters to the generic media formatter with a setting.
+ * Update old view mode formaters.
+ *
+ * Update old per-view-mode media field formatters to the generic media
+ * formatter with a setting.
  */
 function media_update_7019() {
   $instances = array();
@@ -566,7 +568,10 @@ function media_update_7200() {
 }
 
 /**
- * Enable the new Media Field module if this site uses "media" fields. File fields are now preferred for storing media.
+ * Handle existing media fields.
+ *
+ * Enable the new Media Field module if this site uses "media" fields. File
+ * fields are now preferred for storing media.
  */
 function media_update_7201() {
   $fields = field_info_fields();
@@ -578,7 +583,8 @@ function media_update_7201() {
 
       // Update entries in file_usage so that they are associated with Media
       // Field rather than Media.
-      // @TODO This update function may conflict with http://drupal.org/node/1268116
+      // @TODO This update function may conflict with
+      // http://drupal.org/node/1268116
       db_update('file_usage')
         ->condition('module', 'media')
         ->fields(array('module' => 'mediafield'))
@@ -813,15 +819,17 @@ function media_update_7206() {
 }
 
 /**
- * Empty update function to trigger cache clear
- * after changing access callbacks to file_entity_access.
+ * Trigger cache clear.
+ *
+ * Empty update function to trigger cache clear after changing access callbacks
+ * to file_entity_access.
  */
 function media_update_7207() {
   // Do nothing.
 }
 
 /**
- * Drop the media_types table and migrate all files to the new file_entity types.
+ * Drop the media_types table and migrate files to file_entity types.
  */
 function media_update_7208() {
   if (!db_table_exists('media_type')) {
@@ -845,11 +853,9 @@ function media_update_7208() {
 
     include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
     $mapping = file_mimetype_mapping();
+    // We do not migrate this type, since there is no way to handle its weight.
+    unset($existing_types['default']);
     foreach ($existing_types as $type) {
-      if ($type->name == 'default') {
-        // We do not migrate this type, since there is no way to handle its weight.
-        continue;
-      }
       $extensions = isset($type->type_callback_args['extensions']) ? $type->type_callback_args['extensions'] : array();
       $mimetypes = isset($type->type_callback_args['mimetypes']) ? $type->type_callback_args['mimetypes'] : array();
       // Add mimetypes by extensions.
@@ -874,6 +880,9 @@ function media_update_7208() {
         $new_type->mimetypes = array_merge($type->mimetypes, $new_type->mimetypes);
         $new_type->streams = array_merge($type->streams, $new_type->streams);
       }
+      else {
+        $new_type = $type;
+      }
       file_type_save($new_type);
     }
     db_drop_table('media_type');
@@ -881,7 +890,10 @@ function media_update_7208() {
     // Special treatment for old media application type to new file_entity
     // document one. Add some more mimetypes to document.
     $document_type = file_type_load('document');
-    foreach($mapping['mimetypes'] as $mimetype) {
+    if (!$document_type) {
+      return;
+    }
+    foreach ($mapping['mimetypes'] as $mimetype) {
       $is_document = strpos($mimetype, 'document') !== FALSE || strpos($mimetype, 'application/vnd.ms-') !== FALSE;
       if ($is_document && !in_array($mimetype, $document_type->mimetypes)) {
         $document_type->mimetypes[] = $mimetype;
@@ -946,7 +958,7 @@ function media_update_7210() {
 }
 
 /**
- * Helper function for media_update_7204() to update display options within Views.
+ * Utility function for update 7204. Updates display options within Views.
  */
 function _media_update_7204_update_views_display_options(&$display_options, $view_mode_updates) {
   $updated = FALSE;

@@ -65,9 +65,17 @@ Drupal.media.browser.views.select = function(view) {
  * Sets up event-handlers for selecting items in the view.
  */
 Drupal.media.browser.views.setup = function(view) {
+  // Ensure we only setup each view once..
+  if ($(view).hasClass('media-browser-views-processed')) {
+    return;
+  }
+
+  // Reset the list of selected files
+  Drupal.media.browser.selectMedia([]);
+
   // Catch the click on a media item
   $('.view-content .media-item', view).bind('click', function () {
-    var fid = $(this).closest('a[data-fid]').data('fid'),
+    var fid = $(this).closest('.media-item[data-fid]').data('fid'),
       selectedFiles = new Array();
 
     // Remove all currently selected files
@@ -98,7 +106,7 @@ Drupal.media.browser.views.setup = function(view) {
           selectedFiles.push(Drupal.media.browser.selectedMedia[index]);
 
           // Mark it as selected
-          $('.view-content *[data-fid=' + currentFid + '] .media-item', view).addClass('selected');
+          $('.view-content *[data-fid=' + currentFid + '].media-item', view).addClass('selected');
         }
       }
     }
@@ -120,6 +128,9 @@ Drupal.media.browser.views.setup = function(view) {
     }
     Drupal.media.browser.selectMedia(selectedFiles);
   });
+
+  // Add the processed class, so we dont accidentally process the same element twice..
+  $(view).addClass('media-browser-views-processed');
 }
 
 }(jQuery));

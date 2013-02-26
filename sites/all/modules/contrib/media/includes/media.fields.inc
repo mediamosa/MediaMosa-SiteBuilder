@@ -142,7 +142,9 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
   }
 
   $element += array(
-    '#type' => 'media', // Would like to make this a fieldset, but throws some weird warning about element_children... not sure what it is about yet.
+    // @todo This should be a fieldset, but throws a warning about
+    // element_children.
+    '#type' => 'media',
     '#collapsed' => TRUE,
     '#default_value' => $current_value,
     '#required' => $instance['required'],
@@ -178,6 +180,8 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
 }
 
 /**
+ * Widget value.
+ *
  * @todo Is this function ever called? If not, remove it. The Field API now
  *   supports automatic serialization / unserialization, so this should no
  *   longer be needed. After verifying with a module that uses the 'data'
