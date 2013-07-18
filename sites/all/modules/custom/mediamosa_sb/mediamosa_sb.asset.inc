@@ -46,11 +46,21 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     ),
   );
 
-  // Get the default profile.
+  // Get the transcode profile(s).
   $default_profile = MediaMosaSbConnectorWrapper::get_default_transcode_profile();
-
+  $mediamosa_sb_transcodes = variable_get('mediamosa_sb_transcodes');
+  if (!isset($mediamosa_sb_transcodes)) {
+    $mediamosa_sb_transcodes = array(MediaMosaSbConnectorWrapper::get_default_transcode_profile());
+  }
+  // Remove not choosen transcodes.
+  $transcodes = array();
+  foreach ($mediamosa_sb_transcodes as $key => $value) {
+    if ($value > 0) {
+      $transcodes[] = $value;
+    }
+  }
   // Try to create upload ticket.
-  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'transcode' => $default_profile ? array($default_profile) : array()));
+  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'transcode' => $transcodes ? $transcodes : array()));
   if (!$result) {
     $form['upload'] = array(
       '#markup' => t('Unable to upload to MediaMosa; @reason', array('@reason' => mediamosa_ck::get_connector_last_error_text())),
@@ -80,8 +90,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#type' => 'item',
     '#markup' => '<input type="file" id="edit-file-upload" name="file" size="40" class="form-file" />',
     '#title' => t('Upload your file'),
-    // @todo: make setting.
-    '#description' => t('Maximum size of 2,0 GB, MOV, AVI'),
+    '#description' => variable_get('mediamosa_sb_upload_description', 'Maximum size of 2.0GB. <br>Allowed file types: avi,mov,flv,mp4,mpeg.'),
   );
 
   // Get the current user.
@@ -99,11 +108,13 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     $user_quota['user_used'] = $user_quota['user_total'] - (int) $user->items->item->quota_available_mb;
   }
 
-  $form['user_quota'] = array(
-    '#title' => t('Your Quota status'),
-    '#theme' => 'mediamosa_sb_upload_quota',
-    '#options' => $user_quota,
-  );
+  if (variable_get('mediamosa_sb_show_quota')) {
+    $form['user_quota'] = array(
+      '#title' => t('Your Quota status'),
+      '#theme' => 'mediamosa_sb_upload_quota',
+      '#options' => $user_quota,
+    );
+  }
 
   // Redirect value, we need to redirect back after upload so we can add it to
   // Drupal.
