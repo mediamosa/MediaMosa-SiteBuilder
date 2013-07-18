@@ -632,21 +632,20 @@ function mediamosa_sb_asset_delete_confirm_form($form, &$form_state, $asset_id) 
 
   if (!$asset) {
     drupal_set_message(t('Unable to find media, already deleted?'), 'warning');
-
-    // Failed.
     drupal_goto('assets');
   }
 
   $form['asset_id'] = array(
     '#type' => 'value',
-    '#value' => $asset_id,
+    '#value' => rawurlencode($asset_id),
   );
 
   return confirm_form($form,
-                      t('Are you sure you want to delete this media file?'),
-                      url('asset/' . rawurlencode($asset_id), array('absolute' => TRUE)),
-                      t('This action cannot be undone.'),
-                      t('Delete'), t('Cancel')
+    t('Are you sure you want to delete this media file?'),
+    url('asset/detail/' . rawurlencode($asset_id), array('absolute' => TRUE)),
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
   );
 }
 
