@@ -70,7 +70,7 @@ function mediamosa_sb_menu() {
    'description' => 'Configuration settings for the MediaMosa sitebuilder.',
    'page callback' => 'drupal_get_form',
    'page arguments' => array('mediamosa_sb_configuration_form'),
-   'access arguments' => array(MEDIAMOSA_SB_PERMISSION_ADMIN_CONFIGURATION),
+   'access arguments' => array(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN),
    'file' => 'mediamosa_sb.admin.inc',
  );
 

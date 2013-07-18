@@ -26,6 +26,7 @@ class mediamosa_sb {
 
   // ------------------------------------------------------------------- Consts
   // Permissions.
+  const MEDIAMOSA_SB_PERMISSION_ADMIN = 'mediamosa-sb adminstration';
   const MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS = 'mediamosa-sb edit assets';
   const MEDIAMOSA_SB_PERMISSION_DELETE_ASSETS = 'mediamosa-sb delete assets';
   const MEDIAMOSA_SB_PERMISSION_EDIT_COLLECTIONS = 'mediamosa-sb edit collections';
