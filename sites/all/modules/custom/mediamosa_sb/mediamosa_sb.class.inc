@@ -42,7 +42,7 @@ class mediamosa_sb {
    * @return type
    */
   static public function get_asset_detail_url($asset_id) {
-    return 'asset/detail/' . $asset_id;
+    return 'asset/detail/' . rawurlencode($asset_id);
   }
 
   /**
