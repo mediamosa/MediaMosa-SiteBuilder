@@ -501,7 +501,7 @@ class mediamosa_sb {
    */
   static protected function submit_info_metadata($values, $asset_id) {
     // Options + metadata for write.
-    $options = array('action' => 'replace');
+    $options = array('action' => 'update');
 
     // Get the metadata def.
     $metadata_fields = mediamosa_ck::get_metadata_fields();
