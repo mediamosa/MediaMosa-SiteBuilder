@@ -1,33 +1,14 @@
 <?php
 /**
- * MediaMosa is a Full Featured, Webservice Oriented Media Management and
- * Distribution platform (http://mediamosa.org)
- *
- * Copyright (C) 2012 SURFnet BV (http://www.surfnet.nl)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, you can find it at:
- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- */
-
-/**
  * @file
  * Simple static class to hold form functions, so we keep our inc files cleaner
  * and this is autoloaded.
  */
+
 class mediamosa_sb_asset_forms {
-  // ------------------------------------------------------------------- Consts.
+
   const DEFAULT_START_TIME_STILL_FORM = '00:00';
 
-  // ---------------------------------------------------------------- Functions.
   /**
    * Return the default value.
    */
@@ -38,12 +19,12 @@ class mediamosa_sb_asset_forms {
   /**
    * The info form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
-   * @param $asset_id
+   * @param string $asset_id
    *   The ID of the asset.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static public function info_form($values, $asset_id) {
@@ -64,10 +45,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The metadata form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function info_basicinfo_form($values, $asset_id) {
@@ -140,7 +121,7 @@ class mediamosa_sb_asset_forms {
         '#title' => t('My collections'),
         '#required' => FALSE,
         '#multiple' => TRUE,
-        '#size'=> 5,
+        '#size' => 5,
         '#options' => $options_collections,
         '#default_value' => self::default_value($values, 'mycollections'),
       );
@@ -158,10 +139,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The metadata form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function info_metadata_form($values) {
@@ -231,9 +212,10 @@ class mediamosa_sb_asset_forms {
     // Provide a default date in the format YYYY-MM-DD HH:MM:SS.
     $date = '';
 
-    // Provide a format using regular PHP format parts (see documentation on php.net).
-    // If you're using a date_select, the format will control the order of the date parts in the selector,
-    // rearrange them any way you like. Parts left out of the format will not be displayed to the user.
+    // Provide a format using regular PHP format parts (see documentation on
+    // php.net).  If you're using a date_select, the format will control the
+    // order of the date parts in the selector, rearrange them any way you
+    // like. Parts left out of the format will not be displayed to the user.
     $format = 'Y-m-d';
 
     $form['additional']['dc']['dc_date'] = array(
@@ -244,7 +226,8 @@ class mediamosa_sb_asset_forms {
       '#default_value' => $date,
       '#date_format' => $format,
       '#size' => 40,
-      '#date_label_position' => 'within', // See other available attributes and what they do in date_api_elements.inc
+      // See for other attributes in date_api_elements.inc.
+      '#date_label_position' => 'within',
       '#default_value' => self::default_value($values, 'dc_date'),
     );
 
@@ -406,10 +389,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The access form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static public function access_form($values) {
@@ -427,10 +410,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The access form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function access_visibility_form($values) {
@@ -456,10 +439,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The access form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function access_acl_form($values) {
@@ -500,12 +483,12 @@ class mediamosa_sb_asset_forms {
   /**
    * The access form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
-   * @param $is_upload
+   * @param bool $is_upload
    *   Form is used during upload.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static public function media_form($values, $is_upload = FALSE) {
@@ -523,10 +506,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The transcode form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function media_transcoding_form($values, $is_upload) {
@@ -587,7 +570,8 @@ class mediamosa_sb_asset_forms {
       foreach ($xml->items->item as $profile) {
         $profile_id = (int) $profile->profile_id;
 
-        // Is allowed as profile? If a mediafile exists, we ignore the allowed profile.
+        // Is allowed as profile?
+        // If a mediafile exists, we ignore the allowed profile.
         if (!isset($allowed_profiles[$profile_id]) && !isset($existing_transcodes[$profile_id])) {
           continue;
         }
@@ -629,10 +613,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The still form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function media_still_form($values) {
