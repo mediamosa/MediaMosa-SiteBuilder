@@ -23,8 +23,8 @@ function mediamosa_sb_configuration_form() {
   $form['upload']['mediamosa_sb_upload_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description shown with the file upload button.'),
-    '#default_value' => variable_get('mediamosa_sb_upload_description', t('Maximum size of 2.0GB. <br>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.')),
-    '#description' => 'default: <br>' . t('Maximum size of 2.0GB. <br>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.'),
+    '#default_value' => variable_get('mediamosa_sb_upload_description', t('Maximum size of 2.0GB. <br \>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.')),
+    '#description' => 'default: <br \>' . t('Maximum size of 2.0GB. <br \>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.'),
   );
 
   $form['upload']['mediamosa_sb_show_quota'] = array(
@@ -69,6 +69,17 @@ function mediamosa_sb_configuration_form() {
         ':input[name="mediamosa_sb_user_start_transcode"]' => array('checked' => FALSE),
       ),
     ),
+  );
+
+  $form['edit'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Form settings for Edit Asset options.'),
+  );
+  $form['edit']['mediamosa_sb_allow_transfer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow user Transfer.'),
+    '#description' => 'Allow users to transfer assets to other users.',
+    '#default_value' => variable_get('mediamosa_sb_allow_transfer', FALSE),
   );
 
   return system_settings_form($form);

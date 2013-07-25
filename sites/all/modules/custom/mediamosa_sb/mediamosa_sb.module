@@ -148,6 +148,17 @@ function mediamosa_sb_menu() {
     'file' => 'mediamosa_sb.asset.inc',
   );
 
+  $items['asset/transfer/%'] = array(
+    'title' => 'Transfer asset',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_transfer_confirm_form', 2),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
+    'description' => 'Transfer ownership of the asset.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.asset.inc',
+  );
+
   $items['collection/add'] = array(
     'title' => 'Add collection',
     'page callback' => 'drupal_get_form',
