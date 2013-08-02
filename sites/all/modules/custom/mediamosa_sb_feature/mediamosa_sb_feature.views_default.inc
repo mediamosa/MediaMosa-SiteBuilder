@@ -219,6 +219,13 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['owner_id']['field'] = 'owner_id';
   $handler->display->display_options['fields']['owner_id']['label'] = '';
   $handler->display->display_options['fields']['owner_id']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Download */
+  $handler->display->display_options['fields']['download']['id'] = 'download';
+  $handler->display->display_options['fields']['download']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['download']['field'] = 'download';
+  $handler->display->display_options['fields']['download']['label'] = '';
+  $handler->display->display_options['fields']['download']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['download']['download_path'] = '';
 
   /* Display: MediaMosa Asset Detail */
   $handler = $view->new_display('page', 'MediaMosa Asset Detail', 'page');
