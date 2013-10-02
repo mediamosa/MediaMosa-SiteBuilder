@@ -628,8 +628,21 @@ class mediamosa_sb {
    * @return
    */
   static protected function submit_access_acl($values, $asset_id) {
-    // Get the mediafiles.
+
     $mediafile_ids = MediaMosaSbConnectorWrapper::get_asset_mediafile_ids($asset_id);
+
+    // Set is_downloadable for all mediafiles.
+    if ($values['is_downloadable'] == 1) {
+      foreach ($mediafile_ids as $mediafile_id) {
+        $options = array(
+          'is_downloadable' => TRUE,
+          'transcode_inherits_acl' => TRUE,
+        );
+        if (!MediaMosaSbConnectorWrapper::update_mediafile($mediafile_id, $options)) {
+          mediamosa_sb::watchdog_error('Unable to save downloadable for mediafile with ID @mediafile_id.', array('@mediafile_id' => $mediafile_id));
+        }
+      }
+    }
 
     // Domains and realms.
     $acl_domain_realm = array();
