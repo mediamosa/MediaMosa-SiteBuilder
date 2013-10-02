@@ -21,7 +21,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#theme' => 'mediamosa_sb_title_header',
     '#options' => array(
       'current' => 1,
-      'total' => 4,
+      'total' => 3,
       'subtitle' => t('Upload'),
       'subtitle_next' => t('Enter metadata'),
     ),
@@ -133,11 +133,6 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
       2 => array(
         'form' => 'mediamosa_sb_asset_upload_step_access_form',
         'subtitle' => t('Access Control'),
-        'subtitle_next' => t('Define transcoding formats'),
-      ),
-      3 => array(
-        'form' => 'mediamosa_sb_asset_upload_step_media_form',
-        'subtitle' => t('Transcoding formats'),
         'subtitle_next' => '',
       ),
     );
@@ -155,7 +150,7 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
     '#theme' => 'mediamosa_sb_title_header',
     '#options' => array(
       'current' => $step + 1,
-      'total' => 4,
+      'total' => 3,
       'subtitle' => $step_information['subtitle'],
       'subtitle_next' => $step_information['subtitle_next'],
     ),
@@ -267,7 +262,7 @@ function mediamosa_sb_asset_upload_step_metadata_form_validate($form, $form_stat
  * Access form fields.
  *
  * Returns form elements for the 'other info' page of the steps. This is the
- * thid and last step of the example steps.
+ * third and last step of the example steps.
  *
  * @ingroup upload_form
  */
@@ -327,7 +322,7 @@ function _mediamosa_sb_asset_upload_steps_finish_submit($form, &$form_state) {
   mediamosa_sb::submit_access($form_state['step_information'][2]['stored_values'], $form_state['asset_id']);
 
   // Run function for posting transcode jobs / stills to MediaMosa.
-  mediamosa_sb::submit_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id'], TRUE);
+  // mediamosa_sb::submit_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id'], TRUE);
 
   // Go to view page.
   drupal_goto(mediamosa_sb::get_asset_detail_url($form_state['asset_id']));
