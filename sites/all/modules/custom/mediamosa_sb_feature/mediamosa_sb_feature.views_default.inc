@@ -621,6 +621,8 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['still_url']['table'] = 'mediamosa_asset_search';
   $handler->display->display_options['fields']['still_url']['field'] = 'still_url';
   $handler->display->display_options['fields']['still_url']['label'] = '';
+  $handler->display->display_options['fields']['still_url']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['still_url']['alter']['path'] = 'asset/detail/[asset_id]';
   $handler->display->display_options['fields']['still_url']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['still_url']['still_style'] = 'mediamosa_sb_normal';
   /* Field: MediaMosa: Played */
