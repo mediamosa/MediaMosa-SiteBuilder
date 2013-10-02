@@ -431,7 +431,7 @@ class mediamosa_sb_asset_forms {
       '#type' => 'fieldset',
       '#title' => t('Access control'),
       '#states' => array(
-        'enabled' => array(
+        'visible' => array(
           ':input[name="choose"]' => array('value' => 'Protected'),
         ),
       ),
@@ -458,24 +458,15 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'acl_user'),
     );
 
-    // Visibility.
-    $form['visibility'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Visibility'),
-    );
-    // is_visible = !isprivate.
-    $form['visibility']['is_visible'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Visible in lists'),
-      '#description' => t('If checked, the video will be visible on the frontpage (new/popular).'),
-      '#required' => FALSE,
-      '#default_value' => self::default_value($values, 'is_visible', TRUE),
-    );
-
     // License.
     $form['license'] = array(
       '#type' => 'fieldset',
       '#title' => t('License'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="choose"]' => array('value' => 'Open'),
+        ),
+      ),
     );
     $img_path = $base_url . '/' . drupal_get_path('module', 'mediamosa_sb') . '/img/';
     $images = array(
@@ -495,11 +486,35 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'license', ''),
     );
 
+    // Visibility.
+    $form['visibility'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Visibility'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="choose"]' => array('value' => 'Open'),
+        ),
+      ),
+    );
+    // is_visible = !isprivate.
+    $form['visibility']['is_visible'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Visible in lists'),
+      '#description' => t('If checked, the video will be visible on the frontpage (new/popular).'),
+      '#required' => FALSE,
+      '#default_value' => self::default_value($values, 'is_visible', TRUE),
+    );
+
     $form['downloads'] = array(
       '#type' => 'fieldset',
       '#title' => t('Downloadable'),
       '#collapsible' => FALSE,
       '#collapsed' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="choose"]' => array('value' => 'Open'),
+        ),
+      ),
     );
     $form['downloads']['is_downloadable'] = array(
       '#type' => 'checkbox',
