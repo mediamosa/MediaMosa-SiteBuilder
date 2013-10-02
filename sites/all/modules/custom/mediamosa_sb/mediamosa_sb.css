@@ -1,0 +1,50 @@
+
+.page-asset #content #page_content form .form-item {
+  margin: 0 inherit;
+  padding: 0.5em;
+  clear: left;
+}
+
+.page-asset #content #page_content form .form-item-retention .form-type-radio {
+  padding: 0.2em;
+  margin-left: 150px;
+  margin-top: 0px;
+}
+
+.page-asset #content #page_content form .form-item-media .form-type-radio {
+  padding: 0.2em;
+  margin-left: 150px;
+  margin-top: 0px;
+}
+
+.page-asset #content form .form-wrapper .form-item-choose label {
+  width: 565px;
+  float: right;
+}
+.page-asset #content form .form-wrapper .form-item-license .form-radios {
+  float: left;
+  width: 309px;
+}
+.page-asset #content #page_content form .form-item-license .form-radio {
+  margin-top: 18px;
+  margin-left: 40px;
+  float: left;
+}
+.page-asset #content form .form-wrapper .form-item-license .form-type-radio label {
+  margin-left: 60px;
+  height: 53px;
+  margin-top: 2px;
+  line-height: 3em;
+}
+.page-asset #content form .form-wrapper .form-item-license .description {
+}
+
+.page-asset #content form#mediamosa-sb-asset-upload-steps-form {
+  padding-top: 80px;
+}
+.page-asset #content form .form-wrapper {
+  margin-top: 15px;
+}
+#edit-downloads {
+  margin-bottom: 20px;
+}

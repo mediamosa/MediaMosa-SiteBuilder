@@ -396,35 +396,74 @@ class mediamosa_sb_asset_forms {
    *   Returns the form array.
    */
   static public function access_form($values) {
+    global $base_url;
+
     $form = array();
 
-    // Add visibility form.
-    $form['visibility'] = self::access_visibility_form($values);
+    // Add css.
+    $form['#attached'] = array(
+      'css' => array(
+        'type' => 'file',
+        'data' => drupal_get_path('module', 'mediamosa_sb') . '/mediamosa_sb.css',
+      ),
+    );
 
-    // Add acl form.
-    $form['acl'] = self::access_acl_form($values);
+    // Protected.
+    $protected = 'Open';
+    if (isset($values['acl_domain']) || isset($values['acl_realm']) || isset($values['acl_user'])) {
+      $protected = 'Protected';
+    }
+    $form['protected'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Protection'),
+    );
+    $form['protected']['choose'] = array(
+      '#type' => 'radios',
+      '#options' => array(
+        'Open' => 'Open, No protection.',
+        'Protected' => 'Protected, you will need to provide access control information.',
+      ),
+      '#default_value' => $protected,
+    );
 
-    return $form;
-  }
+    // Access Control.
+    $form['control'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Access control'),
+      '#states' => array(
+        'enabled' => array(
+          ':input[name="choose"]' => array('value' => 'Protected'),
+        ),
+      ),
+    );
+    $form['control']['acl_domain'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Domain'),
+      '#required' => FALSE,
+      '#description' => t('Define which domains can view this asset. Enter more domains seperated by a comma. Example: "mediamosa.org, example.com"'),
+      '#default_value' => self::default_value($values, 'acl_domain'),
+    );
+    $form['control']['acl_realm'] = array(
+      '#type' => 'textfield',
+      '#title' => t('By realm'),
+      '#required' => FALSE,
+      '#description' => t('Select wich registered users based on their e-mail realm have access to this asset. Every domain must start with an "@". Example: "@mediamosa.org, @example.com"'),
+      '#default_value' => self::default_value($values, 'acl_realm'),
+    );
+    $form['control']['acl_user'] = array(
+      '#type' => 'textfield',
+      '#title' => t('By email'),
+      '#required' => FALSE,
+      '#description' => t('Select which registered users based on their e-mail address have access to this asset. Example; info@mediamosa.org, name@example.com'),
+      '#default_value' => self::default_value($values, 'acl_user'),
+    );
 
-  /**
-   * The access form.
-   *
-   * @param array $values
-   *   The values of the form.
-   *
-   * @return array
-   *   Returns the form array.
-   */
-  static protected function access_visibility_form($values) {
-    $form = array();
-
+    // Visibility.
     $form['visibility'] = array(
       '#type' => 'fieldset',
       '#title' => t('Visibility'),
     );
-
-    // is_visible = !isprivate
+    // is_visible = !isprivate.
     $form['visibility']['is_visible'] = array(
       '#type' => 'checkbox',
       '#title' => t('Visible in lists'),
@@ -433,55 +472,46 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'is_visible', TRUE),
     );
 
-    return $form;
-  }
-
-  /**
-   * The access form.
-   *
-   * @param array $values
-   *   The values of the form.
-   *
-   * @return array
-   *   Returns the form array.
-   */
-  static protected function access_acl_form($values) {
-    $form = array();
-
-    $form['control'] = array(
+    // License.
+    $form['license'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Access control'),
+      '#title' => t('License'),
+    );
+    $img_path = $base_url . '/' . drupal_get_path('module', 'mediamosa_sb') . '/img/';
+    $images = array(
+      'CC BY (Attribution)' => '<img src="' . $img_path . 'cc-by.png" />',
+      'CC BY-SA (Attribution-ShareAlike)' => '<img src="' . $img_path . 'cc-by-sa.png" />',
+      'CC BY-ND (Attribution-NoDerivs)' => '<img src="' . $img_path . 'cc-by-nd.png" />',
+      'CC BY-NC (Attribution-NonCommercial)' => '<img src="' . $img_path . 'cc-by-nc.png" />',
+      'CC BY-NC-SA (Attribution-NonCommercial-ShareAlike)' => '<img src="' . $img_path . 'cc-by-nc-sa.png" />',
+      'CC BY-NC-ND (Attribution-NonCommercial-NoDerivs)' => '<img src="' . $img_path . 'cc-by-nc-nd.png" />',
+      '' => 'No license.',
+    );
+    $form['license']['license'] = array(
+      '#type' => 'radios',
+      '#description' => l(t('<img src="') . $img_path .  'cc-terms.png" />', 'http://creativecommons.nl/uitleg/', array('html' => TRUE)),
+      '#options' => $images,
+      '#default_value' => self::default_value($values, 'license', ''),
     );
 
-    $form['control']['acl_domain'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Domain'),
-      '#required' => FALSE,
-      '#description' => t('Define which domains can view this video. Example; mediamosa.org, example.com'),
-      '#default_value' => self::default_value($values, 'acl_domain'),
+    $form['downloads'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Downloadable'),
+      '#collapsible' => FALSE,
+      '#collapsed' => TRUE,
     );
-
-    $form['control']['acl_realm'] = array(
-      '#type' => 'textfield',
-      '#title' => t('By realm'),
+    $form['downloads']['is_downloadable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Downloadable'),
+      '#description' => t('If checked, the asset will be downloadable'),
       '#required' => FALSE,
-      '#description' => t('Select wich registered users based on their e-mail domain have access to this video. Example; @mediamosa.org, @example.com'),
-      '#default_value' => self::default_value($values, 'acl_realm'),
-    );
-
-    $form['control']['acl_user'] = array(
-      '#type' => 'textfield',
-      '#title' => t('By email'),
-      '#required' => FALSE,
-      '#description' => t('Select which registered users based on their e-mail adress have access to this video. Example; info@mediamosa.org, name@example.com'),
-      '#default_value' => self::default_value($values, 'acl_user'),
     );
 
     return $form;
   }
 
   /**
-   * The access form.
+   * The Transcode form.
    *
    * @param array $values
    *   The values of the form.

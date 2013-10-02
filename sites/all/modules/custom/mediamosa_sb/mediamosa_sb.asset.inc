@@ -490,6 +490,12 @@ function mediamosa_sb_asset_edit_access_form($form, $form_state, $asset_id) {
   // MediaMosa field 'isprivate' -> 'is_visible'.
   $values['is_visible'] = drupal_strtoupper((string) $asset->items->item->isprivate) == 'TRUE' ? FALSE : TRUE;
 
+  // License is on access page.
+  $values['license'] = '';
+  if (isset($asset->xml->items->item->qualified_dublin_core->license)) {
+    $values['license'] = (string) $asset->xml->items->item->qualified_dublin_core->license;
+  }
+
   // Get the form.
   $form = mediamosa_sb_asset_forms::access_form($values);
 

@@ -608,8 +608,13 @@ class mediamosa_sb {
     $options = array(
       'isprivate' => (isset($values['is_visible']) && !empty($values['is_visible']) ? FALSE : TRUE),
     );
-
     MediaMosaSbConnectorWrapper::update_asset($asset_id, $options);
+
+    $options = array(
+      'license' => $values['license'],
+      'action' => 'update',
+    );
+    MediaMosaSbConnectorWrapper::update_metadata($asset_id, $options);
   }
 
   /**
