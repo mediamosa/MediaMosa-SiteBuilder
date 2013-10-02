@@ -69,6 +69,12 @@
   </div>
   <?php endif; ?>
 
+  <?php if (function_exists('virtualcutter_presentation_load')) : ?>
+    <div class="information-row asset-formats">
+      <?php print l(t('Virtual Cutter'), 'virtualcutter/' . $fields['asset_id']->raw); ?>
+    </div>
+  <?php endif; ?>
+
 </div>
 
 <div class="asset-technical-information">
