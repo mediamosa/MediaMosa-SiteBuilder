@@ -489,7 +489,8 @@ class mediamosa_sb_asset_forms {
     );
     $form['license']['license'] = array(
       '#type' => 'radios',
-      '#description' => l(t('<img src="') . $img_path .  'cc-terms.png" />', 'http://creativecommons.nl/uitleg/', array('html' => TRUE)),
+      '#description' => l(t('<img src="') . $img_path .  'cc-terms.png" />', 'http://creativecommons.nl/uitleg/', array('html' => TRUE)) .
+      l(t('<img src="') . $base_url . '/misc/message-24-info.png" />', 'http://creativecommons.nl/uitleg/', array('html' => TRUE)) ,
       '#options' => $images,
       '#default_value' => self::default_value($values, 'license', ''),
     );
