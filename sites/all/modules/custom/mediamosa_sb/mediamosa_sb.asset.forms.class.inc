@@ -451,7 +451,8 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'acl_realm'),
     );
     $form['control']['acl_user'] = array(
-      '#type' => 'textfield',
+      '#type' => 'textarea',
+      '#rows' => 2,
       '#title' => t('By email'),
       '#required' => FALSE,
       '#description' => t('Select which registered users based on their e-mail address have access to this asset. Example; info@mediamosa.org, name@example.com'),
