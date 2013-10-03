@@ -480,6 +480,11 @@ function mediamosa_sb_asset_edit_access_form($form, $form_state, $asset_id) {
     $values['acl_domain'] = implode(', ', $access['acl_domain']);
     $values['acl_realm'] = implode(', ', $access['acl_realm']);
     $values['acl_user'] = implode(', ', $access['acl_user']);
+    $mf = MediaMosaSbConnectorWrapper::get_mediafile($mediafile_id);
+    $values['is_downloadable'] = 0;
+    if (((string) $mf->xml->items->item->is_downloadable) == 'TRUE') {
+      $values['is_downloadable'] = 1;
+    }
   }
 
   // MediaMosa field 'isprivate' -> 'is_visible'.

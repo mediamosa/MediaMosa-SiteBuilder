@@ -410,7 +410,7 @@ class mediamosa_sb_asset_forms {
 
     // Protected.
     $protected = 'Open';
-    if (isset($values['acl_domain']) || isset($values['acl_realm']) || isset($values['acl_user'])) {
+    if (!empty($values['acl_domain']) || !empty($values['acl_realm']) || !empty($values['acl_user'])) {
       $protected = 'Protected';
     }
     $form['protected'] = array(
@@ -491,11 +491,6 @@ class mediamosa_sb_asset_forms {
     $form['visibility'] = array(
       '#type' => 'fieldset',
       '#title' => t('Visibility'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="choose"]' => array('value' => 'Open'),
-        ),
-      ),
     );
     // is_visible = !isprivate.
     $form['visibility']['is_visible'] = array(
@@ -522,6 +517,7 @@ class mediamosa_sb_asset_forms {
       '#title' => t('Downloadable'),
       '#description' => t('If checked, the asset will be downloadable'),
       '#required' => FALSE,
+      '#default_value' => self::default_value($values, 'is_downloadable', TRUE),
     );
 
     return $form;
