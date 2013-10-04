@@ -1,24 +1,5 @@
 <?php
 /**
- * MediaMosa is a Full Featured, Webservice Oriented Media Management and
- * Distribution platform (http://mediamosa.org)
- *
- * Copyright (C) 2012 SURFnet BV (http://www.surfnet.nl)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, you can find it at:
- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- */
-
-/**
  * @file
  * Asset related functions.
  */
@@ -40,35 +21,36 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#theme' => 'mediamosa_sb_title_header',
     '#options' => array(
       'current' => 1,
-      'total' => 4,
+      'total' => 3,
       'subtitle' => t('Upload'),
       'subtitle_next' => t('Enter metadata'),
     ),
   );
 
-  // Get the default profile.
+  // Get the transcode profile(s).
   $default_profile = MediaMosaSbConnectorWrapper::get_default_transcode_profile();
-
+  $mediamosa_sb_transcodes = variable_get('mediamosa_sb_transcodes');
+  if (!isset($mediamosa_sb_transcodes)) {
+    $mediamosa_sb_transcodes = array(MediaMosaSbConnectorWrapper::get_default_transcode_profile());
+  }
+  // Remove not choosen transcodes.
+  $transcodes = array();
+  foreach ($mediamosa_sb_transcodes as $key => $value) {
+    if ($value > 0) {
+      $transcodes[] = $value;
+    }
+  }
   // Try to create upload ticket.
-  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'transcode' => $default_profile ? array($default_profile) : array()));
+  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'transcode' => $transcodes ? $transcodes : array()));
   if (!$result) {
     $form['upload'] = array(
       '#markup' => t('Unable to upload to MediaMosa; @reason', array('@reason' => mediamosa_ck::get_connector_last_error_text())),
     );
-
     return $form;
   }
 
   // Get upload URL.
   $upload_url = $result['action'];
-
-/*
-  drupal 6;
-  <input type="file" name="file"  class="form-file required" id="edit-file" size="60" />
-
-  drupal 7
-  <input type="file" id="edit-file" name="files[file]" size="60" class="form-file" />
-*/
 
   // Because we override.
   $form_state['has_file_element'] = TRUE;
@@ -80,8 +62,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#type' => 'item',
     '#markup' => '<input type="file" id="edit-file-upload" name="file" size="40" class="form-file" />',
     '#title' => t('Upload your file'),
-    // @todo: make setting.
-    '#description' => t('Maximum size of 2,0 GB, MOV, AVI'),
+    '#description' => variable_get('mediamosa_sb_upload_description', 'Maximum size of 2.0GB. <br />Allowed file types: avi,mov,flv,mp4,mpeg.'),
   );
 
   // Get the current user.
@@ -99,11 +80,13 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     $user_quota['user_used'] = $user_quota['user_total'] - (int) $user->items->item->quota_available_mb;
   }
 
-  $form['user_quota'] = array(
-    '#title' => t('Your Quota status'),
-    '#theme' => 'mediamosa_sb_upload_quota',
-    '#options' => $user_quota,
-  );
+  if (variable_get('mediamosa_sb_show_quota')) {
+    $form['user_quota'] = array(
+      '#title' => t('Your Quota status'),
+      '#theme' => 'mediamosa_sb_upload_quota',
+      '#options' => $user_quota,
+    );
+  }
 
   // Redirect value, we need to redirect back after upload so we can add it to
   // Drupal.
@@ -145,16 +128,11 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
       1 => array(
         'form' => 'mediamosa_sb_asset_upload_step_metadata_form',
         'subtitle' => t('Metadata'),
-        'subtitle_next' => t('Define Access & Visibility'),
+        'subtitle_next' => t('Access Control'),
       ),
       2 => array(
         'form' => 'mediamosa_sb_asset_upload_step_access_form',
-        'subtitle' => t('Access & Visibility'),
-        'subtitle_next' => t('Define transcoding formats'),
-      ),
-      3 => array(
-        'form' => 'mediamosa_sb_asset_upload_step_media_form',
-        'subtitle' => t('Transcoding formats'),
+        'subtitle' => t('Access Control'),
         'subtitle_next' => '',
       ),
     );
@@ -172,7 +150,7 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
     '#theme' => 'mediamosa_sb_title_header',
     '#options' => array(
       'current' => $step + 1,
-      'total' => 4,
+      'total' => 3,
       'subtitle' => $step_information['subtitle'],
       'subtitle_next' => $step_information['subtitle_next'],
     ),
@@ -184,7 +162,7 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
 
   // Show the Next button only if there are more steps defined.
   if ($step < count($form_state['step_information'])) {
-    // The Next button should be included on every step
+    // The Next button should be included on every step.
     $form['next'] = array(
       '#type' => 'submit',
       '#value' => t('Next'),
@@ -228,14 +206,17 @@ function _mediamosa_sb_asset_upload_steps_cancel_submit($form, &$form_state) {
 
 /**
  * Submit handler for the 'next' button.
+ *
  * - Saves away $form_state['values']
  * - Increments the step count.
  * - Replace $form_state['values'] from the last time we were at this page
  *   or with array() if we haven't been here before.
  * - Force form rebuild.
  *
- * @param $form
- * @param $form_state
+ * @param array $form
+ *   regular form array.
+ * @param array $form_state
+ *   form_state array.
  */
 function _mediamosa_sb_asset_upload_steps_next_submit($form, &$form_state) {
   $form_state['step_information'][$form_state['step']]['stored_values'] = $form_state['input'];
@@ -250,7 +231,8 @@ function _mediamosa_sb_asset_upload_steps_next_submit($form, &$form_state) {
       $form_state['values'] = array();
     }
 
-    $form_state['rebuild'] = TRUE;  // Force rebuild with next step.
+    // Force rebuild with next step.
+    $form_state['rebuild'] = TRUE;
     return;
   }
 }
@@ -277,8 +259,10 @@ function mediamosa_sb_asset_upload_step_metadata_form_validate($form, $form_stat
 }
 
 /**
+ * Access form fields.
+ *
  * Returns form elements for the 'other info' page of the steps. This is the
- * thid and last step of the example steps.
+ * third and last step of the example steps.
  *
  * @ingroup upload_form
  */
@@ -295,6 +279,8 @@ function mediamosa_sb_asset_upload_step_access_form($form, $form_state) {
 }
 
 /**
+ * Media fields form.
+ *
  * Returns form elements for the 'other info' page of the steps. This is the
  * thid and last step of the example steps.
  *
@@ -323,9 +309,6 @@ function _mediamosa_sb_asset_upload_steps_finish_validation($form, &$form_state)
 /**
  * Step 4 submition function.
  *
- * @param $form
- * @param $form_state
- *
  * @ingroup upload_form
  */
 function _mediamosa_sb_asset_upload_steps_finish_submit($form, &$form_state) {
@@ -339,7 +322,7 @@ function _mediamosa_sb_asset_upload_steps_finish_submit($form, &$form_state) {
   mediamosa_sb::submit_access($form_state['step_information'][2]['stored_values'], $form_state['asset_id']);
 
   // Run function for posting transcode jobs / stills to MediaMosa.
-  mediamosa_sb::submit_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id'], TRUE);
+  // mediamosa_sb::submit_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id'], TRUE);
 
   // Go to view page.
   drupal_goto(mediamosa_sb::get_asset_detail_url($form_state['asset_id']));
@@ -348,10 +331,10 @@ function _mediamosa_sb_asset_upload_steps_finish_submit($form, &$form_state) {
 /**
  * Build the metadata form.
  *
- * @param $form
- * @param $form_state
- * @param $asset_id
- * @return
+ * @param string $asset_id
+ *   asset id of form.
+ *
+ * @return array
  *   The metadata form.
  */
 function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
@@ -403,7 +386,7 @@ function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
     '#value' => $asset_id,
   );
 
-    // Submit button.
+  // Submit button.
   $form['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -417,6 +400,15 @@ function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
     );
   }
 
+  // Transfer ownership.
+  if (variable_get('mediamosa_sb_allow_transfer', FALSE)) {
+    if (_mediamosa_sb_access_asset_delete($asset_id)) {
+      $form['transfer'] = array(
+        '#type' => 'submit',
+        '#value' => t('Transfer'),
+      );
+    }
+  }
   return $form;
 }
 
@@ -444,6 +436,9 @@ function mediamosa_sb_asset_edit_metadata_form_submit($form, $form_state) {
 
     case t('Delete'):
       drupal_goto('asset/delete/' . rawurlencode($asset_id));
+
+    case t('Transfer'):
+      drupal_goto('asset/transfer/' . rawurlencode($asset_id));
   }
 
   // Redirect.
@@ -485,10 +480,21 @@ function mediamosa_sb_asset_edit_access_form($form, $form_state, $asset_id) {
     $values['acl_domain'] = implode(', ', $access['acl_domain']);
     $values['acl_realm'] = implode(', ', $access['acl_realm']);
     $values['acl_user'] = implode(', ', $access['acl_user']);
+    $mf = MediaMosaSbConnectorWrapper::get_mediafile($mediafile_id);
+    $values['is_downloadable'] = 0;
+    if (((string) $mf->xml->items->item->is_downloadable) == 'TRUE') {
+      $values['is_downloadable'] = 1;
+    }
   }
 
-  // isprivate = !is_visible.
+  // MediaMosa field 'isprivate' -> 'is_visible'.
   $values['is_visible'] = drupal_strtoupper((string) $asset->items->item->isprivate) == 'TRUE' ? FALSE : TRUE;
+
+  // License is on access page.
+  $values['license'] = '';
+  if (isset($asset->xml->items->item->qualified_dublin_core->license)) {
+    $values['license'] = (string) $asset->xml->items->item->qualified_dublin_core->license;
+  }
 
   // Get the form.
   $form = mediamosa_sb_asset_forms::access_form($values);
@@ -498,7 +504,7 @@ function mediamosa_sb_asset_edit_access_form($form, $form_state, $asset_id) {
     '#value' => $asset_id,
   );
 
-    // Submit button.
+  // Submit button.
   $form['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -609,33 +615,32 @@ function mediamosa_sb_asset_edit_media_form_submit($form, $form_state) {
 /**
  * Deletion confirm.
  *
- * @param $asset_id
+ * @param string $asset_id
  *   ID of the asset to delete.
  *
  * @see mediamosa_sb_asset_delete_confirm_form_submit()
  */
 function mediamosa_sb_asset_delete_confirm_form($form, &$form_state, $asset_id) {
 
-  // Get the collection.
+  // Get the asset.
   $asset = MediaMosaSbConnectorWrapper::get_asset($asset_id);
 
   if (!$asset) {
     drupal_set_message(t('Unable to find media, already deleted?'), 'warning');
-
-    // Failed.
     drupal_goto('assets');
   }
 
   $form['asset_id'] = array(
     '#type' => 'value',
-    '#value' => $asset_id,
+    '#value' => rawurlencode($asset_id),
   );
 
   return confirm_form($form,
-                      t('Are you sure you want to delete this media file?'),
-                      url('asset/' . rawurlencode($asset_id), array('absolute' => TRUE)),
-                      t('This action cannot be undone.'),
-                      t('Delete'), t('Cancel')
+    t('Are you sure you want to delete this media file?'),
+    url(mediamosa_sb::get_asset_detail_url($asset_id), array('absolute' => TRUE)),
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
   );
 }
 
@@ -646,19 +651,119 @@ function mediamosa_sb_asset_delete_confirm_form($form, &$form_state, $asset_id) 
  */
 function mediamosa_sb_asset_delete_confirm_form_submit($form, &$form_state) {
 
-  // Remove all links
   $asset_id = $form_state['values']['asset_id'];
 
   // Get the current user.
   $user_id = mediamosa_ck::session_user_id();
 
-  // No more assets in collection, now remove collection.
+  // Now remove asset.
   if (!MediaMosaSbConnectorWrapper::delete_asset($asset_id, $user_id)) {
-    mediamosa_sb::watchdog_error('Unable to delete media.');
+    mediamosa_sb::watchdog_error('Unable to delete asset.');
     drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
   }
 
   // All ok.
-  drupal_set_message(t('Media has been deleted.'));
+  drupal_set_message(t('Asset has been deleted.'));
+  drupal_goto('myassets');
+}
+
+/**
+ * Transfer confirmation form.
+ *
+ * @param string $asset_id
+ *   ID of the asset to delete.
+ *
+ * @see mediamosa_sb_asset_transfer_confirm_form_submit()
+ */
+function mediamosa_sb_asset_transfer_confirm_form($form, &$form_state, $asset_id) {
+
+  if (!variable_get('mediamosa_sb_allow_transfer', FALSE)) {
+    drupal_set_message(t('Transfer not allowed'), 'warning');
+    drupal_goto('myassets');
+  }
+
+  // Get the asset.
+  $asset = MediaMosaSbConnectorWrapper::get_asset(rawurlencode($asset_id));
+  if (!$asset) {
+    drupal_set_message(t('Unable to find media, already deleted?'), 'warning');
+    drupal_goto('myassets');
+  }
+
+  // Owner check.
+  $owner_id = mediamosa_sb::get_owner_asset($asset);
+  $user_id = mediamosa_ck::session_user_id();
+  if ($user_id != $owner_id) {
+    drupal_set_message(t('You need ownership in order to transfer.'), 'warning');
+    return FALSE;
+  }
+
+  $form['asset_id'] = array(
+    '#type' => 'value',
+    '#value' => rawurlencode($asset_id),
+  );
+
+  $form['asset_id'] = array(
+    '#type' => 'value',
+    '#value' => rawurlencode($asset_id),
+  );
+
+  $form['introduction'] = array(
+    '#markup' => t('You can transfer the ownership of this asset. You need to enter the
+e-mail address of the person to transfer the asset to. The email address must be
+known and you will need permission of the new owner. This action can not be undone.'),
+  );
+
+  $form['new_owner_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('New Owner email'),
+    '#default_value' => '',
+    '#size' => 40,
+    '#maxlength' => 128,
+    '#required' => TRUE,
+  );
+
+  // Submit button.
+  $form['save'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+/**
+ * Validation for asset media page.
+ */
+function mediamosa_sb_asset_transfer_confirm_form_validate($form, &$form_state) {
+  // Check if user exists in this installation.
+  $email = check_plain($form_state['values']['new_owner_id']);
+  $result = db_query("SELECT count(*) FROM {users} WHERE mail = '$email'")->fetchField();
+  if ($result < 1) {
+    // User doesn't exist.
+    form_set_error('new_owner_id', 'This user is not known.');
+  }
+}
+
+/**
+ * Submit handler for transfer asset.
+ *
+ * @see mediamosa_sb_asset_transfer_confirm_form()
+ */
+function mediamosa_sb_asset_transfer_confirm_form_submit($form, &$form_state) {
+
+  $asset_id = $form_state['values']['asset_id'];
+
+  // Get the current user.
+  $user_id = mediamosa_ck::session_user_id();
+  $new_owner_id = check_plain($form['new_owner_id']['#value']);
+
+  // Now transfer ownership.
+  if (!MediaMosaSbConnectorWrapper::change_asset_owner($asset_id, $user_id, $new_owner_id)) {
+    mediamosa_sb::watchdog_error('Unable to transfer asset.');
+    drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
+  }
+
+  // All ok.
+  drupal_set_message(t('Asset ownership has been transferred.'));
   drupal_goto('myassets');
 }

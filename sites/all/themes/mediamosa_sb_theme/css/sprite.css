@@ -5,10 +5,13 @@
 .asset-detail-information .asset-view-count,
 .asset-detail-information .asset-uploaded-info,
 .asset-detail-information .asset-collections,
-.asset-detail-information .asset-formats,
 .asset-detail-information .asset-collections ul li,
+.asset-detail-information .asset-formats,
 .asset-detail-information .asset-formats ul li,
 .asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download,
+.asset-detail-information .asset-download ul li,
+.asset-detail-information .asset-download ul li a,
 .collection-detail-information .collection-view-count,
 .collection-detail-information .collection-uploaded-info,
 .collection-detail-information .collection-collections,
@@ -41,22 +44,25 @@
 }
 
 .asset-detail-information .asset-collections {
-  background-position: -430px -609px;
-}
-
-.asset-detail-information .asset-formats {
-  background-position: -405px -659px;
+  background-position: -430px -611px;
 }
 
 .asset-detail-information .asset-collections ul li,
-.asset-detail-information .asset-formats ul li {
-  background-position: -495px -1443px;
+.asset-detail-information .asset-formats ul li,
+.asset-detail-information .asset-download ul li {
+  background-position: -495px -1446px;
 }
 
-.asset-detail-information .asset-formats ul li a {
-  background-position: 100% -1400px;
-  display: inline-block;
+.asset-detail-information .asset-formats,
+.asset-detail-information .asset-download {
+  background-position: -405px -661px;
 }
+
+.asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download ul li a {
+   background-position: 100% -1400px;
+   display: inline-block;
+ }
 
 .item-navigation li {
   background-position: 0 -200px;

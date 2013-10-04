@@ -215,7 +215,7 @@ function mediamosa_sb_collection_delete_confirm_form($form, &$form_state, $coll_
  */
 function mediamosa_sb_collection_delete_confirm_form_submit($form, &$form_state) {
 
-  // Remove all links
+  // Remove all links.
   $coll_id = $form_state['values']['coll_id'];
 
   // Get the current user.
@@ -243,8 +243,7 @@ function mediamosa_sb_collection_delete_confirm_form_submit($form, &$form_state)
         drupal_goto(mediamosa_sb::get_collection_detail_url($coll_id));
       }
     }
-  }
-  while (!empty($asset_ids));
+  } while (!empty($asset_ids));
 
   // No more assets in collection, now remove collection.
   if (!MediaMosaSbConnectorWrapper::delete_collection($coll_id, $user_id)) {

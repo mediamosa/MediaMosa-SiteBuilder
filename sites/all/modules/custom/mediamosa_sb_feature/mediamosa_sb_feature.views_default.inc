@@ -219,6 +219,13 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['owner_id']['field'] = 'owner_id';
   $handler->display->display_options['fields']['owner_id']['label'] = '';
   $handler->display->display_options['fields']['owner_id']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Download */
+  $handler->display->display_options['fields']['download']['id'] = 'download';
+  $handler->display->display_options['fields']['download']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['download']['field'] = 'download';
+  $handler->display->display_options['fields']['download']['label'] = '';
+  $handler->display->display_options['fields']['download']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['download']['download_path'] = '';
 
   /* Display: MediaMosa Asset Detail */
   $handler = $view->new_display('page', 'MediaMosa Asset Detail', 'page');
@@ -614,6 +621,8 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['still_url']['table'] = 'mediamosa_asset_search';
   $handler->display->display_options['fields']['still_url']['field'] = 'still_url';
   $handler->display->display_options['fields']['still_url']['label'] = '';
+  $handler->display->display_options['fields']['still_url']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['still_url']['alter']['path'] = 'asset/detail/[asset_id]';
   $handler->display->display_options['fields']['still_url']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['still_url']['still_style'] = 'mediamosa_sb_normal';
   /* Field: MediaMosa: Played */
@@ -1195,6 +1204,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['sorts']['videotimestamp']['table'] = 'mediamosa_asset_search';
   $handler->display->display_options['sorts']['videotimestamp']['field'] = 'videotimestamp';
   $handler->display->display_options['sorts']['videotimestamp']['order'] = 'DESC';
+  /* Filter criterion: MediaMosa: Owner */
+  $handler->display->display_options['filters']['owner_id']['id'] = 'owner_id';
+  $handler->display->display_options['filters']['owner_id']['table'] = 'mediamosa_asset_search';
+  $handler->display->display_options['filters']['owner_id']['field'] = 'owner_id';
+  $handler->display->display_options['filters']['owner_id']['value'] = '[user:mail]';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -1379,6 +1393,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['filters']['owner_id']['id'] = 'owner_id';
   $handler->display->display_options['filters']['owner_id']['table'] = 'mediamosa_collection_search';
   $handler->display->display_options['filters']['owner_id']['field'] = 'owner_id';
+  $handler->display->display_options['filters']['owner_id']['value'] = '[user:mail]';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');

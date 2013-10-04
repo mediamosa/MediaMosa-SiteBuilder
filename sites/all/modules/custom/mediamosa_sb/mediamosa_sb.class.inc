@@ -26,6 +26,7 @@ class mediamosa_sb {
 
   // ------------------------------------------------------------------- Consts
   // Permissions.
+  const MEDIAMOSA_SB_PERMISSION_ADMIN = 'mediamosa-sb adminstration';
   const MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS = 'mediamosa-sb edit assets';
   const MEDIAMOSA_SB_PERMISSION_DELETE_ASSETS = 'mediamosa-sb delete assets';
   const MEDIAMOSA_SB_PERMISSION_EDIT_COLLECTIONS = 'mediamosa-sb edit collections';
@@ -41,7 +42,7 @@ class mediamosa_sb {
    * @return type
    */
   static public function get_asset_detail_url($asset_id) {
-    return 'asset/detail/' . $asset_id;
+    return 'asset/detail/' . rawurlencode($asset_id);
   }
 
   /**
@@ -500,7 +501,7 @@ class mediamosa_sb {
    */
   static protected function submit_info_metadata($values, $asset_id) {
     // Options + metadata for write.
-    $options = array('action' => 'replace');
+    $options = array('action' => 'update');
 
     // Get the metadata def.
     $metadata_fields = mediamosa_ck::get_metadata_fields();
@@ -607,8 +608,13 @@ class mediamosa_sb {
     $options = array(
       'isprivate' => (isset($values['is_visible']) && !empty($values['is_visible']) ? FALSE : TRUE),
     );
-
     MediaMosaSbConnectorWrapper::update_asset($asset_id, $options);
+
+    $options = array(
+      'license' => $values['license'],
+      'action' => 'update',
+    );
+    MediaMosaSbConnectorWrapper::update_metadata($asset_id, $options);
   }
 
   /**
@@ -622,8 +628,28 @@ class mediamosa_sb {
    * @return
    */
   static protected function submit_access_acl($values, $asset_id) {
-    // Get the mediafiles.
+
+    if ($values['choose'] == 'Open') {
+      $values['acl_domain'] = '';
+      $values['acl_realm'] = '';
+      $values['acl_user'] = '';
+    }
+    else {
+      // Protected files are not downloadable.
+      $values['is_downloadable'] = 0;
+    }
     $mediafile_ids = MediaMosaSbConnectorWrapper::get_asset_mediafile_ids($asset_id);
+
+    // Set is_downloadable for all mediafiles.
+    foreach ($mediafile_ids as $mediafile_id) {
+      $options = array(
+        'is_downloadable' => ($values['is_downloadable'] == 1) ? 'TRUE' : 'FALSE',
+        'transcode_inherits_acl' => TRUE,
+      );
+      if (!MediaMosaSbConnectorWrapper::update_mediafile($mediafile_id, $options)) {
+        mediamosa_sb::watchdog_error('Unable to save downloadable for mediafile with ID @mediafile_id.', array('@mediafile_id' => $mediafile_id));
+      }
+    }
 
     // Domains and realms.
     $acl_domain_realm = array();

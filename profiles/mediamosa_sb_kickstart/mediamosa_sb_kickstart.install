@@ -454,7 +454,11 @@ function mediamosa_sb_kickstart_install() {
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', 'search content', $filtered_html_permission));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval', 'search content', $filtered_html_permission));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID,
+    array('access content', 'access comments', 'post comments', 'skip comment approval', 'search content', $filtered_html_permission)
+  );
+  // Add upload rights to authenticated user.
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('mediamosa-sb upload media'));
 
   // Create a default role for site administrators, with all available permissions assigned.
   $admin_role = new stdClass();

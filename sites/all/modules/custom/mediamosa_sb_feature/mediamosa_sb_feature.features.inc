@@ -37,6 +37,7 @@ function mediamosa_sb_feature_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'mediamosa_sb_large',
   );
 
   // Exported image style: mediamosa_sb_normal.
@@ -59,6 +60,7 @@ function mediamosa_sb_feature_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'mediamosa_sb_normal',
   );
 
   // Exported image style: mediamosa_sb_small.
@@ -81,6 +83,7 @@ function mediamosa_sb_feature_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'mediamosa_sb_small',
   );
 
   return $styles;
