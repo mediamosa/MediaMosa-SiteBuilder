@@ -1,24 +1,5 @@
 <?php
 /**
- * MediaMosa is a Full Featured, Webservice Oriented Media Management and
- * Distribution platform (http://mediamosa.org)
- *
- * Copyright (C) 2012 SURFnet BV (http://www.surfnet.nl)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, you can find it at:
- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- */
-
-/**
  * @file
  * The main module file for MediaMosa Site Builder.
  */
@@ -28,23 +9,23 @@
  */
 function mediamosa_sb_permission() {
   return array(
-    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN =>  array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN => array(
       'title' => t('Allow administration and configuration of Sitebuilder.'),
       'description' => t('Users with this permission may edit global configuration options.'),
     ),
-    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS =>  array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS => array(
       'title' => t('Allow user to edit any asset.'),
       'description' => t('Users with this permission may edit any asset, even when they are not owner.'),
     ),
-    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_DELETE_ASSETS =>  array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_DELETE_ASSETS => array(
       'title' => t('Allow user to delete any asset.'),
       'description' => t('Users with this permission may delete any asset, even when they are not owner.'),
     ),
-    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_COLLECTIONS =>  array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_COLLECTIONS => array(
       'title' => t('Allow user to edit any collection.'),
       'description' => t('Users with this permission may edit any collection, even when they are not owner.'),
     ),
-    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_DELETE_COLLECTIONS =>  array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_DELETE_COLLECTIONS => array(
       'title' => t('Allow user to admin the collections.'),
       'description' => t('Users with this permission may delete any collection, even when they are not owner.'),
     ),
@@ -65,14 +46,14 @@ function mediamosa_sb_permission() {
 function mediamosa_sb_menu() {
   $items = array();
 
- $items['admin/config/media/mediamosa_sb/config'] = array(
-   'title' => 'MediaMosa site builder',
-   'description' => 'Configuration settings for the MediaMosa sitebuilder.',
-   'page callback' => 'drupal_get_form',
-   'page arguments' => array('mediamosa_sb_configuration_form'),
-   'access arguments' => array(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN),
-   'file' => 'mediamosa_sb.admin.inc',
- );
+  $items['admin/config/media/mediamosa_sb/config'] = array(
+    'title' => 'MediaMosa site builder',
+    'description' => 'Configuration settings for the MediaMosa sitebuilder.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_configuration_form'),
+    'access arguments' => array(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN),
+    'file' => 'mediamosa_sb.admin.inc',
+  );
 
   $items['asset/upload'] = array(
     'title' => 'Upload',
@@ -230,21 +211,26 @@ function mediamosa_sb_theme() {
   return array(
     'mediamosa_sb_profile_select' => array(
       'render element' => 'element',
-      'file' => 'mediamosa_sb.theme.inc'
+      'file' => 'mediamosa_sb.theme.inc',
     ),
     'mediamosa_sb_upload_quota' => array(
       'render element' => 'element',
-      'file' => 'mediamosa_sb.theme.inc'
+      'file' => 'mediamosa_sb.theme.inc',
     ),
     'mediamosa_sb_quota_bar' => array(
-      'variables' => array('percent' => NULL, 'message' => NULL, 'used' => NULL, 'total' => NULL),
+      'variables' => array(
+        'percent' => NULL,
+        'message' => NULL,
+        'used' => NULL,
+        'total' => NULL,
+      ),
     ),
     'mediamosa_sb_title_header' => array(
       'render element' => 'element',
-      'file' => 'mediamosa_sb.theme.inc'
+      'file' => 'mediamosa_sb.theme.inc',
     ),
     'mediamosa_sb_powered_by_mediamosa' => array(
-       'arguments' => array('element' => NULL)
+      'arguments' => array('element' => NULL),
     ),
   );
 }
@@ -259,10 +245,10 @@ function _mediamosa_sb_may_upload() {
 /**
  * Access function for editing asset.
  *
- * @param $mixed
+ * @param mixed $mixed
  *   Object or asset ID.
  *
- * @return
+ * @return bool
  *   Returns TRUE when current user can edit asset, or FALSE.
  */
 function _mediamosa_sb_access_asset_edit($mixed) {
@@ -272,10 +258,10 @@ function _mediamosa_sb_access_asset_edit($mixed) {
 /**
  * Access function for deleting asset.
  *
- * @param $mixed
+ * @param mixed $mixed
  *   Object or asset ID.
  *
- * @return
+ * @return bool
  *   Returns TRUE when current user can delete asset, or FALSE.
  */
 function _mediamosa_sb_access_asset_delete($mixed) {
@@ -292,10 +278,10 @@ function mediamosa_sb_mediamosa_asset_view_object_alter($object) {
 /**
  * Access function for editing collection.
  *
- * @param $mixed
+ * @param mixed $mixed
  *   Object or collection ID.
  *
- * @return
+ * @return bool
  *   Returns TRUE when current user can edit collection, or FALSE.
  */
 function _mediamosa_sb_access_collection_edit($mixed) {
@@ -305,10 +291,10 @@ function _mediamosa_sb_access_collection_edit($mixed) {
 /**
  * Access function for deleting collection.
  *
- * @param $mixed
+ * @param mixed $mixed
  *   Object or collection ID.
  *
- * @return
+ * @return bool
  *   Returns TRUE when current user is owner of collection, or FALSE.
  */
 function _mediamosa_sb_access_collection_delete($mixed) {
@@ -370,7 +356,7 @@ function mediamosa_sb_search_execute($keys = NULL, $conditions = NULL) {
   // something between two spaces, optionally quoted.
   preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' .  $keys, $keywords, PREG_SET_ORDER);
 
-  if (count($keywords) ==  0) {
+  if (count($keywords) == 0) {
     return;
   }
 
@@ -490,25 +476,13 @@ function theme_mediamosa_sb_powered_by_mediamosa() {
 }
 
 /**
- * Implements hook_mediamosa_ck_acl_alter.
- *
- * @param $acl
- *   Array contains the basic ACL settings for viewer;
- *  - acl_domain
- *    The domain of the user.
- *  - acl_realm
- *    Realm information of the user.
- *  - acl_user_id
- *    The current user.
- *  - acl_group_id[]
- *    Array of group ids.
- *
+ * Implements hook_mediamosa_ck_acl_alter().
  */
 function mediamosa_sb_mediamosa_ck_acl_alter(&$acl, $type) {
 
   $hostname = &drupal_static('mediamosa_ck_hostname');
   if (empty($hostname)) {
-    $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+    $hostname = gethostbyaddr(ip_address());
   }
 
   // Set the host name as our domain.
