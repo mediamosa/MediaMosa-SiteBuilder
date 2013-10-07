@@ -82,18 +82,16 @@ function mediamosa_sb_configuration_form() {
     '#default_value' => variable_get('mediamosa_sb_allow_transfer', FALSE),
   );
 
+  $form['view_asset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Form settings for View Asset page.'),
+  );
+  $form['view_asset']['mediamosa_sb_view_asset_formats'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show additional formats.'),
+    '#description' => 'Shows a list of additional formats on the asset view page. By default, sitebuilder tries to present a playable media in the player area, this option gives the user more choice.',
+    '#default_value' => variable_get('mediamosa_sb_view_asset_formats', TRUE),
+  );
+
   return system_settings_form($form);
 }
-
-
-/**
- * Implements hook_form_validate().
- */
-//function mediamosa_sb_configuration_form_validate($form, &$form_state) {
-//}
-
-/**
- * Implements hook_form_submit().
- */
-//function mediamosa_sb_configuration_form_submit($form, &$form_state) {
-//}

@@ -54,7 +54,7 @@
     <?php endif; ?>
   </div>
 
-  <?php if (isset($fields['mediafiles']) && isset($fields['mediafiles']->content)): ?>
+  <?php if (!empty($fields['mediafiles']) && !empty($fields['mediafiles']->content)): ?>
   <div class="information-row asset-formats">
     <h3><?php print t('Additional format(s)'); ?></h3>
     <p><?php print t('This video is available in the following additional format(s)'); ?>:</p>
