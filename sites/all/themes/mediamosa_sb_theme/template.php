@@ -74,3 +74,16 @@ function mediamosa_sb_theme_page_alter(&$page) {
     }
   }
 }
+
+/**
+ * Overrides theme_mediamosa_ck_views_theme_asset_mediafiles().
+ */
+function mediamosa_sb_theme_mediamosa_ck_views_theme_asset_mediafiles($variables) {
+
+  if (!variable_get('mediamosa_sb_view_asset_formats', TRUE)) {
+    return;
+  }
+  else {
+    return theme_mediamosa_ck_views_theme_asset_mediafiles($variables);
+  }
+}
