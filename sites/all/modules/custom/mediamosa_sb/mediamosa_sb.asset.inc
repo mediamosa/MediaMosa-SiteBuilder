@@ -29,7 +29,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
 
   // Get the transcode profile(s).
   $default_profile = MediaMosaSbConnectorWrapper::get_default_transcode_profile();
-  $mediamosa_sb_transcodes = variable_get('mediamosa_sb_transcodes');
+  $mediamosa_sb_transcodes = variable_get('mediamosa_ck_transcodes_autostart');
   if (!isset($mediamosa_sb_transcodes)) {
     $mediamosa_sb_transcodes = array(MediaMosaSbConnectorWrapper::get_default_transcode_profile());
   }
@@ -745,6 +745,34 @@ function mediamosa_sb_asset_transfer_confirm_form_validate($form, &$form_state) 
 }
 
 /**
+ * Define transfer_message mail.
+ */
+function mediamosa_sb_asset_mail($key, &$message, $params) {
+  global $base_url;
+
+  $options['language'] = $message['language'];
+  switch ($key) {
+    case 'transfer_message':
+      $langcode = $message['language']->language;
+      $message['subject'] = t('Transfer bestand');
+      $url = $base_url . '/asset/' . check_plain($params['asset_id']);
+      $message['body'][] = t('Je ontvangt deze mail omdat er een video-of audio bestand aan jou is
+overgedragen door een collega medewerker of -student.
+
+!asset_link
+
+Daarmee ben je vanaf nu eigenaar van dit bestand. Je hebt nu de rechten om dit
+bestand te bewerken, afscherming en metadata te veranderen, het over te dragen
+aan iemand anders of het bestand te verwijderen. Mocht je naar aanleiding van
+deze mail vragen hebben, stuur dan een mail naar tilburgutube@uvt.nl. Wij
+nemen zo spoedig mogelijk contact met je op.', array(
+        '!asset_link' => l($url, $url, array('absolute' => TRUE)))
+      );
+      break;
+  }
+}
+
+/**
  * Submit handler for transfer asset.
  *
  * @see mediamosa_sb_asset_transfer_confirm_form()
@@ -763,7 +791,19 @@ function mediamosa_sb_asset_transfer_confirm_form_submit($form, &$form_state) {
     drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
   }
 
-  // All ok.
-  drupal_set_message(t('Asset ownership has been transferred.'));
+  $module = 'mediamosa_sb_asset';
+  $key = 'transfer_message';
+  $from = variable_get('site_mail', 'admin@example.com');
+  $language = language_default();
+  $params = array('asset_id' => $asset_id);
+
+  $result = drupal_mail($module, $key, $new_owner_id, $language, $params, $from, TRUE);
+  if ($result['result'] == TRUE) {
+    drupal_set_message(t('Asset ownership has been transferred, a mail to the new owner has been sent.'));
+  }
+  else {
+    drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+  }
+
   drupal_goto('myassets');
 }
