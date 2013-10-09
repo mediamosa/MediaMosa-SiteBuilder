@@ -395,30 +395,35 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
  *********************************************************/
 
 .asset-detail-information .asset-collections,
-.asset-detail-information .asset-formats {
+.asset-detail-information .asset-formats,
+.asset-detail-information .asset-download {
   padding: 12px 25px;
 }
 
 .asset-detail-information .asset-collections h3,
-.asset-detail-information .asset-formats h3 {
+.asset-detail-information .asset-formats h3,
+.asset-detail-information .asset-download h3 {
   margin-bottom: 11px;
   font-size: 18px;
   /* background declaration in sprite.css */
 }
 
 .asset-detail-information .asset-collections p,
-.asset-detail-information .asset-formats p {
+.asset-detail-information .asset-formats p,
+.asset-detail-information .asset-download p {
   color: #000;
   font-size: 12px;
 }
 
 .asset-detail-information .asset-collections ul,
-.asset-detail-information .asset-formats ul {
+.asset-detail-information .asset-formats ul,
+.asset-detail-information .asset-download ul {
   margin: 10px 0;
 }
 
 .asset-detail-information .asset-collections ul li,
-.asset-detail-information .asset-formats ul li {
+.asset-detail-information .asset-formats ul li,
+.asset-detail-information .asset-download ul li {
   padding-left: 12px;
   margin-bottom: 5px;
   font-size: 12px;
@@ -426,7 +431,8 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
 }
 
 .asset-detail-information .asset-collections ul li a,
-.asset-detail-information .asset-formats ul li a {
+.asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download ul li a {
   margin-top: 2px;
   padding-right: 20px;
   font-size: 12px;

@@ -390,4 +390,27 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
 
     return parent::create_transcode($mediafile_id, $options);
   }
+
+  /**
+   * Change ownership.
+   *
+   * @param string $asset_id
+   *   The asset ID to transfer.
+   * @param string $owner_id
+   *   Current owner
+   * @param string $new_owner_id
+   *   New owner.
+   *
+   * @return bool
+   *   Returns FALSE for failure.
+   */
+  static public function change_asset_owner($asset_id, $owner_id, $new_owner_id) {
+
+    $options = array(
+      'is_app_admin' => 'TRUE',
+      'owner_id' => $new_owner_id,
+      'isprivate' => 'FALSE',
+    );
+    return parent::update_asset($asset_id, $options);
+  }
 }

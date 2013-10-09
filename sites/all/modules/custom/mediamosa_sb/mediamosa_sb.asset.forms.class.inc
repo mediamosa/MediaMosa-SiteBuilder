@@ -1,33 +1,14 @@
 <?php
 /**
- * MediaMosa is a Full Featured, Webservice Oriented Media Management and
- * Distribution platform (http://mediamosa.org)
- *
- * Copyright (C) 2012 SURFnet BV (http://www.surfnet.nl)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, you can find it at:
- * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- */
-
-/**
  * @file
  * Simple static class to hold form functions, so we keep our inc files cleaner
  * and this is autoloaded.
  */
+
 class mediamosa_sb_asset_forms {
-  // ------------------------------------------------------------------- Consts.
+
   const DEFAULT_START_TIME_STILL_FORM = '00:00';
 
-  // ---------------------------------------------------------------- Functions.
   /**
    * Return the default value.
    */
@@ -38,12 +19,12 @@ class mediamosa_sb_asset_forms {
   /**
    * The info form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
-   * @param $asset_id
+   * @param string $asset_id
    *   The ID of the asset.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static public function info_form($values, $asset_id) {
@@ -64,10 +45,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The metadata form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function info_basicinfo_form($values, $asset_id) {
@@ -140,7 +121,7 @@ class mediamosa_sb_asset_forms {
         '#title' => t('My collections'),
         '#required' => FALSE,
         '#multiple' => TRUE,
-        '#size'=> 5,
+        '#size' => 5,
         '#options' => $options_collections,
         '#default_value' => self::default_value($values, 'mycollections'),
       );
@@ -158,10 +139,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The metadata form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function info_metadata_form($values) {
@@ -231,9 +212,10 @@ class mediamosa_sb_asset_forms {
     // Provide a default date in the format YYYY-MM-DD HH:MM:SS.
     $date = '';
 
-    // Provide a format using regular PHP format parts (see documentation on php.net).
-    // If you're using a date_select, the format will control the order of the date parts in the selector,
-    // rearrange them any way you like. Parts left out of the format will not be displayed to the user.
+    // Provide a format using regular PHP format parts (see documentation on
+    // php.net).  If you're using a date_select, the format will control the
+    // order of the date parts in the selector, rearrange them any way you
+    // like. Parts left out of the format will not be displayed to the user.
     $format = 'Y-m-d';
 
     $form['additional']['dc']['dc_date'] = array(
@@ -244,7 +226,8 @@ class mediamosa_sb_asset_forms {
       '#default_value' => $date,
       '#date_format' => $format,
       '#size' => 40,
-      '#date_label_position' => 'within', // See other available attributes and what they do in date_api_elements.inc
+      // See for other attributes in date_api_elements.inc.
+      '#date_label_position' => 'within',
       '#default_value' => self::default_value($values, 'dc_date'),
     );
 
@@ -406,42 +389,110 @@ class mediamosa_sb_asset_forms {
   /**
    * The access form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static public function access_form($values) {
+    global $base_url;
+
     $form = array();
 
-    // Add visibility form.
-    $form['visibility'] = self::access_visibility_form($values);
+    // Add css.
+    $form['#attached'] = array(
+      'css' => array(
+        'type' => 'file',
+        'data' => drupal_get_path('module', 'mediamosa_sb') . '/mediamosa_sb.css',
+      ),
+    );
 
-    // Add acl form.
-    $form['acl'] = self::access_acl_form($values);
+    // Protected.
+    $protected = 'Open';
+    if (!empty($values['acl_domain']) || !empty($values['acl_realm']) || !empty($values['acl_user'])) {
+      $protected = 'Protected';
+    }
+    $form['protected'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Protection'),
+    );
+    $form['protected']['choose'] = array(
+      '#type' => 'radios',
+      '#options' => array(
+        'Open' => 'Open, No protection.',
+        'Protected' => 'Protected, you will need to provide access control information.',
+      ),
+      '#default_value' => $protected,
+    );
 
-    return $form;
-  }
+    // Access Control.
+    $form['control'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Access control'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="choose"]' => array('value' => 'Protected'),
+        ),
+      ),
+    );
+    $form['control']['acl_domain'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Domain'),
+      '#required' => FALSE,
+      '#description' => t('Define which domains can view this asset. Enter more domains seperated by a comma. Example: "mediamosa.org, example.com"'),
+      '#default_value' => self::default_value($values, 'acl_domain'),
+    );
+    $form['control']['acl_realm'] = array(
+      '#type' => 'textfield',
+      '#title' => t('By realm'),
+      '#required' => FALSE,
+      '#description' => t('Select wich registered users based on their e-mail realm have access to this asset. Every domain must start with an "@". Example: "@mediamosa.org, @example.com"'),
+      '#default_value' => self::default_value($values, 'acl_realm'),
+    );
+    $form['control']['acl_user'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#title' => t('By email'),
+      '#required' => FALSE,
+      '#description' => t('Select which registered users based on their e-mail address have access to this asset. Example; info@mediamosa.org, name@example.com'),
+      '#default_value' => self::default_value($values, 'acl_user'),
+    );
 
-  /**
-   * The access form.
-   *
-   * @param $values
-   *   The values of the form.
-   *
-   * @return
-   *   Returns the form array.
-   */
-  static protected function access_visibility_form($values) {
-    $form = array();
+    // License.
+    $form['license'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('License'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="choose"]' => array('value' => 'Open'),
+        ),
+      ),
+    );
+    $img_path = $base_url . '/' . drupal_get_path('module', 'mediamosa_sb') . '/img/';
+    $images = array(
+      'CC BY (Attribution)' => '<img src="' . $img_path . 'cc-by.png" />',
+      'CC BY-SA (Attribution-ShareAlike)' => '<img src="' . $img_path . 'cc-by-sa.png" />',
+      'CC BY-ND (Attribution-NoDerivs)' => '<img src="' . $img_path . 'cc-by-nd.png" />',
+      'CC BY-NC (Attribution-NonCommercial)' => '<img src="' . $img_path . 'cc-by-nc.png" />',
+      'CC BY-NC-SA (Attribution-NonCommercial-ShareAlike)' => '<img src="' . $img_path . 'cc-by-nc-sa.png" />',
+      'CC BY-NC-ND (Attribution-NonCommercial-NoDerivs)' => '<img src="' . $img_path . 'cc-by-nc-nd.png" />',
+      '' => 'No license.',
+    );
+    $form['license']['license'] = array(
+      '#type' => 'radios',
+      '#description' => l(t('<img src="') . $img_path .  'cc-terms.png" />', 'http://creativecommons.nl/uitleg/', array('html' => TRUE, 'attributes' => array('target' => '_blank'))) .
+      l(t('<img src="') . $base_url . '/misc/message-24-info.png" />', 'http://creativecommons.nl/uitleg/', array('html' => TRUE, 'attributes' => array('target' => '_blank'))),
+      '#options' => $images,
+      '#default_value' => self::default_value($values, 'license', ''),
+    );
 
+    // Visibility.
     $form['visibility'] = array(
       '#type' => 'fieldset',
       '#title' => t('Visibility'),
     );
-
-    // is_visible = !isprivate
+    // is_visible = !isprivate.
     $form['visibility']['is_visible'] = array(
       '#type' => 'checkbox',
       '#title' => t('Visible in lists'),
@@ -450,62 +501,37 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'is_visible', TRUE),
     );
 
-    return $form;
-  }
-
-  /**
-   * The access form.
-   *
-   * @param $values
-   *   The values of the form.
-   *
-   * @return
-   *   Returns the form array.
-   */
-  static protected function access_acl_form($values) {
-    $form = array();
-
-    $form['control'] = array(
+    $form['downloads'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Access control'),
+      '#title' => t('Downloadable'),
+      '#collapsible' => FALSE,
+      '#collapsed' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="choose"]' => array('value' => 'Open'),
+        ),
+      ),
     );
-
-    $form['control']['acl_domain'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Domain'),
+    $form['downloads']['is_downloadable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Downloadable'),
+      '#description' => t('If checked, the asset will be downloadable'),
       '#required' => FALSE,
-      '#description' => t('Define which domains can view this video. Example; mediamosa.org, example.com'),
-      '#default_value' => self::default_value($values, 'acl_domain'),
-    );
-
-    $form['control']['acl_realm'] = array(
-      '#type' => 'textfield',
-      '#title' => t('By realm'),
-      '#required' => FALSE,
-      '#description' => t('Select wich registered users based on their e-mail domain have access to this video. Example; @mediamosa.org, @example.com'),
-      '#default_value' => self::default_value($values, 'acl_realm'),
-    );
-
-    $form['control']['acl_user'] = array(
-      '#type' => 'textfield',
-      '#title' => t('By email'),
-      '#required' => FALSE,
-      '#description' => t('Select which registered users based on their e-mail adress have access to this video. Example; info@mediamosa.org, name@example.com'),
-      '#default_value' => self::default_value($values, 'acl_user'),
+      '#default_value' => self::default_value($values, 'is_downloadable', TRUE),
     );
 
     return $form;
   }
 
   /**
-   * The access form.
+   * The Transcode form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
-   * @param $is_upload
+   * @param bool $is_upload
    *   Form is used during upload.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static public function media_form($values, $is_upload = FALSE) {
@@ -523,10 +549,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The transcode form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function media_transcoding_form($values, $is_upload) {
@@ -587,7 +613,8 @@ class mediamosa_sb_asset_forms {
       foreach ($xml->items->item as $profile) {
         $profile_id = (int) $profile->profile_id;
 
-        // Is allowed as profile? If a mediafile exists, we ignore the allowed profile.
+        // Is allowed as profile?
+        // If a mediafile exists, we ignore the allowed profile.
         if (!isset($allowed_profiles[$profile_id]) && !isset($existing_transcodes[$profile_id])) {
           continue;
         }
@@ -629,10 +656,10 @@ class mediamosa_sb_asset_forms {
   /**
    * The still form.
    *
-   * @param $values
+   * @param array $values
    *   The values of the form.
    *
-   * @return
+   * @return array
    *   Returns the form array.
    */
   static protected function media_still_form($values) {

@@ -54,14 +54,27 @@
     <?php endif; ?>
   </div>
 
+  <?php if (isset($fields['mediafiles']) && isset($fields['mediafiles']->content)): ?>
   <div class="information-row asset-formats">
     <h3><?php print t('Additional format(s)'); ?></h3>
-
-
     <p><?php print t('This video is available in the following additional format(s)'); ?>:</p>
-
     <?php print $fields['mediafiles']->content; ?>
   </div>
+  <?php endif; ?>
+
+  <?php if (isset($fields['download']) && isset($fields['download']->content)): ?>
+  <div class="information-row asset-download">
+    <h3><?php print t('Download'); ?></h3>
+    <?php print $fields['download']->content; ?>
+  </div>
+  <?php endif; ?>
+
+  <?php if (function_exists('virtualcutter_presentation_load')) : ?>
+    <div class="information-row asset-formats">
+      <?php print l(t('Virtual Cutter'), 'virtualcutter/' . $fields['asset_id']->raw); ?>
+    </div>
+  <?php endif; ?>
+
 </div>
 
 <div class="asset-technical-information">

@@ -28,6 +28,10 @@
  */
 function mediamosa_sb_permission() {
   return array(
+    mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN =>  array(
+      'title' => t('Allow administration and configuration of Sitebuilder.'),
+      'description' => t('Users with this permission may edit global configuration options.'),
+    ),
     mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS =>  array(
       'title' => t('Allow user to edit any asset.'),
       'description' => t('Users with this permission may edit any asset, even when they are not owner.'),
@@ -61,14 +65,14 @@ function mediamosa_sb_permission() {
 function mediamosa_sb_menu() {
   $items = array();
 
-//  $items['admin/config/media/mediamosa_sb/config'] = array(
-//    'title' => 'MediaMosa site builder',
-//    'description' => 'Configuration settings of the MediaMosa site builder.',
-//    'page callback' => 'drupal_get_form',
-//    'page arguments' => array('mediamosa_sb_configuration_form'),
-//    'access arguments' => array(MEDIAMOSA_SB_PERMISSION_ADMIN_CONFIGURATION),
-//    'file' => 'mediamosa_sb.admin.inc',
-//  );
+ $items['admin/config/media/mediamosa_sb/config'] = array(
+   'title' => 'MediaMosa site builder',
+   'description' => 'Configuration settings for the MediaMosa sitebuilder.',
+   'page callback' => 'drupal_get_form',
+   'page arguments' => array('mediamosa_sb_configuration_form'),
+   'access arguments' => array(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_ADMIN),
+   'file' => 'mediamosa_sb.admin.inc',
+ );
 
   $items['asset/upload'] = array(
     'title' => 'Upload',
@@ -125,8 +129,8 @@ function mediamosa_sb_menu() {
     'title' => 'Video',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mediamosa_sb_asset_edit_media_form', 2),
-    'access callback' => '_mediamosa_sb_access_asset_edit',
-    'access arguments' => array(2),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer content'),
     'description' => 'Control the transcode and stills of the asset.',
     'type' => MENU_LOCAL_TASK,
     'file' => 'mediamosa_sb.asset.inc',
@@ -140,6 +144,17 @@ function mediamosa_sb_menu() {
     'access callback' => '_mediamosa_sb_access_asset_edit',
     'access arguments' => array(2),
     'description' => 'Delete the asset.',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'mediamosa_sb.asset.inc',
+  );
+
+  $items['asset/transfer/%'] = array(
+    'title' => 'Transfer asset',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mediamosa_sb_asset_transfer_confirm_form', 2),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
+    'description' => 'Transfer ownership of the asset.',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'mediamosa_sb.asset.inc',
   );
