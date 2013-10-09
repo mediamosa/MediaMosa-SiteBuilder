@@ -28,7 +28,7 @@
   <?php if ($fields['granted']->raw == 'TRUE'): ?>
     <?php print $fields['still_url']->content; ?>
   <?php else: ?>
-<?php print l(theme('image', array('path' => drupal_get_path('theme', 'mediamosa_sb_theme') . '/images/notgranted.png', 'alt' => t("You don't have the right permissions to access this video"))), 'asset/detail/' . $fields['asset_id']->raw, array('html' => TRUE, 'attributes' => array('class' => 'views-field-still-url'))); ?>
+<?php print l(theme('image', array('path' => drupal_get_path('theme', 'mediamosa_sb_theme') . '/images/notgranted-thumb.png', 'width' => '220px', 'height' => '124px', 'alt' => t("You don't have the right permissions to access this video"))), 'asset/detail/' . $fields['asset_id']->raw, array('html' => TRUE, 'attributes' => array('class' => 'views-field-still-url'))); ?>
   <?php endif; ?>
 <?php endif; ?>
 
@@ -66,5 +66,3 @@
   <?php endif; ?>
 
 </div>
-
-
