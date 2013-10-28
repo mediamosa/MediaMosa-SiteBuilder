@@ -1,12 +1,14 @@
 name = "MediaMosa Site Builder"
 description = "MediaMosa Site Builer is a standard front-end application for MediaMosa with very powerful tools to customize your MediaMosa website."
 package = "MediaMosa Site Builder"
-version = "7.x-1.x-dev"
+version = 7.x-3.5-dev
 core = 7.x
 
 ; Dependencies (mediamosa CK)
-dependencies[] = mediamosa_ck (>=1.99)
+dependencies[] = mediamosa_sdk
+dependencies[] = mediamosa_connector
 dependencies[] = media_mediamosa
+dependencies[] = mediamosa_ck
 dependencies[] = mediamosa_ck_access
 dependencies[] = mediamosa_ck_stats
 dependencies[] = mediamosa_ck_still

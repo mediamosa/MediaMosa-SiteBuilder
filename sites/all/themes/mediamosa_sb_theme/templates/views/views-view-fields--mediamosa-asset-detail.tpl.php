@@ -75,6 +75,13 @@
     </div>
   <?php endif; ?>
 
+  <?php if (isset($fields['share']) && isset($fields['share']->content)): ?>
+  <div class="information-row asset-download">
+    <h3><?php print t('Embed'); ?></h3>
+    <?php print token_replace($fields['share']->content); ?>
+  </div>
+  <?php endif; ?>
+
 </div>
 
 <div class="asset-technical-information">
