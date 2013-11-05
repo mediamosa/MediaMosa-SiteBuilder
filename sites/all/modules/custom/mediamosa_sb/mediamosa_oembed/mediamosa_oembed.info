@@ -1,0 +1,10 @@
+package = oEmbed
+name = MediaMosa oEmbed
+description = oEmbed Provider for MediaMosa assets
+core = 7.x
+version = "7.x-1.0"
+
+dependencies[] = mediamosa_ck
+dependencies[] = oembed
+dependencies[] = oembedprovider
+
