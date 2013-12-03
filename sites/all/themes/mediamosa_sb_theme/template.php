@@ -87,3 +87,19 @@ function mediamosa_sb_theme_mediamosa_ck_views_theme_asset_mediafiles($variables
     return theme_mediamosa_ck_views_theme_asset_mediafiles($variables);
   }
 }
+
+/**
+ * Create themed owner field.
+ */
+function mediamosa_sb_theme_mediamosa_ck_views_theme_owner($variables) {
+  if (module_exists('surfconext')) {
+    $u = user_load($variables['uid']);
+    if (isset($u->display_name) && isset($u->display_name['und'][0]['value'])) {
+      return $u->display_name['und'][0]['value'];
+    }
+    else {
+      return '-';
+    }
+  }
+  theme_mediamosa_ck_views_theme_owner($variables);
+}
