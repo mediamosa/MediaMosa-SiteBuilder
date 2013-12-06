@@ -1257,6 +1257,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 1;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
   $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = FALSE;
