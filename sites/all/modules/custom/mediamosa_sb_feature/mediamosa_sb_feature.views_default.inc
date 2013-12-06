@@ -125,11 +125,14 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 1;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+
   /* Field: MediaMosa: Asset ID */
   $handler->display->display_options['fields']['asset_id']['id'] = 'asset_id';
   $handler->display->display_options['fields']['asset_id']['table'] = 'mediamosa_asset_get';
