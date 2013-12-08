@@ -692,7 +692,7 @@ function mediamosa_sb_asset_transfer_confirm_form($form, &$form_state, $asset_id
   // Owner check.
   $owner_id = mediamosa_sb::get_owner_asset($asset);
   $user_id = mediamosa_ck::session_user_id();
-  if ($user_id != $owner_id) {
+  if (($user_id != $owner_id) && (!user_access('administer site configuration'))) {
     drupal_set_message(t('You need ownership in order to transfer.'), 'warning');
     return FALSE;
   }
