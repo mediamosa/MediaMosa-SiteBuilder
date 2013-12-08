@@ -72,7 +72,7 @@ function mediamosa_sb_collection_add_form($form, $form_state) {
 /**
  * Validation for add collection form.
  */
-function mediamosa_sb_collection_add_form_validation($form, $form_state) {
+function mediamosa_sb_collection_add_form_validate($form, $form_state) {
 }
 
 /**
@@ -144,7 +144,7 @@ function mediamosa_sb_collection_edit_form($form, $form_state, $coll_id) {
 /**
  * Validation for edit collection form.
  */
-function mediamosa_sb_collection_edit_form_validation($form, $form_state) {
+function mediamosa_sb_collection_edit_form_validate($form, $form_state) {
 }
 
 /**
