@@ -102,6 +102,15 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#value' => t('Upload'),
   );
 
+  // Add javascript to disable double click.
+  if (!isset($form['#attached']['js'])) {
+    $form['#attached']['js'] = array();
+  }
+  $form['#attached']['js'][drupal_get_path('module', 'mediamosa_sb') . '/mediamosa_sb.js'] = array(
+    'type' => 'file',
+    'weight' => 10,
+  );
+
   $form['#validate'][] = array('mediamosa_sb_asset_upload_form_validate');
 
   $form['#action'] = $upload_url;
@@ -112,19 +121,10 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
   return $form;
 }
 
-function mediamosa_sb_asset_test_form_callback($form, &$fstate) {
-  //  return "<div id='test-ajax'>Wrapper Div</div>";
-}
-
-function mediamosa_sb_asset_test_form_validate($form, &$fstate) {
-  //form_set_error("item", "Some error to display.");
-}
-
 /**
  * Validation for upload form.
  */
 function mediamosa_sb_asset_upload_form_validate($form, &$form_state) {
-  //die('1');
 }
 
 /**
