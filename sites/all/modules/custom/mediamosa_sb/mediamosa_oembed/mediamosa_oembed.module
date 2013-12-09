@@ -1,0 +1,54 @@
+<?php
+/**
+ * @file
+ * MediaMosa oEmbed module.
+ */
+
+/**
+ * Implements hook_oembedprovider().
+ */
+function mediamosa_oembed_oembedprovider() {
+  $providers = array();
+  $base = url('', array('absolute' => TRUE));
+
+  $providers[$base . 'asset/*'] = array(
+    'callback' => 'mediamosa_oembed_provider',
+  );
+
+  return $providers;
+}
+
+/**
+ * The oEmbed provider for MediaMosa.
+ */
+function mediamosa_oembed_provider($provider, $url, $matches, $attributes) {
+
+  $result = FALSE;
+
+  $asset_id = preg_replace('/[^\da-z]/i', '', $matches[1]);
+
+  // Get the information from a player view to get a correct embedable player
+  // object, still and the title.
+  $player_view = views_get_view('mediamosa_player_block');
+  $player_result = $player_view->preview('mediamosa_player_block', array($asset_id));
+
+  $title = $player_view->result['0']->metadata_dc['title'];
+  $html = $player_view->display_handler->handlers['field']['player']->original_value;
+
+  // @todo, get the still.
+  $still = '';
+  $result = array(
+    'type' => 'video',
+    'width' => '100%',
+    'height' => '100%',
+    'html' => $html,
+    'title' => $title,
+    'thumbnail_url' => $still,
+    // Possible other fields: author_name, author_url, thumbnail_width,
+    // thumbnail_height.
+  );
+
+  $result = _oembedprovider_result($result['type'], $result);
+
+  return $result;
+}

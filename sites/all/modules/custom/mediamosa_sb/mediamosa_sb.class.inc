@@ -638,6 +638,8 @@ class mediamosa_sb {
       // Protected files are not downloadable.
       $values['is_downloadable'] = 0;
     }
+
+    // Get all mediafiles.
     $mediafile_ids = MediaMosaSbConnectorWrapper::get_asset_mediafile_ids($asset_id);
 
     // Set is_downloadable for all mediafiles.
