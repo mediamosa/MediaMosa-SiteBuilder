@@ -120,11 +120,13 @@ function mediamosa_sb_feature_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'All videos';
+  $handler->display->display_options['title'] = 'Video detail';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 1;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
@@ -231,6 +233,120 @@ function mediamosa_sb_feature_views_default_views() {
   $handler = $view->new_display('page', 'MediaMosa Asset Detail', 'page');
   $handler->display->display_options['display_description'] = 'Show a single asset. First contextual filter is the asset_id.';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: MediaMosa: Asset ID */
+  $handler->display->display_options['fields']['asset_id']['id'] = 'asset_id';
+  $handler->display->display_options['fields']['asset_id']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['asset_id']['field'] = 'asset_id';
+  $handler->display->display_options['fields']['asset_id']['label'] = '';
+  $handler->display->display_options['fields']['asset_id']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Access - Is owner */
+  $handler->display->display_options['fields']['is_owner']['id'] = 'is_owner';
+  $handler->display->display_options['fields']['is_owner']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['is_owner']['field'] = 'is_owner';
+  $handler->display->display_options['fields']['is_owner']['label'] = '';
+  $handler->display->display_options['fields']['is_owner']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['is_owner']['type'] = 'true-false';
+  $handler->display->display_options['fields']['is_owner']['not'] = 0;
+  /* Field: MediaMosa: Access - Edit */
+  $handler->display->display_options['fields']['access_edit']['id'] = 'access_edit';
+  $handler->display->display_options['fields']['access_edit']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['access_edit']['field'] = 'access_edit';
+  $handler->display->display_options['fields']['access_edit']['label'] = '';
+  $handler->display->display_options['fields']['access_edit']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['access_edit']['not'] = 0;
+  /* Field: MediaMosa: Access - Delete */
+  $handler->display->display_options['fields']['access_delete']['id'] = 'access_delete';
+  $handler->display->display_options['fields']['access_delete']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['access_delete']['field'] = 'access_delete';
+  $handler->display->display_options['fields']['access_delete']['label'] = '';
+  $handler->display->display_options['fields']['access_delete']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['access_delete']['not'] = 0;
+  /* Field: MediaMosa: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Description */
+  $handler->display->display_options['fields']['description']['id'] = 'description';
+  $handler->display->display_options['fields']['description']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['description']['field'] = 'description';
+  $handler->display->display_options['fields']['description']['label'] = '';
+  $handler->display->display_options['fields']['description']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Mediafiles */
+  $handler->display->display_options['fields']['mediafiles']['id'] = 'mediafiles';
+  $handler->display->display_options['fields']['mediafiles']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['mediafiles']['field'] = 'mediafiles';
+  $handler->display->display_options['fields']['mediafiles']['mediafile_path'] = '';
+  /* Field: MediaMosa: Video player */
+  $handler->display->display_options['fields']['player']['id'] = 'player';
+  $handler->display->display_options['fields']['player']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['player']['field'] = 'player';
+  $handler->display->display_options['fields']['player']['player_autostart'] = '1';
+  /* Field: MediaMosa: Collections */
+  $handler->display->display_options['fields']['collections']['id'] = 'collections';
+  $handler->display->display_options['fields']['collections']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['collections']['field'] = 'collections';
+  $handler->display->display_options['fields']['collections']['collection_theme'] = 'mediamosa_ck_views_theme_asset_collections';
+  /* Field: MediaMosa: Metadata block for Dublin Core */
+  $handler->display->display_options['fields']['metadata_dc']['id'] = 'metadata_dc';
+  $handler->display->display_options['fields']['metadata_dc']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['metadata_dc']['field'] = 'metadata_dc';
+  $handler->display->display_options['fields']['metadata_dc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
+  /* Field: MediaMosa: Metadata block for Qualified Dublin Core */
+  $handler->display->display_options['fields']['metadata_qdc']['id'] = 'metadata_qdc';
+  $handler->display->display_options['fields']['metadata_qdc']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['metadata_qdc']['field'] = 'metadata_qdc';
+  $handler->display->display_options['fields']['metadata_qdc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
+  /* Field: MediaMosa: Technical metadata */
+  $handler->display->display_options['fields']['technical_metadata']['id'] = 'technical_metadata';
+  $handler->display->display_options['fields']['technical_metadata']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['technical_metadata']['field'] = 'technical_metadata';
+  $handler->display->display_options['fields']['technical_metadata']['technical_metadata_theme'] = 'mediamosa_ck_views_theme_asset_technical_metadata';
+  /* Field: MediaMosa: Played */
+  $handler->display->display_options['fields']['played']['id'] = 'played';
+  $handler->display->display_options['fields']['played']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['played']['field'] = 'played';
+  $handler->display->display_options['fields']['played']['label'] = '';
+  $handler->display->display_options['fields']['played']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Created */
+  $handler->display->display_options['fields']['videotimestamp']['id'] = 'videotimestamp';
+  $handler->display->display_options['fields']['videotimestamp']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['videotimestamp']['field'] = 'videotimestamp';
+  $handler->display->display_options['fields']['videotimestamp']['label'] = '';
+  $handler->display->display_options['fields']['videotimestamp']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['videotimestamp']['date_format'] = 'mediamosa_ck_normal';
+  /* Field: MediaMosa: Owner */
+  $handler->display->display_options['fields']['owner_id']['id'] = 'owner_id';
+  $handler->display->display_options['fields']['owner_id']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['owner_id']['field'] = 'owner_id';
+  $handler->display->display_options['fields']['owner_id']['label'] = '';
+  $handler->display->display_options['fields']['owner_id']['element_label_colon'] = FALSE;
+  /* Field: MediaMosa: Download */
+  $handler->display->display_options['fields']['download']['id'] = 'download';
+  $handler->display->display_options['fields']['download']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['download']['field'] = 'download';
+  $handler->display->display_options['fields']['download']['label'] = '';
+  $handler->display->display_options['fields']['download']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['download']['download_path'] = '';
+  /* Field: share */
+  $handler->display->display_options['fields']['share']['id'] = 'share';
+  $handler->display->display_options['fields']['share']['table'] = 'views';
+  $handler->display->display_options['fields']['share']['field'] = 'nothing';
+  $handler->display->display_options['fields']['share']['ui_name'] = 'share';
+  $handler->display->display_options['fields']['share']['label'] = 'Embed';
+  $handler->display->display_options['fields']['share']['alter']['text'] = '<p><form>
+<input type=text value="[site:url]/asset/player/[asset_id]"></p>
+<p>object code:
+<div class="embed_iframe">
+<textarea title="Click and press CTRL+C to copy..." onclick="this.style.borderColor = \'lightred\'; this.select();" style="min-width:50%; height:4em; cursor:pointer;" height="1">
+&lt;iframe width="640" height="360" src="[site:url]asset/player/[asset_id]" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+</textarea>
+</div></form>
+</p>';
+  $handler->display->display_options['fields']['share']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['share']['element_default_classes'] = FALSE;
   $handler->display->display_options['path'] = 'asset/detail';
 
   /* Display: Block */
@@ -255,6 +371,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -356,6 +477,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -468,6 +594,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -579,6 +710,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
   $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = FALSE;
@@ -692,6 +828,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
@@ -816,6 +957,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
@@ -878,7 +1024,6 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['enabled'] = FALSE;
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['exposed_form'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -1140,6 +1285,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 1;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
   $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = FALSE;
@@ -1303,7 +1453,16 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['player']['field'] = 'player';
   $handler->display->display_options['fields']['player']['label'] = '';
   $handler->display->display_options['fields']['player']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['player']['player_width'] = '942';
+  $handler->display->display_options['fields']['player']['player_height'] = '942';
   $handler->display->display_options['fields']['player']['player_autostart'] = '0';
+  /* Field: MediaMosa: Playback range */
+  $handler->display->display_options['fields']['playback_range']['id'] = 'playback_range';
+  $handler->display->display_options['fields']['playback_range']['table'] = 'mediamosa_asset_get';
+  $handler->display->display_options['fields']['playback_range']['field'] = 'playback_range';
+  $handler->display->display_options['fields']['playback_range']['label'] = '';
+  $handler->display->display_options['fields']['playback_range']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['playback_range']['element_label_colon'] = FALSE;
 
   /* Display: Asset Page */
   $handler = $view->new_display('page', 'Asset Page', 'page');

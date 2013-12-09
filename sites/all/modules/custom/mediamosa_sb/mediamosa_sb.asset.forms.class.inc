@@ -524,6 +524,20 @@ class mediamosa_sb_asset_forms {
   }
 
   /**
+   * Implements hook_form_validate().
+   */
+  static public function access_form_validate($form, $form_state) {
+
+    if ($form_state['values']['choose'] == 'Protected') {
+      if (($form_state['values']['acl_domain'] == '') &&
+        ($form_state['values']['acl_realm'] == '') &&
+        ($form_state['values']['acl_user'] == '')) {
+        form_set_error('acl_domain', 'When choosing protected, at least one access control must be given.');
+      }
+    }
+  }
+
+  /**
    * The Transcode form.
    *
    * @param array $values

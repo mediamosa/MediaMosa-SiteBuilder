@@ -6,8 +6,6 @@
  * A Very much tomed down version of views-view.tpl.php.
  *
  * @ingroup views_templates
- */
-?>
 <style type="text/css">
   html {
     overflow-y: hidden;
@@ -16,6 +14,8 @@
     height: inherit !important;
   }
 </style>
+ */
+?>
 <?php if ($rows): ?>
 <div class="view-content">
 <?php print $rows; ?>
