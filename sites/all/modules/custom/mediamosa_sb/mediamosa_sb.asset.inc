@@ -41,7 +41,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     }
   }
   // Try to create upload ticket.
-  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'transcode' => $transcodes ? $transcodes : array()));
+  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'isprivate' => TRUE, 'transcode' => $transcodes ? $transcodes : array()));
   if (!$result) {
     $form['upload'] = array(
       '#markup' => t('Unable to upload to MediaMosa; @reason', array('@reason' => mediamosa_ck::get_connector_last_error_text())),
@@ -62,6 +62,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#type' => 'item',
     '#markup' => '<input type="file" id="edit-file-upload" name="file" size="40" class="form-file" />',
     '#title' => t('Upload your file'),
+    '#required' => TRUE,
     '#description' => variable_get('mediamosa_sb_upload_description', 'Maximum size of 2.0GB. <br />Allowed file types: avi,mov,flv,mp4,mpeg.'),
   );
 
@@ -101,12 +102,29 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#value' => t('Upload'),
   );
 
+  // Add javascript to disable double click.
+  if (!isset($form['#attached']['js'])) {
+    $form['#attached']['js'] = array();
+  }
+  $form['#attached']['js'][drupal_get_path('module', 'mediamosa_sb') . '/mediamosa_sb.js'] = array(
+    'type' => 'file',
+    'weight' => 10,
+  );
+
+  $form['#validate'][] = array('mediamosa_sb_asset_upload_form_validate');
+
   $form['#action'] = $upload_url;
 
   // Merge with other options in for upload (turned off for now).
   $form = array_merge(module_invoke_all('media_mediamosa_upload_collect'), $form);
 
   return $form;
+}
+
+/**
+ * Validation for upload form.
+ */
+function mediamosa_sb_asset_upload_form_validate($form, &$form_state) {
 }
 
 /**
@@ -197,6 +215,24 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
 }
 
 /**
+ * Implements hook_form_validate().
+ */
+function mediamosa_sb_asset_upload_steps_form_validate($form, &$form_state) {
+
+  switch ($form_state['step']) {
+    case 1:
+      // Basic information validation checks.
+      break;
+
+    case 2:
+      // Access control validation checks.
+      mediamosa_sb_asset_forms::access_form_validate($form, $form_state);
+      break;
+  }
+}
+
+
+/**
  * Submit handler for the "cancel" button.
  */
 function _mediamosa_sb_asset_upload_steps_cancel_submit($form, &$form_state) {
@@ -220,6 +256,11 @@ function _mediamosa_sb_asset_upload_steps_cancel_submit($form, &$form_state) {
  */
 function _mediamosa_sb_asset_upload_steps_next_submit($form, &$form_state) {
   $form_state['step_information'][$form_state['step']]['stored_values'] = $form_state['input'];
+
+  // Run function for posting metadata to MediaMosa.
+  if ($form_state['step'] == 1) {
+    mediamosa_sb::submit_info($form_state['step_information'][1]['stored_values'], $form_state['asset_id']);
+  }
 
   if ($form_state['step'] < count($form_state['step_information'])) {
     $form_state['step']++;
@@ -302,6 +343,9 @@ function mediamosa_sb_asset_upload_step_media_form($form, &$form_state) {
  * Validation for metadata form.
  */
 function _mediamosa_sb_asset_upload_steps_finish_validation($form, &$form_state) {
+
+  form_set_error('still_start_time', t('Time for still generation must be in format MM:SS.'));
+
   // Run function for validation transcode jobs / stills to MediaMosa.
   mediamosa_sb::validate_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id']);
 }
@@ -320,9 +364,6 @@ function _mediamosa_sb_asset_upload_steps_finish_submit($form, &$form_state) {
 
   // Run function for posting access rules to MediaMosa.
   mediamosa_sb::submit_access($form_state['step_information'][2]['stored_values'], $form_state['asset_id']);
-
-  // Run function for posting transcode jobs / stills to MediaMosa.
-  // mediamosa_sb::submit_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id'], TRUE);
 
   // Go to view page.
   drupal_goto(mediamosa_sb::get_asset_detail_url($form_state['asset_id']));
@@ -415,7 +456,7 @@ function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
 /**
  * Validation for asset info page.
  */
-function mediamosa_sb_asset_edit_metadata_form_validation($form, &$form_state) {
+function mediamosa_sb_asset_edit_metadata_form_validate($form, &$form_state) {
 }
 
 /**
@@ -516,7 +557,8 @@ function mediamosa_sb_asset_edit_access_form($form, $form_state, $asset_id) {
 /**
  * Validation for asset access page.
  */
-function mediamosa_sb_asset_edit_access_form_validation($form, &$form_state) {
+function mediamosa_sb_asset_edit_access_form_validate($form, &$form_state) {
+  mediamosa_sb_asset_forms::access_form_validate($form, $form_state);
 }
 
 /**
@@ -692,7 +734,7 @@ function mediamosa_sb_asset_transfer_confirm_form($form, &$form_state, $asset_id
   // Owner check.
   $owner_id = mediamosa_sb::get_owner_asset($asset);
   $user_id = mediamosa_ck::session_user_id();
-  if ($user_id != $owner_id) {
+  if (($user_id != $owner_id) && (!user_access('administer site configuration'))) {
     drupal_set_message(t('You need ownership in order to transfer.'), 'warning');
     return FALSE;
   }
@@ -708,9 +750,10 @@ function mediamosa_sb_asset_transfer_confirm_form($form, &$form_state, $asset_id
   );
 
   $form['introduction'] = array(
-    '#markup' => t('You can transfer the ownership of this asset. You need to enter the
-e-mail address of the person to transfer the asset to. The email address must be
-known and you will need permission of the new owner. This action can not be undone.'),
+    '#markup' => t('You can transfer the ownership of this asset. You need to enter the e-mail
+address of the person to transfer the asset to. The email address must be known
+in this application and you will need permission of the new owner. This action
+cannot be undone.'),
   );
 
   $form['new_owner_id'] = array(
@@ -754,20 +797,16 @@ function mediamosa_sb_asset_mail($key, &$message, $params) {
   switch ($key) {
     case 'transfer_message':
       $langcode = $message['language']->language;
-      $message['subject'] = t('Transfer bestand');
-      $url = $base_url . '/asset/' . check_plain($params['asset_id']);
-      $message['body'][] = t('Je ontvangt deze mail omdat er een video-of audio bestand aan jou is
-overgedragen door een collega medewerker of -student.
+      $message['subject'] = t('Transfer media');
+      $url = $base_url . '/asset/detail/' . check_plain($params['asset_id']);
+      $message['body'][] = t('You receive this email because there is a video- or audio file transferred to
+you.
 
 !asset_link
 
-Daarmee ben je vanaf nu eigenaar van dit bestand. Je hebt nu de rechten om dit
-bestand te bewerken, afscherming en metadata te veranderen, het over te dragen
-aan iemand anders of het bestand te verwijderen. Mocht je naar aanleiding van
-deze mail vragen hebben, stuur dan een mail naar tilburgutube@uvt.nl. Wij
-nemen zo spoedig mogelijk contact met je op.', array(
-        '!asset_link' => l($url, $url, array('absolute' => TRUE)))
-      );
+You are now the owner of this file. You have permission to edit the
+file, to transfer it to another user or to delete the file.', array(
+        '!asset_link' => l($url, $url, array('absolute' => TRUE))));
       break;
   }
 }
