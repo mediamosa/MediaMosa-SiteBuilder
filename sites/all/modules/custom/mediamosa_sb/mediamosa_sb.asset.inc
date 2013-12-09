@@ -214,9 +214,12 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
   return $form;
 }
 
+/**
+ * Implements hook_form_validate().
+ */
 function mediamosa_sb_asset_upload_steps_form_validate($form, &$form_state) {
 
-  switch($form_state['step']) {
+  switch ($form_state['step']) {
     case 1:
       // Basic information validation checks.
       break;
@@ -224,7 +227,7 @@ function mediamosa_sb_asset_upload_steps_form_validate($form, &$form_state) {
     case 2:
       // Access control validation checks.
       mediamosa_sb_asset_forms::access_form_validate($form, $form_state);
-    break;
+      break;
   }
 }
 
@@ -254,6 +257,11 @@ function _mediamosa_sb_asset_upload_steps_cancel_submit($form, &$form_state) {
 function _mediamosa_sb_asset_upload_steps_next_submit($form, &$form_state) {
   $form_state['step_information'][$form_state['step']]['stored_values'] = $form_state['input'];
 
+  // Run function for posting metadata to MediaMosa.
+  if ($form_state['step'] == 1) {
+    mediamosa_sb::submit_info($form_state['step_information'][1]['stored_values'], $form_state['asset_id']);
+  }
+
   if ($form_state['step'] < count($form_state['step_information'])) {
     $form_state['step']++;
 
@@ -281,9 +289,6 @@ function mediamosa_sb_asset_upload_step_metadata_form($form, $form_state) {
 
   // Set asset_id in case we need it.
   $values = array_merge(array('asset_id' => $form_state['asset_id']), $form_state['values']);
-
-  // Add a warning on this page.
-  drupal_add_js('jQuery(document).ready(function($) {$(window).bind("beforeunload", function() {return "";} );});', 'inline');
 
   return mediamosa_sb_asset_forms::info_form($values, $form_state['asset_id']);
 }
@@ -341,7 +346,6 @@ function _mediamosa_sb_asset_upload_steps_finish_validation($form, &$form_state)
 
   form_set_error('still_start_time', t('Time for still generation must be in format MM:SS.'));
 
-
   // Run function for validation transcode jobs / stills to MediaMosa.
   mediamosa_sb::validate_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id']);
 }
@@ -360,9 +364,6 @@ function _mediamosa_sb_asset_upload_steps_finish_submit($form, &$form_state) {
 
   // Run function for posting access rules to MediaMosa.
   mediamosa_sb::submit_access($form_state['step_information'][2]['stored_values'], $form_state['asset_id']);
-
-  // Run function for posting transcode jobs / stills to MediaMosa.
-  // mediamosa_sb::submit_media($form_state['step_information'][3]['stored_values'], $form_state['asset_id'], TRUE);
 
   // Go to view page.
   drupal_goto(mediamosa_sb::get_asset_detail_url($form_state['asset_id']));
