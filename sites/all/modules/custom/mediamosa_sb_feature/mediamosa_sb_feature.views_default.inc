@@ -372,6 +372,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -473,6 +478,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -585,6 +595,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
@@ -696,6 +711,11 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
   $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = FALSE;
@@ -809,6 +829,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
@@ -933,6 +958,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
@@ -995,7 +1025,6 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['enabled'] = FALSE;
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['exposed_form'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
