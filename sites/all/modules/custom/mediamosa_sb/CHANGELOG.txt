@@ -1,4 +1,4 @@
-MediaMosa SiteBuilder 7.x-3.5-dev
+MediaMosa SiteBuilder 7.x-1.3-dev
 ---------------------------------
 - /asset/player/[id] supports ?t parameter. (?t=5,15)
 - added /asset/player/[id] option.
