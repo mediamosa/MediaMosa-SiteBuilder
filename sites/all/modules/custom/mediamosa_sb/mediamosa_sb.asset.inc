@@ -282,6 +282,9 @@ function mediamosa_sb_asset_upload_step_metadata_form($form, $form_state) {
   // Set asset_id in case we need it.
   $values = array_merge(array('asset_id' => $form_state['asset_id']), $form_state['values']);
 
+  // Add a warning on this page.
+  drupal_add_js('jQuery(document).ready(function($) {$(window).bind("beforeunload", function() {return "";} );});', 'inline');
+
   return mediamosa_sb_asset_forms::info_form($values, $form_state['asset_id']);
 }
 
