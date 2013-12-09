@@ -132,7 +132,6 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-
   /* Field: MediaMosa: Asset ID */
   $handler->display->display_options['fields']['asset_id']['id'] = 'asset_id';
   $handler->display->display_options['fields']['asset_id']['table'] = 'mediamosa_asset_get';
@@ -713,7 +712,7 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -831,7 +830,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -960,7 +959,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_granted'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
