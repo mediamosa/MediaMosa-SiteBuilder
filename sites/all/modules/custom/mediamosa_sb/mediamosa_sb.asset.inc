@@ -17,7 +17,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
 
   // Set the title.
   $form['title'] = array(
-    '#title' => t('Upload a new video'),
+    '#title' => t('Upload a new media item'),
     '#theme' => 'mediamosa_sb_title_header',
     '#options' => array(
       'current' => 1,
@@ -164,7 +164,7 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
 
   // Set the title.
   $form['title'] = array(
-    '#title' => t('Upload a new video'),
+    '#title' => t('Upload a new media item'),
     '#theme' => 'mediamosa_sb_title_header',
     '#options' => array(
       'current' => $step + 1,

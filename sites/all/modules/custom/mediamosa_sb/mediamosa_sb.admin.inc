@@ -35,7 +35,7 @@ function mediamosa_sb_configuration_form() {
   $form['upload']['mediamosa_sb_is_visible'] = array(
     '#type' => 'checkbox',
     '#title' => t('Default visible in lists (step 3).'),
-    '#description' => 'If checked, the video will by default be visible on the frontpage (new/popular).',
+    '#description' => 'If checked, the media item will by default be visible on the frontpage (new/popular).',
     '#default_value' => variable_get('mediamosa_sb_is_visible', TRUE),
   );
 
