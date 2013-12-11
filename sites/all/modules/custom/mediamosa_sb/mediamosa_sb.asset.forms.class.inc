@@ -496,7 +496,7 @@ class mediamosa_sb_asset_forms {
     $form['visibility']['is_visible'] = array(
       '#type' => 'checkbox',
       '#title' => t('Visible in lists'),
-      '#description' => t('If checked, the video will be visible on the frontpage (new/popular).'),
+      '#description' => t('If checked, the media item will be visible on the frontpage (new/popular).'),
       '#required' => FALSE,
       '#default_value' => self::default_value($values, 'is_visible', TRUE),
     );
@@ -577,7 +577,7 @@ class mediamosa_sb_asset_forms {
 
     $form['transcode'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Currently active video profiles'),
+      '#title' => t('Currently active media profiles'),
     );
 
     $xml = MediaMosaSbConnectorWrapper::get_transcode_profiles();

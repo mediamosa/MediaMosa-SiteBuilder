@@ -59,7 +59,7 @@ function mediamosa_sb_menu() {
     'title' => 'Upload',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mediamosa_sb_asset_upload_form'),
-    'description' => 'Upload a new video.',
+    'description' => 'Upload new media.',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'mediamosa_sb.asset.inc',
     'access callback' => '_mediamosa_sb_may_upload',
@@ -71,7 +71,7 @@ function mediamosa_sb_menu() {
     'page arguments' => array('mediamosa_sb_asset_upload_steps_form', 3, 4),
     'access callback' => '_mediamosa_sb_access_asset_edit',
     'access arguments' => array(3),
-    'description' => 'Edit the properties of the video',
+    'description' => 'Edit the properties of the media',
     'type' => MENU_CALLBACK,
     'visible' => FALSE,
     'file' => 'mediamosa_sb.asset.inc',
@@ -107,7 +107,7 @@ function mediamosa_sb_menu() {
   );
 
   $items['asset/edit/%/media'] = array(
-    'title' => 'Video',
+    'title' => 'Media item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mediamosa_sb_asset_edit_media_form', 2),
     'access callback' => 'user_access',
@@ -315,7 +315,7 @@ function mediamosa_sb_mediamosa_collection_view_object_alter($object) {
  */
 function mediamosa_sb_search_info() {
   return array(
-    'title' => 'Videos',
+    'title' => 'Media items',
   );
 }
 
