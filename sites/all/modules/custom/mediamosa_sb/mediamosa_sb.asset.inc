@@ -41,7 +41,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     }
   }
   // Try to create upload ticket.
-  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'isprivate' => TRUE, 'transcode' => $transcodes ? $transcodes : array()));
+  $result = MediaMosaSbConnectorWrapper::create_upload_ticket(array('create_still' => TRUE, 'transcode' => $transcodes ? $transcodes : array()));
   if (!$result) {
     $form['upload'] = array(
       '#markup' => t('Unable to upload to MediaMosa; @reason', array('@reason' => mediamosa_ck::get_connector_last_error_text())),
