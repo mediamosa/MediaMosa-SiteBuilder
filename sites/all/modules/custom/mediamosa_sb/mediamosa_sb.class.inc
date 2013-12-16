@@ -511,12 +511,16 @@ class mediamosa_sb {
         // Build name.
         $prefixed_name = $prefix . '_' . $name;
 
-        if (!isset($values[$prefixed_name]) || $values[$prefixed_name] === '') {
+        if (!array_key_exists($prefixed_name, $values)) {
           continue;
         }
 
         // Set.
-        $options[$name] = $values[$prefixed_name];
+        if (is_null($values[$prefixed_name])) {
+          $options[$name] = '';
+        } else {
+          $options[$name] = $values[$prefixed_name];
+        }
       }
     }
 
