@@ -237,7 +237,7 @@ function mediamosa_sb_asset_upload_steps_form_validate($form, &$form_state) {
  */
 function _mediamosa_sb_asset_upload_steps_cancel_submit($form, &$form_state) {
   // Go back to start.
-  drupal_goto('mediamosa/upload');
+  drupal_goto('asset/upload');
 }
 
 /**
