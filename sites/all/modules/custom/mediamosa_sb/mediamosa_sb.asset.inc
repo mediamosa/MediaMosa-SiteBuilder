@@ -176,7 +176,7 @@ function mediamosa_sb_asset_upload_steps_form($form, &$form_state, $asset_id, $m
 
   // Call the function named in $form_state['step_information'] to get the
   // form elements to display for this step.
-  $form['data'] = $form_state['step_information'][$step]['form']($form, $form_state);
+  $form += $form_state['step_information'][$step]['form']($form, $form_state);
 
   // Show the Next button only if there are more steps defined.
   if ($step < count($form_state['step_information'])) {
@@ -281,7 +281,7 @@ function _mediamosa_sb_asset_upload_steps_next_submit($form, &$form_state) {
 /**
  * The info (metadata) step form.
  */
-function mediamosa_sb_asset_upload_step_metadata_form($form, $form_state) {
+function mediamosa_sb_asset_upload_step_metadata_form($form, &$form_state) {
   // Set default.
   $form_state += array(
     'values' => array(),
@@ -290,7 +290,19 @@ function mediamosa_sb_asset_upload_step_metadata_form($form, $form_state) {
   // Set asset_id in case we need it.
   $values = array_merge(array('asset_id' => $form_state['asset_id']), $form_state['values']);
 
-  return mediamosa_sb_asset_forms::info_form($values, $form_state['asset_id']);
+  return mediamosa_sb_asset_forms::info_form($values, $form_state, $form_state['asset_id']);
+}
+
+function mediamosa_sb_asset_edit_form_add_field_callback($form, &$form_state) {
+  $name = $form_state['triggering_element']['#name'];
+  $split = explode('_', $name);
+  return $form['metadata']['additional'][$split[0]][$name];
+}
+
+function mediamosa_sb_asset_edit_form_add_field($form, &$form_state) {
+  $name = $form_state['triggering_element']['#name'];
+  $form_state[$name.'_num']++;
+  $form_state['rebuild'] = TRUE;
 }
 
 /**
@@ -409,7 +421,18 @@ function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
     // Loop through fields.
     foreach ($asset->xpath('items/item/' . $metadata_field['xpath']) as $metadata) {
       foreach ($metadata as $name => $value) {
-        $values[$prefix . '_' . (string) $name] = (string) $value;
+        $full_name = $prefix . '_' . (string) $name;
+        if (empty($values[$full_name])) {
+          // first time we see this value
+          $values[$full_name] = (string) $value;
+        } else {
+          if (!is_array($values[$full_name])) {
+            // convert to array to accept multiple values
+            $values[$full_name] = array($values[$full_name]);
+          }
+          // and add the extra value to the array
+          $values[$full_name][] = (string) $value;
+        }
       }
     }
   }
@@ -420,7 +443,7 @@ function mediamosa_sb_asset_edit_metadata_form($form, &$form_state, $asset_id) {
   }
 
   // Get the form.
-  $form = mediamosa_sb_asset_forms::info_form($values, $asset_id);
+  $form = mediamosa_sb_asset_forms::info_form($values, $form_state, $asset_id);
 
   $form['asset_id'] = array(
     '#type' => 'value',
