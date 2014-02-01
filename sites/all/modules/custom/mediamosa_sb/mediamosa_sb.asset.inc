@@ -495,7 +495,7 @@ function mediamosa_sb_asset_edit_metadata_form_submit($form, $form_state) {
   switch ($op) {
     case t('Save'):
       // Run function for posting metadata to MediaMosa.
-      mediamosa_sb::submit_info($form_state['input'], $asset_id);
+      mediamosa_sb::submit_info($form_state['values'], $asset_id);
       break;
 
     case t('Delete'):
