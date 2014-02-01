@@ -180,27 +180,7 @@ class mediamosa_sb_asset_forms {
 
     $form['additional']['dc'] += static::create_multivalue_field('dc_subject', $values, $form_state);
 
-    // Provide a default date in the format YYYY-MM-DD HH:MM:SS.
-    $date = '';
-
-    // Provide a format using regular PHP format parts (see documentation on
-    // php.net).  If you're using a date_select, the format will control the
-    // order of the date parts in the selector, rearrange them any way you
-    // like. Parts left out of the format will not be displayed to the user.
-    $format = 'Y-m-d';
-
-    $form['additional']['dc']['dc_date'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Date'),
-      '#description' => t('Date of the resource'),
-      '#required' => FALSE,
-      '#default_value' => $date,
-      '#date_format' => $format,
-      '#size' => 40,
-      // See for other attributes in date_api_elements.inc.
-      '#date_label_position' => 'within',
-      '#default_value' => self::default_value($values, 'dc_date'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_date', $values, $form_state);
 
     $form['additional']['dc'] += static::create_multivalue_field('dc_identifier', $values, $form_state);
 
