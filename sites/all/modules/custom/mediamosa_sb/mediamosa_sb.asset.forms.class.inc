@@ -27,7 +27,7 @@ class mediamosa_sb_asset_forms {
    * @return array
    *   Returns the form array.
    */
-  static public function info_form($values, $asset_id) {
+  static public function info_form($values, &$form_state, $asset_id) {
     $form = array();
 
     // Add basic information form.
@@ -37,7 +37,7 @@ class mediamosa_sb_asset_forms {
     $form['collections'] = self::info_collections_form($values, $asset_id);
 
     // Add metadata form.
-    $form['metadata'] = self::info_metadata_form($values, $asset_id);
+    $form['metadata'] = self::info_metadata_form($values, $form_state);
 
     return $form;
   }
@@ -145,7 +145,7 @@ class mediamosa_sb_asset_forms {
    * @return array
    *   Returns the form array.
    */
-  static protected function info_metadata_form($values) {
+  static protected function info_metadata_form($values, &$form_state) {
     $form = array();
 
     $form['additional'] = array(
@@ -160,22 +160,11 @@ class mediamosa_sb_asset_forms {
       '#collapsed' => TRUE,
     );
 
-    $form['additional']['dc']['dc_type'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Type'),
-      '#required' => FALSE,
-      '#description' => t('The nature or genre of the resource e.g. Image, MovingImage'),
-      '#default_value' => self::default_value($values, 'dc_type'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_type', $values, $form_state);
 
-    $form['additional']['dc']['dc_format'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Format'),
-      '#required' => FALSE,
-      '#description' => t('The file format, physical medium e.g. video, image'),
-      '#default_value' => self::default_value($values, 'dc_format'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_format', $values, $form_state);
 
+    // Language can only have a single value
     $form['additional']['dc']['dc_language'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
@@ -185,99 +174,25 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'dc_language'),
     );
 
-    $form['additional']['dc']['dc_creator'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Creator'),
-      '#required' => FALSE,
-      '#description' => t('Responsible for making the resource'),
-      '#default_value' => self::default_value($values, 'dc_creator'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_creator', $values, $form_state);
 
-    $form['additional']['dc']['dc_publisher'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Publisher'),
-      '#required' => FALSE,
-      '#description' => t('Responsible for making the resource available'),
-      '#default_value' => self::default_value($values, 'dc_publisher'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_publisher', $values, $form_state);
 
-    $form['additional']['dc']['dc_subject'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Subject'),
-      '#required' => FALSE,
-      '#description' => t('The topic of the resource'),
-      '#default_value' => self::default_value($values, 'dc_subject'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_subject', $values, $form_state);
 
-    // Provide a default date in the format YYYY-MM-DD HH:MM:SS.
-    $date = '';
+    $form['additional']['dc'] += static::create_multivalue_field('dc_date', $values, $form_state);
 
-    // Provide a format using regular PHP format parts (see documentation on
-    // php.net).  If you're using a date_select, the format will control the
-    // order of the date parts in the selector, rearrange them any way you
-    // like. Parts left out of the format will not be displayed to the user.
-    $format = 'Y-m-d';
+    $form['additional']['dc'] += static::create_multivalue_field('dc_identifier', $values, $form_state);
 
-    $form['additional']['dc']['dc_date'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Date'),
-      '#description' => t('Date of the resource'),
-      '#required' => FALSE,
-      '#default_value' => $date,
-      '#date_format' => $format,
-      '#size' => 40,
-      // See for other attributes in date_api_elements.inc.
-      '#date_label_position' => 'within',
-      '#default_value' => self::default_value($values, 'dc_date'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_source', $values, $form_state);
 
-    $form['additional']['dc']['dc_identifier'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Indentifier'),
-      '#required' => FALSE,
-      '#description' => t('An unambiguous reference to the resource within a given context'),
-      '#default_value' => self::default_value($values, 'dc_identifier'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_relation', $values, $form_state);
 
-    $form['additional']['dc']['dc_source'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Source'),
-      '#required' => FALSE,
-      '#description' => t('A related resource from which the described resource is derived'),
-      '#default_value' => self::default_value($values, 'dc_source'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_coverage_temporal', $values, $form_state);
 
-    $form['additional']['dc']['dc_relation'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Relation'),
-      '#required' => FALSE,
-      '#description' => t('A related resource from which the described resource is derived'),
-      '#default_value' => self::default_value($values, 'dc_relation'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_coverage_spatial', $values, $form_state);
 
-    $form['additional']['dc']['dc_coverage_temporal'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Temporal coverage'),
-      '#required' => FALSE,
-      '#description' => t('The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant'),
-      '#default_value' => self::default_value($values, 'dc_coverage_temporal'),
-    );
-
-    $form['additional']['dc']['dc_coverage_spatial'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Spatial coverage'),
-      '#required' => FALSE,
-      '#description' => t('The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant'),
-      '#default_value' => self::default_value($values, 'dc_coverage_spatial'),
-    );
-
-    $form['additional']['dc']['dc_rights'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Rights'),
-      '#required' => FALSE,
-      '#description' => t('Information about rights held in and over the resource.'),
-      '#default_value' => self::default_value($values, 'dc_rights'),
-    );
+    $form['additional']['dc'] += static::create_multivalue_field('dc_rights', $values, $form_state);
 
     $form['additional']['qdc'] = array(
       '#type' => 'fieldset',
@@ -286,104 +201,217 @@ class mediamosa_sb_asset_forms {
       '#collapsed' => TRUE,
     );
 
-    $form['additional']['qdc']['qdc_title_alternative'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Alternative title'),
-      '#required' => FALSE,
-      '#description' => t('Alternative title of the resource'),
-      '#default_value' => self::default_value($values, 'qdc_title_alternative'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_title_alternative', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_description_abstract'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Abstract description'),
-      '#required' => FALSE,
-      '#rows' => 5,
-      '#description' => t('An abstract description of the resource'),
-      '#default_value' => self::default_value($values, 'qdc_description_abstract'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_description_abstract', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_created'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Created'),
-      '#description' => t('Date of creation of the resource.'),
-      '#required' => FALSE,
-      '#default_value' => $date,
-      '#date_format' => $format,
-      '#size' => 40,
-      '#date_label_position' => 'within',
-      '#default_value' => self::default_value($values, 'qdc_created'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_created', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_issued'] = array(
-      '#type' => 'date_popup',
-      '#title' => t('Issued'),
-      '#description' => t('Date of formal issuance (e.g., publication) of the resource'),
-      '#required' => FALSE,
-      '#default_value' => $date,
-      '#date_format' => $format,
-      '#size' => 40,
-      '#date_label_position' => 'within',
-      '#default_value' => self::default_value($values, 'qdc_issued'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_issued', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_hasformat'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Has format'),
-      '#required' => FALSE,
-      '#description' => t('The described resource pre-existed the referenced resource'),
-      '#default_value' => self::default_value($values, 'qdc_hasformat'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_hasformat', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_isformat'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Is format of'),
-      '#required' => FALSE,
-      '#description' => t('The described resource is the same intellectual content of the referenced resource, but presented in another format'),
-      '#default_value' => self::default_value($values, 'qdc_isformat'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_isformatof', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_format_medium'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Medium'),
-      '#required' => FALSE,
-      '#description' => t('The material or physical carrier of the resource'),
-      '#default_value' => self::default_value($values, 'qdc_format_medium'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_format_medium', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_format_extent'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Extent'),
-      '#required' => FALSE,
-      '#description' => t('The size or duration of the resource'),
-      '#default_value' => self::default_value($values, 'qdc_format_extent'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_format_extent', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_license'] = array(
-      '#type' => 'textfield',
-      '#title' => t('License'),
-      '#required' => FALSE,
-      '#description' => t('License of the resource'),
-      '#default_value' => self::default_value($values, 'qdc_license'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_license', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_rightsholder'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Rights'),
-      '#required' => FALSE,
-      '#description' => t('Rights holder of the resource'),
-      '#default_value' => self::default_value($values, 'qdc_rightsholder'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_rightsholder', $values, $form_state);
 
-    $form['additional']['qdc']['qdc_isreferencedby'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Is referenced by'),
-      '#required' => FALSE,
-      '#description' => t('The described resource is referenced, cited, or otherwise pointed to by the referenced resource.'),
-      '#default_value' => self::default_value($values, 'qdc_isreferencedby'),
-    );
+    $form['additional']['qdc'] += static::create_multivalue_field('qdc_isreferencedby', $values, $form_state);
 
     return $form;
+  }
+
+  public static function create_multivalue_field($name, $values, &$form_state) {
+    $default_values = array();
+    if (isset($values[$name])) {
+      if (is_array($values[$name])) {
+        $default_values = $values[$name];
+      } else {
+        $default_values[] = $values[$name];
+      }
+    }
+
+    $field = array();
+    $field[$name] = array(
+      '#prefix' => '<div id="form-multivalue-'.$name.'-wrapper" class="form-multivalue-wrapper">',
+      '#suffix' => '</div>',
+      '#tree' => TRUE,
+    );
+
+    if (empty($form_state[$name.'_num'])) {
+      $form_state[$name.'_num'] = count($default_values) ?: 1;
+    }
+
+    for ($i = 0; $i < $form_state[$name.'_num']; $i++) {
+      $field[$name][$i] = array();
+      $field[$name][$i] += static::multivalue_field_properties($name);
+      // only the first field must have the title
+      if ($i != 0) {
+        unset($field[$name][$i]['#title']);
+        $field[$name][$i]['#title'] = '&nbsp;';
+      }
+      if ($i != $form_state[$name.'_num']-1) {
+        unset($field[$name][$i]['#description']);
+      }
+      if (isset($default_values[$i])) {
+        $field[$name][$i]['#default_value'] = $default_values[$i];
+      }
+    }
+
+    $field[$name.'_add'] = array(
+      '#type' => 'submit',
+      '#value' => '+',
+      '#submit' => array('mediamosa_sb_asset_edit_form_add_field'),
+      '#limit_validation_errors' => array(),
+      '#name' => $name,
+      '#ajax' => array(
+        'callback' => 'mediamosa_sb_asset_edit_form_add_field_callback',
+        'wrapper' => 'form-multivalue-'.$name.'-wrapper',
+      ),
+    );
+
+    return $field;
+  }
+
+  protected static function multivalue_field_properties($name) {
+    $properties = array(
+      '#type' => 'textfield',
+      '#required' => FALSE,
+    );
+    switch ($name) {
+      case 'dc_type':
+        $properties['#title'] = t('Type');
+        $properties['#description'] = t('The nature or genre of the resource e.g. Image, MovingImage');
+        break;
+
+      case 'dc_format':
+        $properties['#title'] = t('Format');
+        $properties['#description'] = t('The file format, physical medium e.g. video, image');
+        break;
+
+      case 'dc_creator':
+        $properties['#title'] = t('Creator');
+        $properties['#description'] = t('Responsible for making the resource');
+        break;
+
+      case 'dc_publisher':
+        $properties['#title'] = t('Publisher');
+        $properties['#description'] = t('Responsible for making the resource available');
+        break;
+
+      case 'dc_subject':
+        $properties['#title'] = t('Subject');
+        $properties['#description'] = t('The topic of the resource');
+        break;
+
+      case 'dc_date':
+        $properties['#title'] = t('Date');
+        $properties['#description'] = t('Date of the resource');
+        $properties['#type'] = 'date_popup';
+        $properties['#date_format'] = 'Y-m-d';
+        $properties['#size'] = 40;
+        $properties['#date_label_position'] = 'within';
+        break;
+
+      case 'dc_identifier':
+        $properties['#title'] = t('Identifier');
+        $properties['#description'] = t('An unambiguous reference to the resource within a given context');
+        break;
+
+      case 'dc_source':
+        $properties['#title'] = t('Source');
+        $properties['#description'] = t('A related resource from which the described resource is derived');
+        break;
+
+      case 'dc_relation':
+        $properties['#title'] = t('Relation');
+        $properties['#description'] = t('A related resource from which the described resource is derived');
+        break;
+
+      case 'dc_coverage_temporal':
+        $properties['#title'] = t('Temporal coverage');
+        $properties['#description'] = t('The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant');
+        break;
+
+      case 'dc_coverage_spatial':
+        $properties['#title'] = t('Spatial coverage');
+        $properties['#description'] = t('The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant');
+        break;
+
+      case 'dc_rights':
+        $properties['#title'] = t('Rights');
+        $properties['#description'] = t('Information about rights held in and over the resource.');
+        break;
+
+      case 'qdc_title_alternative':
+        $properties['#title'] = t('Alternative title');
+        $properties['#description'] = t('Alternative title of the resource');
+        break;
+
+      case 'qdc_description_abstract':
+        $properties['#title'] = t('Abstract description');
+        $properties['#description'] = t('An abstract description of the resource');
+        break;
+
+      case 'qdc_hasformat':
+        $properties['#title'] = t('Has format');
+        $properties['#description'] = t('The described resource pre-existed the referenced resource');
+        break;
+
+      case 'qdc_isformatof':
+        $properties['#title'] = t('Is format of');
+        $properties['#description'] = t('The described resource is the same intellectual content of the referenced resource, but presented in another format');
+        break;
+
+      case 'qdc_format_medium':
+        $properties['#title'] = t('Medium');
+        $properties['#description'] = t('The material or physical carrier of the resource');
+        break;
+
+      case 'qdc_format_extent':
+        $properties['#title'] = t('Extent');
+        $properties['#description'] = t('The size or duration of the resource');
+        break;
+
+      case 'qdc_license':
+        $properties['#title'] = t('License');
+        $properties['#description'] = t('License of the resource');
+        break;
+
+      case 'qdc_rightsholder':
+        $properties['#title'] = t('Rights');
+        $properties['#description'] = t('Rights holder of the resource');
+        break;
+
+      case 'qdc_isreferencedby':
+        $properties['#title'] = t('Is referenced by');
+        $properties['#description'] = t('The described resource is referenced, cited, or otherwise pointed to by the referenced resource.');
+        break;
+
+      case 'qdc_created':
+        $properties['#title'] = t('Created');
+        $properties['#description'] = t('Date of creation of the resource.');
+        $properties['#type'] = 'date_popup';
+        $properties['#date_format'] = 'Y-m-d';
+        $properties['#size'] = 40;
+        $properties['#date_label_position'] = 'within';
+        break;
+
+      case 'qdc_issued':
+        $properties['#title'] = t('Issued');
+        $properties['#description'] = t('Date of formal issuance (e.g., publication) of the resource');
+        $properties['#type'] = 'date_popup';
+        $properties['#date_format'] = 'Y-m-d';
+        $properties['#size'] = 40;
+        $properties['#date_label_position'] = 'within';
+        break;
+    }
+    return $properties;
   }
 
   /**
@@ -496,7 +524,7 @@ class mediamosa_sb_asset_forms {
     $form['visibility']['is_visible'] = array(
       '#type' => 'checkbox',
       '#title' => t('Visible in lists'),
-      '#description' => t('If checked, the video will be visible on the frontpage (new/popular).'),
+      '#description' => t('If checked, the media item will be visible on the frontpage (new/popular).'),
       '#required' => FALSE,
       '#default_value' => self::default_value($values, 'is_visible', TRUE),
     );
@@ -577,7 +605,7 @@ class mediamosa_sb_asset_forms {
 
     $form['transcode'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Currently active video profiles'),
+      '#title' => t('Currently active media profiles'),
     );
 
     $xml = MediaMosaSbConnectorWrapper::get_transcode_profiles();

@@ -192,11 +192,15 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['metadata_dc']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['metadata_dc']['field'] = 'metadata_dc';
   $handler->display->display_options['fields']['metadata_dc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
+  $handler->display->display_options['fields']['metadata_dc']['metadata_implode'] = 1;
+  $handler->display->display_options['fields']['metadata_dc']['metadata_implode_string'] = '\\n';
   /* Field: MediaMosa: Metadata block for Qualified Dublin Core */
   $handler->display->display_options['fields']['metadata_qdc']['id'] = 'metadata_qdc';
   $handler->display->display_options['fields']['metadata_qdc']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['metadata_qdc']['field'] = 'metadata_qdc';
   $handler->display->display_options['fields']['metadata_qdc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
+  $handler->display->display_options['fields']['metadata_qdc']['metadata_implode'] = 1;
+  $handler->display->display_options['fields']['metadata_qdc']['metadata_implode_string'] = '\\n';
   /* Field: MediaMosa: Technical metadata */
   $handler->display->display_options['fields']['technical_metadata']['id'] = 'technical_metadata';
   $handler->display->display_options['fields']['technical_metadata']['table'] = 'mediamosa_asset_get';
