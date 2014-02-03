@@ -68,7 +68,7 @@ function mediamosa_sb_kickstart_install() {
   theme_disable(array('bartik'));
 
   $default_theme = 'mediamosa_sb_theme';
-  $admin_theme = 'garland';
+  $admin_theme = 'seven';
   variable_set('theme_default', $default_theme);
   variable_set('admin_theme', $admin_theme);
   variable_set('node_admin_theme', 1);
