@@ -33,7 +33,12 @@ MediaMosa SiteBuilder 7.x-1.3-dev
 - Fixed permission bug.
 - Added Sitebuilder (upload related) settings.
 - Upgraded ctools, views, wysiwyg, libraries.
-
+- Fixed date_popup fields to be saved and convert dc:date to multivalue.
+- Initial implementation for multivalue fields.
+- Fixed cancel button in upload form.
+- Allow to update fields with an empty value.
+- Rename 'video' to the more generic 'media item'.
+- Remove the default isprivate value, as this is now an option in CK.
 
 MediaMosa SiteBuilder 7.x-1.x-dev
 ---------------------------------
