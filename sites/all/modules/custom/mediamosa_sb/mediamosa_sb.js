@@ -12,7 +12,7 @@ Drupal.behaviors.hideSubmitBlockit = {
 	// Check for file.
         file_upload = $('input.form-file', $form).val();
 	if (!file_upload) {
-	  alert('You must provide a file.');
+	  alert(Drupal.t('You must provide a file.'));
           return false;
         }
 
