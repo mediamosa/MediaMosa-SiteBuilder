@@ -39,6 +39,8 @@ MediaMosa SiteBuilder 7.x-1.3-dev
 - Allow to update fields with an empty value.
 - Rename 'video' to the more generic 'media item'.
 - Remove the default isprivate value, as this is now an option in CK.
+- Upgraded Drupal to 7.26.
+- Set default admin theme to Seven.
 
 MediaMosa SiteBuilder 7.x-1.x-dev
 ---------------------------------
