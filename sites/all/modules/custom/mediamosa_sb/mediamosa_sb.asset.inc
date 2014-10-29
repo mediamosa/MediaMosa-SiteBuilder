@@ -723,7 +723,6 @@ function mediamosa_sb_asset_delete_confirm_form_submit($form, &$form_state) {
 
   // Now remove asset.
   if (!MediaMosaSbConnectorWrapper::delete_asset($asset_id, $user_id)) {
-    mediamosa_sb::watchdog_error('Unable to delete asset.');
     drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
   }
 
