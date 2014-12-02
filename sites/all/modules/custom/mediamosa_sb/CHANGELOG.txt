@@ -41,6 +41,7 @@ MediaMosa SiteBuilder 7.x-1.3-dev
 - Remove the default isprivate value, as this is now an option in CK.
 - Upgraded Drupal to 7.26.
 - Set default admin theme to Seven.
+- Update MediaMosa CK submodule. Please use 'git submodule update' to get latest version.
 
 MediaMosa SiteBuilder 7.x-1.x-dev
 ---------------------------------
