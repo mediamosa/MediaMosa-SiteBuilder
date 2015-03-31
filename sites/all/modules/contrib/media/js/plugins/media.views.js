@@ -11,6 +11,15 @@ namespace('Drupal.media.browser.views');
 Drupal.behaviors.mediaViews = {
   attach: function (context, settings) {
 
+    // Make sure when pressing enter on text inputs, the form isn't submitted
+    $('.ctools-auto-submit-full-form .views-exposed-form input:text, input:text.ctools-auto-submit', context)
+      .filter(':not(.ctools-auto-submit-exclude)')
+      .bind('keydown keyup', function (e) {
+        if(e.keyCode === 13) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      });
     // Disable the links on media items list
     $('.view-content ul.media-list-thumbnails a').click(function() {
       return false;
@@ -34,16 +43,14 @@ Drupal.behaviors.mediaViews = {
       }
     }
 
-    // We want to be able to reset state on tab-changes, so we bind on the
-    // 'select' event on the tabset
-    $('#media-browser-tabset').tabs({
-      select: function(e, ui) {
-        var view = $('.view', ui.panel);
-        if (view.length) {
-          Drupal.media.browser.views.select(view);
-        }
+    // Reset the state on tab-changes- bind on the 'select' event on the tabset
+    $('#media-browser-tabset').bind('tabsselect', function(event, ui) {
+      var view = $('.view', ui.panel);
+      if (view.length) {
+        Drupal.media.browser.views.select(view);
       }
-    })
+    });
+
   }
 }
 
