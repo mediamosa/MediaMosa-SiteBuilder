@@ -709,7 +709,7 @@ class mediamosa_sb_asset_forms {
 
     $form['still'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Still generation for this video'),
+      '#title' => t('Still generation for this media'),
     );
 
     $form['still']['still_start_time'] = array(

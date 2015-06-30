@@ -20,10 +20,10 @@ function mediamosa_sb_configuration_form() {
   );
 
   $form['upload']['mediamosa_sb_upload_description'] = array(
-    '#type' => 'textfield',
+    '#type' => 'textarea',
     '#title' => t('Description shown with the file upload button.'),
     '#default_value' => variable_get('mediamosa_sb_upload_description', t('Maximum size of 2.0GB. <br \>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.')),
-    '#description' => 'default: <br \>' . t('Maximum size of 2.0GB. <br \>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.'),
+    '#description' => 'Basic HTML is allowed. Default: <br \>' . t('Maximum size of 2.0GB. <br \>Allowed file types: 3gp,avi,dv,flv,mov,mp3,mp4,mpeg,wav,wma,wmv.'),
   );
 
   $form['upload']['mediamosa_sb_show_quota'] = array(
@@ -48,7 +48,7 @@ function mediamosa_sb_configuration_form() {
 
   $form['edit'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Form settings for Edit Asset options.'),
+    '#title' => t('Form settings for Edit Media options.'),
   );
   $form['edit']['mediamosa_sb_allow_transfer'] = array(
     '#type' => 'checkbox',
@@ -59,7 +59,7 @@ function mediamosa_sb_configuration_form() {
 
   $form['view_asset'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Form settings for View Asset page.'),
+    '#title' => t('Form settings for View Media page.'),
   );
   $form['view_asset']['mediamosa_sb_view_asset_formats'] = array(
     '#type' => 'checkbox',
