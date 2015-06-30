@@ -726,6 +726,9 @@ function mediamosa_sb_asset_delete_confirm_form_submit($form, &$form_state) {
     drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
   }
 
+  // Invoke possible other actions on deleted asset.
+  module_invoke_all('mediamosa_sb_asset_deleted');
+
   // All ok.
   drupal_set_message(t('Asset has been deleted.'));
   drupal_goto('myassets');
@@ -772,19 +775,20 @@ function mediamosa_sb_asset_transfer_confirm_form($form, &$form_state, $asset_id
   );
 
   $form['introduction'] = array(
-    '#markup' => t('You can transfer the ownership of this asset. You need to enter the e-mail
-address of the person to transfer the asset to. The email address must be known
+    '#markup' => t('You can transfer the ownership of this asset. You need to
+enter the name of the person to transfer the asset to. The name must be known
 in this application and you will need permission of the new owner. This action
 cannot be undone.'),
   );
 
   $form['new_owner_id'] = array(
     '#type' => 'textfield',
-    '#title' => t('New Owner email'),
+    '#title' => t('New Owner'),
     '#default_value' => '',
     '#size' => 40,
     '#maxlength' => 128,
     '#required' => TRUE,
+    '#autocomplete_path' => 'mediamosa_user/autocomplete',
   );
 
   // Submit button.
@@ -800,36 +804,12 @@ cannot be undone.'),
  * Validation for asset media page.
  */
 function mediamosa_sb_asset_transfer_confirm_form_validate($form, &$form_state) {
-  // Check if user exists in this installation.
-  $email = check_plain($form_state['values']['new_owner_id']);
-  $result = db_query("SELECT count(*) FROM {users} WHERE mail = '$email'")->fetchField();
+  // Check if user exists.
+  $new_owner = check_plain($form_state['values']['new_owner_id']);
+  $result = db_query("SELECT count(*) FROM {users} WHERE name = :new_owner", array(':new_owner' => $new_owner))->fetchField();
   if ($result < 1) {
     // User doesn't exist.
     form_set_error('new_owner_id', 'This user is not known.');
-  }
-}
-
-/**
- * Define transfer_message mail.
- */
-function mediamosa_sb_asset_mail($key, &$message, $params) {
-  global $base_url;
-
-  $options['language'] = $message['language'];
-  switch ($key) {
-    case 'transfer_message':
-      $langcode = $message['language']->language;
-      $message['subject'] = t('Transfer media');
-      $url = $base_url . '/asset/detail/' . check_plain($params['asset_id']);
-      $message['body'][] = t('You receive this email because there is a video- or audio file transferred to
-you.
-
-!asset_link
-
-You are now the owner of this file. You have permission to edit the
-file, to transfer it to another user or to delete the file.', array(
-        '!asset_link' => l($url, $url, array('absolute' => TRUE))));
-      break;
   }
 }
 
@@ -839,28 +819,102 @@ file, to transfer it to another user or to delete the file.', array(
  * @see mediamosa_sb_asset_transfer_confirm_form()
  */
 function mediamosa_sb_asset_transfer_confirm_form_submit($form, &$form_state) {
+  global $base_url;
 
-  $asset_id = $form_state['values']['asset_id'];
+  $asset_id = check_plain($form_state['values']['asset_id']);
 
-  // Get the current user.
-  $user_id = mediamosa_ck::session_user_id();
-  $new_owner_id = check_plain($form['new_owner_id']['#value']);
+  // Get old owner info.
+  $asset = MediaMosaSbConnectorWrapper::get_asset(rawurlencode($asset_id));
+  $old_owner = '';
+  if (isset($asset->xml->items->item->owner_id)) {
+    $old_owner = (string) $asset->xml->items->item->owner_id;
+    if (variable_get('mediamosa_ck_asset_owner', 'mail') == 'mail') {
+      // Get the name given the mail address.
+      $old_owner_mail = $old_owner;
+      $old_owner = db_query("SELECT name FROM {users} WHERE lower(mail) = :email", array(':email' => strtolower(check_plain($old_owner))))->fetchField();
+    }
+    else {
+      // @todo: displayname?
+      $old_owner_mail = db_query("SELECT mail FROM {users} WHERE name = :name", array(':name' => $old_owner))->fetchField();
+    }
+  }
+
+  // Get new owner info.
+  $new_owner = check_plain($form['new_owner_id']['#value']);
+  $new_owner_mail = db_query("SELECT mail FROM {users} WHERE name = :new_owner", array(':new_owner' => $new_owner))->fetchField();
+  if (!isset($new_owner)) {
+    form_set_error('new_owner_id', 'This user is not known.');
+    drupal_goto('myassets');
+    return;
+  }
+
+  // Remove all links to collections for this asset, first get the
+  // collections with: asset/$id/collection
+  try {
+    // Get the collections.
+    $uri = 'asset/' . rawurlencode($asset_id) . '/collection';
+    $collections = mediamosa_ck::request_get($uri, array(
+      'data' => array(),
+    ), FALSE);
+  }
+  catch (Exception $e) {
+    mediamosa_ck::watchdog_error('Unable to find asset; !message.', array('!message' => $e->getMessage()));
+  }
+  if (isset($collections->xml->items->item)) {
+    foreach ($collections->xml->items->item as $collectie) {
+      MediaMosaSbConnectorWrapper::delete_collection_asset_relations((string) $collectie->coll_id, (string) $collectie->owner_id, array($asset_id), array('is_app_admin' => TRUE));
+    }
+  }
 
   // Now transfer ownership.
-  if (!MediaMosaSbConnectorWrapper::change_asset_owner($asset_id, $user_id, $new_owner_id)) {
+  if (variable_get('mediamosa_ck_asset_owner', 'mail') == 'mail') {
+    $transfer_result = MediaMosaSbConnectorWrapper::change_asset_owner($asset_id, $old_owner_mail, $new_owner_mail);
+  }
+  else {
+    $transfer_result = MediaMosaSbConnectorWrapper::change_asset_owner($asset_id, $old_owner, $new_owner);
+  }
+  if (!$transfer_result) {
     mediamosa_sb::watchdog_error('Unable to transfer asset.');
     drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
   }
 
-  $module = 'mediamosa_sb_asset';
+  $module = 'mediamosa_sb';
   $key = 'transfer_message';
   $from = variable_get('site_mail', 'admin@example.com');
   $language = language_default();
-  $params = array('asset_id' => $asset_id);
 
-  $result = drupal_mail($module, $key, $new_owner_id, $language, $params, $from, TRUE);
+  $url = $base_url . '/' . mediamosa_sb::get_asset_detail_url($asset_id);
+
+  // Get the asset title.
+  $title = '';
+  if (isset($asset->xml->items->item->dublin_core->title)) {
+    $title = (string) $asset->xml->items->item->dublin_core->title;
+  }
+  // Get the asset description.
+  $description = '';
+  if (isset($asset->xml->items->item->dublin_core->description)) {
+    $description = (string) $asset->xml->items->item->dublin_core->description;
+  }
+  // Get the asset description.
+  $duration = '';
+  if (isset($asset->xml->items->item->mediafile_duration)) {
+    $duration = (string) $asset->xml->items->item->mediafile_duration;
+  }
+
+  $params = array(
+    'asset_url' => l($url, $url, array('absolute' => TRUE)),
+    'asset_id' => $asset_id,
+    'asset_new_owner_name' => $new_owner,
+    'asset_old_owner_name' => $old_owner,
+    'asset_title' => $title,
+    'asset_description' => $description,
+    'asset_duration' => $duration,
+  );
+
+  $result = drupal_mail($module, $key, $new_owner_mail, $language, $params, $from, TRUE);
+
   if ($result['result'] == TRUE) {
-    drupal_set_message(t('Asset ownership has been transferred, a mail to the new owner has been sent.'));
+    drupal_set_message(t('Media ownership has been transferred, a mail to the new owner has been sent.'));
   }
   else {
     drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');

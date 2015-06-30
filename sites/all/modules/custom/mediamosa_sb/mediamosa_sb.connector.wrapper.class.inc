@@ -319,7 +319,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    */
   static public function delete_collection($coll_id, $user_id, $options = array()) {
     // Need edit right.
-    if (mediamosa_sb::access_asset_edit($coll_id)) {
+    if (mediamosa_sb::access_collection_edit($coll_id)) {
       $user_id = mediamosa_sb::get_owner_collection($coll_id);
     }
 
@@ -338,7 +338,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    */
   static public function delete_collection_asset_relations($coll_id, $user_id, array $asset_ids, array $options = array()) {
     // Need edit right.
-    if (mediamosa_sb::access_asset_edit($coll_id)) {
+    if (mediamosa_sb::access_collection_edit($coll_id)) {
       $user_id = mediamosa_sb::get_owner_collection($coll_id);
     }
 
@@ -406,11 +406,33 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    */
   static public function change_asset_owner($asset_id, $owner_id, $new_owner_id) {
 
+    try {
+      // Get the asset.
+      $asset = parent::get_asset($asset_id, array('show_stills' => FALSE, 'get_original_only' => TRUE));
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
+    if (!isset($asset)) {
+      return FALSE;
+    }
+
+    // Or user = owner, or user has elevated rights.
+    if (!(($owner_id == (string) $asset->xml->items->item->owner_id) || (user_access(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS)))) {
+      return FALSE;
+    }
+
     $options = array(
       'is_app_admin' => 'TRUE',
       'owner_id' => $new_owner_id,
       'isprivate' => 'FALSE',
     );
-    return parent::update_asset($asset_id, $options);
+    try {
+      // Update the asset.
+      return parent::update_asset($asset_id, $options);
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
   }
 }
