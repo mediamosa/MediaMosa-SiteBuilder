@@ -34,9 +34,9 @@ dependencies[] = features
 
 dependencies[] = mediamosa_sb
 dependencies[] = mediamosa_sb_feature
+dependencies[] = mediamosa_site_builder_menu
+dependencies[] = mediamosa_sb_footer_menu
 
 dependencies[] = mediamosa_ck
 dependencies[] = mediamosa_sdk
 dependencies[] = mediamosa_connector
-
-files[] = mediamosa_sb_kickstart.profile
