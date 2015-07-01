@@ -196,3 +196,9 @@ ul.tabs.primary li.active a {
   font-size: 18px;
 }
 
+/**
+ * Image selector.
+ */
+.image_picker_image {
+  max-width: 200px;
+}

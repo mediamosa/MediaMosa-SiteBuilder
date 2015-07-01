@@ -680,30 +680,24 @@ class mediamosa_sb {
   }
 
   /**
-   * Validate form media.
-   *
-   * @param $values
-   *   The post values.
-   * @param $asset_id
-   *   The asset ID.
-   */
-  static public function validate_media($values, $asset_id) {
-    // Validate the still form.
-    self::validate_media_still($values, $asset_id);
-  }
-
-  /**
    * Validate form still.
    *
-   * @param $values
+   * @param array $values
    *   The post values.
-   * @param $asset_id
+   * @param string $asset_id
    *   The asset ID.
    */
-  static protected function validate_media_still($values, $asset_id) {
-    // Check if still time is correct format.
+  static public function validate_media_thumbnail($values, $asset_id) {
+
+    // Basic checks on this form.
     if (!preg_match("/[0-9]{1,2}:[0-9]{1,2}/", $values['still_start_time'])) {
-      form_set_error('still_start_time', t('Time for still generation must be in format MM:SS.'));
+      form_set_error('still_start_time', t('Time for still generation must be in format mm:ss.'));
+    }
+    if (!preg_match("/[0-9]{1,2}:[0-9]{1,2}/", $values['still_start_time'])) {
+      form_set_error('still_end_time', t('Time for still generation must be in format mm:ss.'));
+    }
+    if ($values['still_number'] > 10) {
+      form_set_error('still_number', t('There is a maximum of 10 images.'));
     }
   }
 
@@ -717,35 +711,77 @@ class mediamosa_sb {
    *   The asset ID.
    */
   static public function submit_media($values, $asset_id, $is_upload = FALSE) {
-    // Submit still.
-    self::submit_media_still($values, $asset_id);
-
-    // Submit media.
     self::submit_media_transcoding($values, $asset_id, $is_upload);
+  }
+
+  /**
+   * Submit still selection.
+   *
+   * @param array $values
+   *   The post values.
+   * @param string $asset_id
+   *   The asset ID.
+   */
+  static public function submit_thumbnail($values, $asset_id) {
+    $result = FALSE;
+
+    $data = array(
+      'user_id' => mediamosa_ck::session_user_id(),
+      'still_id' => $values['still_select'],
+    );
+
+    if (user_access(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS)) {
+      $data['is_app_admin'] = 'TRUE';
+    }
+
+    try {
+      $result = mediamosa_ck::request_post_fatal('asset/' . rawurlencode($asset_id) . '/still/default', array('data' => $data));
+    }
+    catch (Exception $e) {
+      mediamosa_ck::watchdog_error('Unable to set the default still; @message.', array('@message' => $e->getMessage()));
+    }
+
+    // Flush cached version of the image.
+    // @todo: use image_path_flush('public://mediamosa-still/' . rawurlencode($asset_id) . '.jpg');
+    // which doesnt seem to resolve the path correctly.
+    $styles = image_styles();
+    foreach ($styles as $style) {
+      $image_path = 'public://mediamosa-still/' . $style['name'] . '/' . rawurlencode($asset_id) . '.jpg';
+      if (file_exists($image_path)) {
+        file_unmanaged_delete($image_path);
+      }
+    }
+    return $result;
   }
 
   /**
    * Submit still.
    *
-   * @param $values
+   * @param array $values
    *   The post values.
-   * @param $asset_id
+   * @param string $asset_id
    *   The asset ID.
    */
-  static protected function submit_media_still($values, $asset_id) {
+  static public function submit_create_thumbnails($values, $asset_id) {
     // Get the original mediafile_id.
     $mediafile_id_original = MediaMosaSbConnectorWrapper::get_asset_mediafile_id_first_original($asset_id);
 
-    // Check if we need to generate still.
-    if ($values['still_start_time'] != mediamosa_sb_asset_forms::DEFAULT_START_TIME_STILL_FORM) {
+    if (isset($mediafile_id_original)) {
       // Remove all stills first.
       MediaMosaSbConnectorWrapper::delete_asset_still($asset_id, mediamosa_ck::session_user_id());
 
+      // Type is normal to create more than 1 still.
+      $data = array('still_type' => 'NORMAL');
+
       // Calc number of seconds.
       list($minutes, $seconds) = explode(':', $values['still_start_time'], 2);
-      $data = array(
-        'start_time' => ($minutes * 60) + $seconds,
-      );
+      $data['start_time'] = ($minutes * 60) + $seconds;
+
+      // Calc number of seconds.
+      list($minutes, $seconds) = explode(':', $values['still_end_time'], 2);
+      $data['end_time'] = ($minutes * 60) + $seconds;
+
+      $data['still_per_mediafile'] = (int) $values['still_number'];
 
       // Create still.
       MediaMosaSbConnectorWrapper::create_mediafile_still_asset($asset_id, $mediafile_id_original, $data);

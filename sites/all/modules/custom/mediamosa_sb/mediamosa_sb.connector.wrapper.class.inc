@@ -360,7 +360,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    * @return mediamosa_connector_response
    *   Returns FALSE when failure or mediamosa_connector_response.
    */
-  static public function create_mediafile_still_asset($asset_id, $mediafile_id, $user_id, $data = array()) {
+  static public function create_mediafile_still_asset($asset_id, $mediafile_id, $data = array()) {
     // Need edit right.
     if (mediamosa_sb::access_asset_edit($asset_id)) {
       $user_id = mediamosa_sb::get_owner_mediafile($mediafile_id);
