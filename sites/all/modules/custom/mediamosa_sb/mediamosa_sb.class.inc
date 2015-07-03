@@ -599,26 +599,35 @@ class mediamosa_sb {
   /**
    * Set access on mediafile.
    *
-   * @param $values
+   * @param array $values
    *   The submited values.
-   * @param $asset_id
+   * @param string $asset_id
    *   The asset ID.
-   *
-   * @return
    */
   static protected function submit_access_visibility($values, $asset_id) {
 
+    $options = array();
+    $app_options = array();
+    if (user_access(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS)) {
+      $app_options = array('is_app_admin' => 'TRUE');
+    }
+
     // Save state isprivate to asset.
-    $options = array(
-      'isprivate' => (isset($values['is_visible']) && !empty($values['is_visible']) ? FALSE : TRUE),
-    );
-    MediaMosaSbConnectorWrapper::update_asset($asset_id, $options);
+    $options['isprivate'] = (isset($values['is_visible']) && !empty($values['is_visible']) ? FALSE : TRUE);
+    MediaMosaSbConnectorWrapper::update_asset($asset_id, array_merge($options, $app_options));
+
+    if ($values['is_published'] == 1) {
+      MediaMosaSbConnectorWrapper::asset_publish($asset_id, $app_options);
+    }
+    else {
+      MediaMosaSbConnectorWrapper::asset_unpublish($asset_id, $app_options);
+    }
 
     $options = array(
       'license' => $values['license'],
       'action' => 'update',
     );
-    MediaMosaSbConnectorWrapper::update_metadata($asset_id, $options);
+    MediaMosaSbConnectorWrapper::update_metadata($asset_id, array_merge($options, $app_options));
   }
 
   /**

@@ -49,6 +49,13 @@
   <?php print $fields['title']->content; ?>
   <?php print $fields['title']->wrapper_suffix; ?>
 
+  <?php if (isset($fields['published'])): ?>
+    <?php print $fields['published']->wrapper_prefix; ?>
+    <?php if (strip_tags($fields['published']->content) == 'TRUE'): print t('Published'); endif; ?>
+    <?php if (strip_tags($fields['published']->content) == 'FALSE'): print t('Not published'); endif; ?>
+    <?php print $fields['published']->wrapper_suffix; ?>
+  <?php endif; ?>
+
   <?php print $fields['videotimestamp']->wrapper_prefix; ?>
   <?php print $fields['videotimestamp']->content; ?>
   <?php print $fields['videotimestamp']->wrapper_suffix; ?>

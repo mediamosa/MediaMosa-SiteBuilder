@@ -413,4 +413,51 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
     );
     return parent::update_asset($asset_id, $options);
   }
+
+  /**
+   * Publish an asset.
+   *
+   * @param array $options
+   *   The options for the asset.
+   *
+   * @return array
+   *   returns rest call output.
+   */
+  static public function asset_publish($asset_id, array $options = array()) {
+    // Need edit right.
+    if (mediamosa_sb::access_asset_edit($asset_id)) {
+      $options += array('user_id' => mediamosa_sb::get_owner_asset($asset_id));
+    }
+    try {
+      return mediamosa_ck::request_post_fatal('asset/' . rawurlencode($asset_id) . '/publish', array('data' => $options));
+    }
+    catch (Exception $e) {
+      mediamosa_ck::watchdog_error('Unable to update asset; !message.', array('!message' => $e->getMessage()));
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Publish an asset.
+   *
+   * @param array $options
+   *   The options for the asset.
+   *
+   * @return array
+   *   returns rest call output.
+   */
+  static public function asset_unpublish($asset_id, array $options = array()) {
+    // Need edit right.
+    if (mediamosa_sb::access_asset_edit($asset_id)) {
+      $options += array('user_id' => mediamosa_sb::get_owner_asset($asset_id));
+    }
+    try {
+      return mediamosa_ck::request_post_fatal('asset/' . rawurlencode($asset_id) . '/unpublish', array('data' => $options));
+    }
+    catch (Exception $e) {
+      mediamosa_ck::watchdog_error('Unable to update asset; !message.', array('!message' => $e->getMessage()));
+    }
+    return FALSE;
+  }
 }

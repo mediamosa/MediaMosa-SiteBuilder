@@ -560,6 +560,12 @@ function mediamosa_sb_asset_edit_access_form($form, $form_state, $asset_id) {
     $values['license'] = (string) $asset->xml->items->item->qualified_dublin_core->license;
   }
 
+  // Published?
+  $values['published'] = '';
+  if (isset($asset->xml->items->item->asset->published)) {
+    $values['published'] = (string) $asset->xml->items->item->asset->published == 'TRUE' ? TRUE : FALSE;
+  }
+
   // Get the form.
   $form = mediamosa_sb_asset_forms::access_form($values);
 
@@ -600,7 +606,6 @@ function mediamosa_sb_asset_edit_access_form_submit($form, $form_state) {
       mediamosa_sb::submit_access($form_state['input'], $asset_id);
       break;
   }
-
   // Redirect.
   drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
 }
