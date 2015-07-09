@@ -58,12 +58,14 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
   // FIXME: Hack to make it work with single array file upload to mediamosa.
   // To make it work with MediaMosa single array upload result. MediaMosa
   // can not work with files[file].
+  $description = variable_get('mediamosa_sb_upload_description', 'Maximum size of 2.0GB. <br />Allowed file types: avi,mov,flv,mp4,mpeg.');
+  $description = check_markup($description, 'full_html');
   $form['file'] = array(
     '#type' => 'item',
     '#markup' => '<input type="file" id="edit-file-upload" name="file" size="40" class="form-file" />',
     '#title' => t('Upload your file'),
     '#required' => TRUE,
-    '#description' => variable_get('mediamosa_sb_upload_description', 'Maximum size of 2.0GB. <br />Allowed file types: avi,mov,flv,mp4,mpeg.'),
+    '#description' => $description,
   );
 
   // Get the current user.
