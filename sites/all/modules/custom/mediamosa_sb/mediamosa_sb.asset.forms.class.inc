@@ -590,17 +590,34 @@ class mediamosa_sb_asset_forms {
    * @return array
    *   Returns the form array.
    */
-  static public function media_form($values, $is_upload = FALSE) {
+  static public function media_form($values, $is_upload = FALSE, $asset = NULL) {
     $form = array();
 
-    // Add transcoding form.
-    $form['transcoding'] = self::media_transcoding_form($values, $is_upload);
+    if (variable_get('mediamosa_sb_show_transcodes', FALSE)) {
+      // Add transcoding form.
+      $form['transcoding'] = self::media_transcoding_form($values, $is_upload);
+    }
 
     // Add still form.
-    $form['still'] = self::media_still_form($values);
+    $form['still'] = self::media_still_form($values, $asset);
 
     return $form;
   }
+
+  /**
+   * Implements hook_form_validate().
+   */
+  static public function media_form_validate($form, $form_state) {
+
+    if ($form_state['values']['choose'] == 'Protected') {
+      if (($form_state['values']['acl_domain'] == '') &&
+        ($form_state['values']['acl_realm'] == '') &&
+        ($form_state['values']['acl_user'] == '')) {
+        form_set_error('acl_domain', 'When choosing protected, at least one access control must be given.');
+      }
+    }
+  }
+
 
   /**
    * The transcode form.
@@ -718,23 +735,119 @@ class mediamosa_sb_asset_forms {
    * @return array
    *   Returns the form array.
    */
-  static protected function media_still_form($values) {
+  static protected function media_still_form($values, $asset) {
     $form = array();
+
+    drupal_add_js(drupal_get_path('module', 'mediamosa_sb') . '/image-picker/image-picker.min.js');
+    drupal_add_css(drupal_get_path('module', 'mediamosa_sb') . '/image-picker/image-picker.css');
 
     $form['still'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Still generation for this media'),
+      '#title' => t('Thumbnail'),
     );
 
-    $form['still']['still_start_time'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Time for still generation'),
-      '#required' => FALSE,
-      '#size' => 5,
-      '#default_value' => isset($values['still_start_time']) ? $values['still_start_time'] : self::DEFAULT_START_TIME_STILL_FORM,
-      '#description' => t('Enter the time in MM:SS (minutes:seconds) format for the frame on which the still wil be generated'),
-    );
+    // Test if stills exists.
+    $options = array();
+    $options_attributes = array();
+    $mediafiles = $asset->xml->items->item->mediafiles;
 
+    $default_still = '';
+    foreach ($mediafiles->children() as $mf) {
+      if (isset($mf->still)) {
+        foreach ($mf->still as $still) {
+
+          $options[(string) $still->mediafile_id] = (string) $still->filename;
+          $options_attributes[(string) $still->mediafile_id] = array('data-img-src' => (string) $still->still_ticket);
+          if ($still->still_default == 'TRUE') {
+            $default_still = (string) $still->mediafile_id;
+          }
+        }
+      }
+    }
+
+    $show_still_generate = TRUE;
+    if (!empty($options)) {
+      // The asset has stills, show a image picker to choose the default image.
+      drupal_add_js('(function($) {$(document).ready(function() {$("#edit-still-select").imagepicker();});}(jQuery));', 'inline');
+      $form['still']['still_select'] = array(
+        '#type' => 'select',
+        '#title' => t('Select thumbnail'),
+        '#options' => $options,
+        '#option_attributes' => $options_attributes,
+        '#default_value' => $default_still,
+      );
+
+      $form['still']['save_select'] = array(
+        '#type' => 'submit',
+        '#value' => t('Save selection'),
+      );
+    }
+    else {
+      // Check if there is a running job for the asset.
+      try {
+        $xml = MediaMosaCkConnectorWrapper::get_asset_jobs($values['asset_id']);
+      }
+      catch (Exception $e) {
+        mediamosa_ck::watchdog_error('Unable to get jobs; !message.',
+          array('!message' => $e->getMessage())
+        );
+      }
+
+      if (isset($xml->items->item)) {
+        foreach ($xml->items->item as $job) {
+
+          if ((((string) $job->status == 'WAITING') || ((string) $job->status == 'INPROGRESS')) && ((string) $job->job_type == 'STILL')) {
+            drupal_add_library('system', 'ui.progressbar');
+            drupal_add_js('var mediamosa_sb_job_id="' . (string) $job->id . '";', 'inline');
+            drupal_add_js(drupal_get_path('module', 'mediamosa_sb') . '/js/sb_still_progress.js');
+
+            $form['still']['still_wait'] = array(
+              '#prefix' => '<div id="stillprogressbar"><div class="stillprogress-label">Loading...</div></div>',
+            );
+            $show_still_generate = FALSE;
+            break;
+          }
+        }
+      }
+    }
+    if ($show_still_generate) {
+      $form['still_generate'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#title' => t('thumbnail options'),
+        '#description' => t('Thumbnails can be re-generated, enter a start- and endtime, together with an
+amount of images, and a job will be started to create them.'),
+      );
+      $form['still_generate']['still_start_time'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Start time'),
+        '#required' => FALSE,
+        '#size' => 5,
+        '#default_value' => '00:10',
+        '#description' => t('starttime: time in mm:ss (minutes:seconds)'),
+      );
+      $form['still_generate']['still_end_time'] = array(
+        '#type' => 'textfield',
+        '#title' => t('endtime'),
+        '#required' => FALSE,
+        '#size' => 5,
+        '#default_value' => '01:30',
+        '#description' => t('endtime: time in mm:ss (minutes:seconds)'),
+      );
+      $form['still_generate']['still_number'] = array(
+        '#type' => 'textfield',
+        '#title' => t('number of images (max 10)'),
+        '#required' => FALSE,
+        '#size' => 5,
+        '#default_value' => '5',
+        '#description' => t('Number of images taken between start and endtime.'),
+      );
+      $form['still_generate']['save_generate'] = array(
+        '#type' => 'submit',
+        '#value' => t('Create new thumbnails'),
+      );
+    }
     return $form;
   }
 }

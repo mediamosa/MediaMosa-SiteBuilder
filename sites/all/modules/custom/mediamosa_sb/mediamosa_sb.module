@@ -107,11 +107,11 @@ function mediamosa_sb_menu() {
   );
 
   $items['asset/edit/%/media'] = array(
-    'title' => 'Media item',
+    'title' => 'Thumbnail',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mediamosa_sb_asset_edit_media_form', 2),
-    'access callback' => 'user_access',
-    'access arguments' => array('administer content'),
+    'access callback' => '_mediamosa_sb_access_asset_edit',
+    'access arguments' => array(2),
     'description' => 'Control the transcode and stills of the asset.',
     'type' => MENU_LOCAL_TASK,
     'file' => 'mediamosa_sb.asset.inc',
@@ -179,7 +179,38 @@ function mediamosa_sb_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['mediamosa_job/jobprogress/%'] = array(
+    'title' => t('Job progress'),
+    'page callback' => 'mediamosa_sb_job_progress',
+    'page arguments' => array(2),
+    'access callback' => 'user_is_logged_in',
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Implements menu item /mediamosa_job/jobprogress/%.
+ */
+function mediamosa_sb_job_progress($job_id) {
+  try {
+    $xml = MediaMosaCkConnectorWrapper::get_job($job_id);
+    $perc = ((float) $xml->items->item->progress) * 100;
+    $status = (string) $xml->items->item->status;
+  }
+  catch (Exception $e) {
+    mediamosa_ck::watchdog_error('Unable to get jobs; !message.',
+      array('!message' => $e->getMessage())
+    );
+    $perc = 0;
+    $status = t('unable to connect to jobserver.');
+  }
+  $progress = array(
+    'message' => strtolower($status),
+    'percentage' => $perc,
+  );
+  drupal_json_output($progress);
 }
 
 /**

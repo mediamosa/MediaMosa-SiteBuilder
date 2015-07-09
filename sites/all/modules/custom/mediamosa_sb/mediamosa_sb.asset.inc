@@ -629,19 +629,12 @@ function mediamosa_sb_asset_edit_media_form($form, $form_state, $asset_id) {
   drupal_set_title(mediamosa_sb::get_asset_title($asset));
 
   // Get the media form.
-  $form = mediamosa_sb_asset_forms::media_form($values);
+  $form = mediamosa_sb_asset_forms::media_form($values, FALSE, $asset);
 
   $form['asset_id'] = array(
     '#type' => 'value',
     '#value' => $asset_id,
   );
-
-  // Submit button.
-  $form['save'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-
   return $form;
 }
 
@@ -649,6 +642,7 @@ function mediamosa_sb_asset_edit_media_form($form, $form_state, $asset_id) {
  * Validation for asset media page.
  */
 function mediamosa_sb_asset_edit_media_form_validate($form, &$form_state) {
+
   // What was pressed.
   $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 
@@ -656,9 +650,11 @@ function mediamosa_sb_asset_edit_media_form_validate($form, &$form_state) {
   $asset_id = $form_state['values']['asset_id'];
 
   switch ($op) {
-    case t('Save'):
-      // Run function for validating media form post.
-      mediamosa_sb::validate_media($form_state['input'], $asset_id);
+    case t('Save selection'):
+      break;
+
+    case t('Create new thumbnails'):
+      mediamosa_sb::validate_media_thumbnail($form_state['input'], $asset_id);
       break;
   }
 }
@@ -674,14 +670,16 @@ function mediamosa_sb_asset_edit_media_form_submit($form, $form_state) {
   $asset_id = $form_state['values']['asset_id'];
 
   switch ($op) {
-    case t('Save'):
-      // Submit the media form.
-      mediamosa_sb::submit_media($form_state['input'], $asset_id);
+    case t('Save selection'):
+      mediamosa_sb::submit_thumbnail($form_state['input'], $asset_id);
+      drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
+      break;
+
+    case t('Create new thumbnails'):
+      mediamosa_sb::submit_create_thumbnails($form_state['input'], $asset_id);
+      drupal_goto('asset/edit/' . rawurlencode($asset_id) . '/media');
       break;
   }
-
-  // Redirect.
-  drupal_goto(mediamosa_sb::get_asset_detail_url($asset_id));
 }
 
 /**
