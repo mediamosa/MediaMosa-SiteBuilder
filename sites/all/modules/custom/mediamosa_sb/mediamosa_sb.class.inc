@@ -652,7 +652,7 @@ class mediamosa_sb {
         'is_downloadable' => ($values['is_downloadable'] == 1) ? 'TRUE' : 'FALSE',
         'transcode_inherits_acl' => TRUE,
       );
-      if (!MediaMosaSbConnectorWrapper::update_mediafile($mediafile_id, $options)) {
+      if (!MediaMosaSbConnectorWrapper::update_mediafile_asset($asset_id, $mediafile_id, $options)) {
         mediamosa_sb::watchdog_error('Unable to save downloadable for mediafile with ID @mediafile_id.', array('@mediafile_id' => $mediafile_id));
       }
     }

@@ -172,6 +172,13 @@ function mediamosa_sb_menu() {
     'file' => 'mediamosa_sb.collection.inc',
   );
 
+  $items['mediamosa_user/autocomplete'] = array(
+    'title' => 'User autocomplete',
+    'page callback' => 'mediamosa_sb_user_autocomplete',
+    'access callback' => 'user_is_logged_in',
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -487,4 +494,165 @@ function mediamosa_sb_mediamosa_ck_acl_alter(&$acl, $type) {
 
   // Set the host name as our domain.
   $acl['acl_domain'] = $hostname;
+}
+
+/**
+ * Implements hook_mailkeys().
+ */
+function mediamosa_sb_mailkeys() {
+  return array(
+    'transfer_message' => t('Message when transferring an asset to another user.'),
+  );
+}
+
+/**
+ * Define transfer_message mail.
+ */
+function mediamosa_sb_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'transfer_message':
+      $language = $message['language'];
+      $message['subject'] = _mediamosa_sb_mail_text('transfer_message_subject', $language);
+      $message['body'][] = _mediamosa_sb_mail_text('transfer_message_body', $language, $params);
+      break;
+  }
+}
+
+/**
+ * Implements hook_mail_edit_text().
+ */
+function mediamosa_sb_mail_edit_text($mailkey, $language) {
+  $return = array();
+  $return['subject'] = _mediamosa_sb_mail_text($mailkey . '_subject', $language, array(), FALSE);
+  $return['body'] = _mediamosa_sb_mail_text($mailkey . '_body', $language, array(), FALSE);
+  return $return;
+}
+
+/**
+ * Returns a mail string for a variable name.
+ *
+ * Used by mediamosa_sb_asset_mail() and the settings forms to retrieve strings.
+ */
+function _mediamosa_sb_mail_text($key, $language = NULL, $variables = array(), $replace = TRUE) {
+  $langcode = isset($language) ? $language->language : NULL;
+
+  if ($admin_setting = variable_get('mediamosa_sb_mail_' . $key, FALSE)) {
+    // An admin setting overrides the default string.
+    $text = $admin_setting;
+  }
+  else {
+    // No override, return default string.
+    switch ($key) {
+      case 'transfer_message_subject':
+        $text = t('Transfer media', array(), array('langcode' => $langcode));
+        break;
+
+      case 'transfer_message_body':
+        $text = t('You receive this email because there is a mediafile transferred to you.
+
+[asset:url]
+
+You are now the owner of this file. You have permission to edit the
+file, to transfer it to another user or to delete the file.',
+                array(), array('langcode' => $langcode));
+        break;
+    }
+  }
+
+  if ($replace) {
+    // We do not sanitize the token replacement, since the output of this
+    // replacement is intended for an e-mail message, not a web browser.
+    return token_replace($text, $variables,
+      array(
+        'language' => $language,
+        'callback' => 'user_mail_tokens',
+        'sanitize' => FALSE,
+        'clear' => TRUE,
+      )
+    );
+  }
+
+  return $text;
+}
+
+/**
+ * Implements hook mail_edit_token_types().
+ */
+function mediamosa_sb_mail_edit_token_types($mailkey) {
+  return array('asset');
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function mediamosa_sb_token_info() {
+  $info = array();
+
+  $info['tokens']['asset']['url'] = array(
+    'name' => t('Link to asset.'),
+    'description' => t('Full link to asset detail page.'),
+  );
+  $info['tokens']['asset']['id'] = array(
+    'name' => t('Asset id'),
+    'description' => t('Unique identifier of the asset.'),
+  );
+  $info['tokens']['asset']['new_owner_name'] = array(
+    'name' => t('New owner (name)'),
+    'description' => t('The name of the new owner of the asset.'),
+  );
+  $info['tokens']['asset']['old_owner_name'] = array(
+    'name' => t('Current owner (name)'),
+    'description' => t('The name of the current owner of the asset.'),
+  );
+  $info['tokens']['asset']['title'] = array(
+    'name' => t('Title'),
+    'description' => t('The dublin core title of the asset.'),
+  );
+  $info['tokens']['asset']['description'] = array(
+    'name' => t('Description'),
+    'description' => t('The dublin core description of the asset.'),
+  );
+  $info['tokens']['asset']['duration'] = array(
+    'name' => t('Duration'),
+    'description' => t('In case of video/audio, the duration of the media.'),
+  );
+
+  $info['types']['asset'] = array(
+    'name' => t('Asset'),
+    'description' => t('Tokens related to Assets.'),
+    'needs-data' => 'asset',
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function mediamosa_sb_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if ($type == 'asset') {
+    foreach ($tokens as $name => $original) {
+      $replacements[$original] = isset($data['asset_' . $name]) ? $data['asset_' . $name] : '';
+    }
+  }
+
+  // Return the replacements.
+  return $replacements;
+}
+
+/**
+ * Menu callback; Retrieve a JSON object containing autocomplete suggestions for
+ * existing users.
+ */
+function mediamosa_sb_user_autocomplete($string = '') {
+  $matches = array();
+  if ($string) {
+    $result = db_select('users')->fields('users', array('name'))->condition('name', '%' . db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
+    foreach ($result as $user) {
+      $matches[$user->name] = check_plain($user->name);
+    }
+  }
+
+  drupal_json_output($matches);
 }
