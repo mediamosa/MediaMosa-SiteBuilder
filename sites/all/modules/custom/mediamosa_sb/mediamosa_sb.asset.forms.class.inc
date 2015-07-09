@@ -548,6 +548,20 @@ class mediamosa_sb_asset_forms {
       '#default_value' => self::default_value($values, 'is_downloadable', TRUE),
     );
 
+    $form['published'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Published'),
+      '#collapsible' => FALSE,
+      '#collapsed' => TRUE,
+    );
+    $form['published']['is_published'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Published'),
+      '#description' => t('Only published media is visible for others.'),
+      '#required' => FALSE,
+      '#default_value' => self::default_value($values, 'published', FALSE),
+    );
+
     return $form;
   }
 

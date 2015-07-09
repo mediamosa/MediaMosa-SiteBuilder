@@ -109,6 +109,13 @@
   font-size: 12px;
 }
 
+#page_content .view .asset-information .views-field-published {
+  position: absolute;
+  right: 10px;
+  bottom: 24px;
+  font-size: 12px;
+}
+
 #page_content .view .asset-information .views-field-owner-id .field-content,
 #page_content .view .asset-information .views-field-videotimestamp span {
   color: #686868;

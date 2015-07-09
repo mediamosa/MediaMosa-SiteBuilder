@@ -1355,6 +1355,11 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['filters']['owner_id']['table'] = 'mediamosa_asset_search';
   $handler->display->display_options['filters']['owner_id']['field'] = 'owner_id';
   $handler->display->display_options['filters']['owner_id']['value'] = '[user:mail]';
+  /* Filter criterion: MediaMosa: Published */
+  $handler->display->display_options['filters']['published']['id'] = 'published';
+  $handler->display->display_options['filters']['published']['table'] = 'mediamosa_asset_search';
+  $handler->display->display_options['filters']['published']['field'] = 'published';
+  $handler->display->display_options['filters']['published']['value'] = 'ALL';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -1411,6 +1416,12 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['mediafile_duration']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['mediafile_duration']['date_format'] = 'mediamosa_ck_mf_duration';
   $handler->display->display_options['fields']['mediafile_duration']['custom_date_format'] = 'H:i';
+  /* Field: MediaMosa: Published */
+  $handler->display->display_options['fields']['published']['id'] = 'published';
+  $handler->display->display_options['fields']['published']['table'] = 'mediamosa_asset_search';
+  $handler->display->display_options['fields']['published']['field'] = 'published';
+  $handler->display->display_options['fields']['published']['label'] = '';
+  $handler->display->display_options['fields']['published']['element_label_colon'] = FALSE;
   $handler->display->display_options['path'] = 'myassets';
   $export['mediamosa_my_assets'] = $view;
 
