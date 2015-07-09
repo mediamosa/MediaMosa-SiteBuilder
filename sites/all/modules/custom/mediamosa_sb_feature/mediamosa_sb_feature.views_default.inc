@@ -120,7 +120,7 @@ function mediamosa_sb_feature_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Video detail';
+  $handler->display->display_options['title'] = 'Media detail';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -177,7 +177,7 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['mediafiles']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['mediafiles']['field'] = 'mediafiles';
   $handler->display->display_options['fields']['mediafiles']['mediafile_path'] = '';
-  /* Field: MediaMosa: Video player */
+  /* Field: MediaMosa: Media player */
   $handler->display->display_options['fields']['player']['id'] = 'player';
   $handler->display->display_options['fields']['player']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['player']['field'] = 'player';
@@ -191,16 +191,10 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['metadata_dc']['id'] = 'metadata_dc';
   $handler->display->display_options['fields']['metadata_dc']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['metadata_dc']['field'] = 'metadata_dc';
-  $handler->display->display_options['fields']['metadata_dc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
-  $handler->display->display_options['fields']['metadata_dc']['metadata_implode'] = 1;
-  $handler->display->display_options['fields']['metadata_dc']['metadata_implode_string'] = '\\n';
   /* Field: MediaMosa: Metadata block for Qualified Dublin Core */
   $handler->display->display_options['fields']['metadata_qdc']['id'] = 'metadata_qdc';
   $handler->display->display_options['fields']['metadata_qdc']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['metadata_qdc']['field'] = 'metadata_qdc';
-  $handler->display->display_options['fields']['metadata_qdc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
-  $handler->display->display_options['fields']['metadata_qdc']['metadata_implode'] = 1;
-  $handler->display->display_options['fields']['metadata_qdc']['metadata_implode_string'] = '\\n';
   /* Field: MediaMosa: Technical metadata */
   $handler->display->display_options['fields']['technical_metadata']['id'] = 'technical_metadata';
   $handler->display->display_options['fields']['technical_metadata']['table'] = 'mediamosa_asset_get';
@@ -283,7 +277,7 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['mediafiles']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['mediafiles']['field'] = 'mediafiles';
   $handler->display->display_options['fields']['mediafiles']['mediafile_path'] = '';
-  /* Field: MediaMosa: Video player */
+  /* Field: MediaMosa: Media player */
   $handler->display->display_options['fields']['player']['id'] = 'player';
   $handler->display->display_options['fields']['player']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['player']['field'] = 'player';
@@ -297,12 +291,10 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['fields']['metadata_dc']['id'] = 'metadata_dc';
   $handler->display->display_options['fields']['metadata_dc']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['metadata_dc']['field'] = 'metadata_dc';
-  $handler->display->display_options['fields']['metadata_dc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
   /* Field: MediaMosa: Metadata block for Qualified Dublin Core */
   $handler->display->display_options['fields']['metadata_qdc']['id'] = 'metadata_qdc';
   $handler->display->display_options['fields']['metadata_qdc']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['metadata_qdc']['field'] = 'metadata_qdc';
-  $handler->display->display_options['fields']['metadata_qdc']['metadata_theme'] = 'mediamosa_ck_views_theme_asset_metadata';
   /* Field: MediaMosa: Technical metadata */
   $handler->display->display_options['fields']['technical_metadata']['id'] = 'technical_metadata';
   $handler->display->display_options['fields']['technical_metadata']['table'] = 'mediamosa_asset_get';
@@ -370,12 +362,12 @@ function mediamosa_sb_feature_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Featured videos';
+  $handler->display->display_options['title'] = 'Featured media';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
@@ -476,12 +468,12 @@ function mediamosa_sb_feature_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'MediaMosa Asset New';
+  $handler->display->display_options['title'] = 'New Media';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
@@ -593,12 +585,12 @@ function mediamosa_sb_feature_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'MediaMosa Asset Popular';
+  $handler->display->display_options['title'] = 'Popular Media';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
@@ -709,12 +701,12 @@ function mediamosa_sb_feature_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'MediaMosa Asset Search page';
+  $handler->display->display_options['title'] = 'Search media';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
@@ -827,12 +819,12 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'All Videos';
+  $handler->display->display_options['title'] = '';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
@@ -961,7 +953,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 0;
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_show_stills'] = 1;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_show_collections'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_is_public_list'] = 0;
   $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_empty_assets'] = 1;
@@ -1169,7 +1161,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'MediaMosa Collection Detail';
+  $handler->display->display_options['title'] = 'Collection Detail';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1284,7 +1276,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'My videos';
+  $handler->display->display_options['title'] = 'My media';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1434,7 +1426,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Mediamosa Player';
+  $handler->display->display_options['title'] = 'Viewer';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1451,7 +1443,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['asset_id']['label'] = '';
   $handler->display->display_options['fields']['asset_id']['exclude'] = TRUE;
   $handler->display->display_options['fields']['asset_id']['element_label_colon'] = FALSE;
-  /* Field: MediaMosa: Video player */
+  /* Field: MediaMosa: Media player */
   $handler->display->display_options['fields']['player']['id'] = 'player';
   $handler->display->display_options['fields']['player']['table'] = 'mediamosa_asset_get';
   $handler->display->display_options['fields']['player']['field'] = 'player';

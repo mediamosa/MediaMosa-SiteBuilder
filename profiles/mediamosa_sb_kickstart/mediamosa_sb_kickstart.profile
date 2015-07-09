@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * profile.
+ */
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -37,9 +41,18 @@ function mediamosa_sb_kickstart_install_tasks() {
 }
 
 /**
+ * Implements hook_install_tasks().
+ */
+function mediamosa_sb_kickstart_modules_installed() {
+  features_revert();
+  cache_clear_all();
+}
+
+/**
  * Setting up form mediamosa connector.
  */
 function mediamosa_sb_kickstart_connector_form() {
+  $form = array();
   $form['connection'] = array(
     '#type' => 'fieldset',
     '#title' => t('Connection settings to MediaMosa REST interface'),
@@ -138,7 +151,13 @@ function _mediamosa_sb_kickstart_setup_wysiwyg() {
   $editor = 'ckeditor';
   $settings = 'a:20:{s:7:"default";i:1;s:11:"user_choose";i:0;s:11:"show_toggle";i:1;s:5:"theme";s:8:"advanced";s:8:"language";s:2:"en";s:7:"buttons";a:1:{s:6:"drupal";a:1:{s:5:"media";i:1;}}s:11:"toolbar_loc";s:3:"top";s:13:"toolbar_align";s:4:"left";s:8:"path_loc";s:6:"bottom";s:8:"resizing";i:1;s:11:"verify_html";i:1;s:12:"preformatted";i:0;s:22:"convert_fonts_to_spans";i:1;s:17:"remove_linebreaks";i:1;s:23:"apply_source_formatting";i:0;s:27:"paste_auto_cleanup_on_paste";i:0;s:13:"block_formats";s:32:"p,address,pre,h2,h3,h4,h5,h6,div";s:11:"css_setting";s:5:"theme";s:8:"css_path";s:0:"";s:11:"css_classes";s:0:"";}';
 
-  db_query("INSERT INTO {wysiwyg} SET editor = :editor, settings = :settings, format = :format", array(':editor' => $editor, ':settings' => $settings, ':format' => $format));
+  db_query("INSERT INTO {wysiwyg} SET editor = :editor, settings = :settings, format = :format",
+           array(
+             ':editor' => $editor,
+             ':settings' => $settings,
+             ':format' => $format,
+           )
+  );
 }
 
 /**
@@ -147,9 +166,12 @@ function _mediamosa_sb_kickstart_setup_wysiwyg() {
 function _mediamosa_sb_kickstart_setup_intro_page() {
   // Create basic page for explaining the user what to do...
   $node = new stdClass();
-  $node->uid = 1; // Admin
-  $node->status = 1; // Published
-  $node->promote = 1; // On front page.
+  // Admin.
+  $node->uid = 1;
+  // Published.
+  $node->status = 1;
+  // On front page.
+  $node->promote = 1;
   $node->type = 'page';
   $node->locked = 0;
   $node->has_title = 1;
@@ -181,10 +203,16 @@ function _mediamosa_sb_kickstart_setup_intro_page() {
  */
 function _mediamosa_sb_kickstart_setup_footer_menu() {
 
+  /**
+   * Used defaults.
+   */
   function _set_page_defaults(&$node) {
-    $node->uid = 1; // Admin
-    $node->status = 1; // Published
-    $node->promote = 0; // On front page.
+    // Admin.
+    $node->uid = 1;
+    // Published.
+    $node->status = 1;
+    // On front page.
+    $node->promote = 0;
     $node->type = 'page';
     $node->locked = 0;
     $node->has_title = 1;
@@ -201,7 +229,7 @@ function _mediamosa_sb_kickstart_setup_footer_menu() {
   $node->title = t('Contact');
   $node->body[$node->language][0]['value'] = '';
   node_save($node);
-  $alias = array('source' => 'node/'. $node->nid, 'alias' => 'contact');
+  $alias = array('source' => 'node/' . $node->nid, 'alias' => 'contact');
   path_save($alias);
 
   $node = new stdClass();
@@ -209,7 +237,7 @@ function _mediamosa_sb_kickstart_setup_footer_menu() {
   $node->title = st('Colofon');
   $node->body[$node->language][0]['value'] = '';
   node_save($node);
-  $alias = array('source' => 'node/'. $node->nid, 'alias' => 'colofon');
+  $alias = array('source' => 'node/' . $node->nid, 'alias' => 'colofon');
   path_save($alias);
 
   $node = new stdClass();
@@ -217,7 +245,7 @@ function _mediamosa_sb_kickstart_setup_footer_menu() {
   $node->title = st('Disclaimer');
   $node->body[$node->language][0]['value'] = '';
   node_save($node);
-  $alias = array('source' => 'node/'. $node->nid, 'alias' => 'disclaimer');
+  $alias = array('source' => 'node/' . $node->nid, 'alias' => 'disclaimer');
   path_save($alias);
 
   $node = new stdClass();
@@ -225,6 +253,6 @@ function _mediamosa_sb_kickstart_setup_footer_menu() {
   $node->title = st('Copyrights');
   $node->body[$node->language][0]['value'] = '';
   node_save($node);
-  $alias = array('source' => 'node/'. $node->nid, 'alias' => 'copyrights');
+  $alias = array('source' => 'node/' . $node->nid, 'alias' => 'copyrights');
   path_save($alias);
 }

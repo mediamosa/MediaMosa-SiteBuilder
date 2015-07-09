@@ -1,0 +1,17 @@
+name = MediaMosa Site Builder Footer
+description = mediamosa SB footer menu
+core = 7.x
+package = Mediamosa - Site Builder
+php = 5.2.4
+version = 7.x-1.0
+project = mediamosa_sb_footer_menu
+dependencies[] = features
+dependencies[] = mediamosa_site_builder_menu
+dependencies[] = menu
+features[features_api][] = api:1
+features[menu_custom][] = footer-menu
+features[menu_links][] = footer-menu:contact
+features[menu_links][] = footer-menu:colofon
+features[menu_links][] = footer-menu:disclaimer
+features[menu_links][] = footer-menu:copyrights
+mtime = 1435655434
