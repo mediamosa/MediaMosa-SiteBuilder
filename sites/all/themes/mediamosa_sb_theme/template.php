@@ -9,8 +9,8 @@
 /**
  * Implements hook_theme().
  */
-function bootstrap_theme() {
-  return array(
+function mediamosa_sb_theme_theme() {
+    return array(
     'pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
       'file' => 'includes/pager.inc',
