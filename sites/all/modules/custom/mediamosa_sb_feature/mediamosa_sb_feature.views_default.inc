@@ -27,6 +27,7 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_private_collections'] = 1;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Filter';
   $handler->display->display_options['pager']['type'] = 'full';
@@ -819,7 +820,6 @@ Consider loosening your query with OR. bike OR shed will often show more results
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = '';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1494,6 +1494,7 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['mediamosa_ck_views_hide_private_collections'] = 0;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Filter';
   $handler->display->display_options['pager']['type'] = 'full';
@@ -1551,6 +1552,10 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = 'Date';
   $handler->display->display_options['fields']['created']['date_format'] = 'mediamosa_ck_normal';
+  /* Field: MediaMosa: private */
+  $handler->display->display_options['fields']['private']['id'] = 'private';
+  $handler->display->display_options['fields']['private']['table'] = 'mediamosa_collection_search';
+  $handler->display->display_options['fields']['private']['field'] = 'private';
   /* Field: MediaMosa: Actions */
   $handler->display->display_options['fields']['actions']['id'] = 'actions';
   $handler->display->display_options['fields']['actions']['table'] = 'mediamosa_collection_search';

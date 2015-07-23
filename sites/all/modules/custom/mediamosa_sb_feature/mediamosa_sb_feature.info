@@ -31,4 +31,4 @@ features[views_view][] = mediamosa_collection_detail
 features[views_view][] = mediamosa_my_assets
 features[views_view][] = mediamosa_player_block
 features[views_view][] = my_collections
-mtime = 1434454562
+mtime = 1435925927
