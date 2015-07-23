@@ -68,5 +68,16 @@ function mediamosa_sb_configuration_form() {
     '#default_value' => variable_get('mediamosa_sb_view_asset_formats', TRUE),
   );
 
+  $form['edit_asset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Form settings for Edit Media page.'),
+  );
+  $form['edit_asset']['mediamosa_sb_asset_czp'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use CZP (LOM) on media forms.'),
+    '#description' => 'Add CZP (LOM) metadata fields to the media forms.',
+    '#default_value' => variable_get('mediamosa_sb_asset_czp', FALSE),
+  );
+
   return system_settings_form($form);
 }

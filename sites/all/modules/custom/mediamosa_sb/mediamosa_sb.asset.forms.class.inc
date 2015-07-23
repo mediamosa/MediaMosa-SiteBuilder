@@ -223,6 +223,30 @@ class mediamosa_sb_asset_forms {
 
     $form['additional']['qdc'] += static::create_multivalue_field('qdc_isreferencedby', $values, $form_state);
 
+    if (variable_get('mediamosa_sb_asset_czp', FALSE)) {
+      $form['additional']['czp'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Leerobject'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+
+      $form['additional']['czp']['czp_beschrijving'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Beschrijving'),
+        '#required' => FALSE,
+        '#default_value' => self::default_value($values, 'czp_beschrijving'),
+      );
+
+      $form['additional']['czp'] += static::create_multivalue_field('czp_sleutelwoord', $values, $form_state);
+      $form['additional']['czp'] += static::create_multivalue_field('czp_taal', $values, $form_state);
+      $form['additional']['czp'] += static::create_multivalue_field('czp_soort_leermateriaal', $values, $form_state);
+      $form['additional']['czp'] += static::create_multivalue_field('czp_context', $values, $form_state);
+      $form['additional']['czp'] += static::create_multivalue_field('czp_beoogde_leeftijdsgroep', $values, $form_state);
+      $form['additional']['czp'] += static::create_multivalue_field('czp_beoogde_eindgebruiker', $values, $form_state);
+      $form['additional']['czp'] += static::create_multivalue_field('czp_classificatie', $values, $form_state);
+    }
+
     return $form;
   }
 
