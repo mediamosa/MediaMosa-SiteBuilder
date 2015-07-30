@@ -7,12 +7,7 @@ core = 7.x
 ; Dependencies (mediamosa CK)
 dependencies[] = mediamosa_sdk
 dependencies[] = mediamosa_connector
-dependencies[] = media_mediamosa
 dependencies[] = mediamosa_ck (>=7.x-3.5.2-dev)
-dependencies[] = mediamosa_ck_access
-dependencies[] = mediamosa_ck_stats
-dependencies[] = mediamosa_ck_still
-dependencies[] = mediamosa_ck_transcode
 dependencies[] = mediamosa_ck_views
 
 files[] = mediamosa_sb.asset.forms.class.inc
