@@ -304,8 +304,9 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
 
 .page-asset .view .asset-video-player,
 .page-collection .view .collection-videos {
-  width: 640px;
-  margin-right: 20px;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 0 15px 15px;
   float: left;
 }
 
@@ -348,11 +349,16 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
 
 .page-asset .asset-detail-information,
 .page-collection .collection-detail-information {
-  width: 274px;
-  float: left;
-  border-width: 7px 7px 1px 7px;
-  border-color: #eaeaf3;
+  background-color: #fff;
+  width: 265px;
+  float: right;
+  margin-right: 7px;
+  margin-left: 8px;
+  margin-bottom: 15px;
+  border-width: 5px 5px 1px 5px;
+  border-color: #999999;
   border-style: solid;
+  overflow: hidden;
 }
 
 .page-asset .asset-detail-information strong,
@@ -450,11 +456,11 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
  *********************************************************/
 
 .asset-technical-information {
-  width: 640px;
-  margin-top: 20px;
-  float: left;
+  max-width: 640px;
+  margin: auto;
+  margin: 0px 15px 15px 15px;
+  clear: left;
   overflow: hidden;
-  clear: both;
 }
 
 .asset-technical-information #asset-tabs {

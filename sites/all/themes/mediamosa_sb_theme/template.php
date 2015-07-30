@@ -172,3 +172,44 @@ function mediamosa_sb_theme_form_select_options($element, $choices = NULL) {
   }
   return $options;
 }
+
+/**
+ * Shows listing of asset metadata.
+ *
+ * The theme used to generate a listing of metadata in the views using
+ * mediamosa_ck_views_field_text_metadata. Slightly modified from the original:
+ * no showing of empty rows.
+ *
+ * @param array $variables
+ *   Data used for the theme.
+ */
+function mediamosa_sb_theme_mediamosa_ck_views_theme_asset_metadata($variables) {
+  $rows = array();
+
+  ksort($variables['metadata']);
+
+  foreach ($variables['metadata'] as $name => $value) {
+    $name = drupal_ucfirst(str_replace('_', ' ', $name));
+
+    if (is_array($value)) {
+      $value = implode("\n", $value);
+    }
+    if (($name == 'created') and (isset($value)) and (substr($value, -9) == ' 00:00:00')) {
+      $value = substr($value, 0, -9);
+    }
+
+    if (empty($value)) {
+      $rows[] = array(
+        'class' => array('empty'), 'data' => array('name' => $name, 'value' => ''),
+      );
+    }
+    else {
+      $rows[] = array('name' => $name, 'value' => (empty($value) ? ' ' : nl2br(check_plain($value))));
+    }
+  }
+  if (empty($rows)) {
+    $rows[] = array('-', '');
+  }
+
+  return theme('table', array('rows' => $rows));
+}

@@ -22,3 +22,4 @@ regions[sidebar_first] = Right sidebar
 regions[footer] = Footer
 
 scripts[] = js/mediamosa_sb_theme.js
+scripts[] = js/asset_detail.js
