@@ -25,6 +25,7 @@
  *   The form array.
  */
 function _mediamosa_sb_collection_form($values) {
+  $form =  array();
   $form['basic'] = array(
     '#type' => 'fieldset',
     '#title' => t('Basic Information'),
@@ -42,6 +43,14 @@ function _mediamosa_sb_collection_form($values) {
     '#title' => t('Description'),
     '#required' => FALSE,
     '#default_value' => empty($values['description']) ? '' : $values['description'],
+  );
+
+  $form['basic']['private'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Private'),
+    '#description' => '',
+    '#required' => FALSE,
+    '#default_value' => empty($values['private']) ? '' : ($values['private'] == 'TRUE') ? '1' : '0',
   );
 
   return $form;
@@ -83,6 +92,7 @@ function mediamosa_sb_collection_add_form_submit($form, $form_state) {
   $options = array(
     'title' => $form_state['values']['title'],
     'description' => $form_state['values']['description'],
+    'private' => $form_state['values']['private'] == '1' ? 'TRUE' : 'FALSE',
   );
 
   // Add the collection.
@@ -114,8 +124,9 @@ function mediamosa_sb_collection_edit_form($form, $form_state, $coll_id) {
 
   $form_state += array(
     'values' => array(
-      'title' => (string) $collection->items->item->title,
-      'description' => (string) $collection->items->item->description,
+      'title' => (string) $item->title,
+      'description' => (string) $item->description,
+      'private' => (string) $item->private,
     ),
   );
 
@@ -163,6 +174,7 @@ function mediamosa_sb_collection_edit_form_submit($form, $form_state) {
       $options = array(
         'title' => $form_state['values']['title'],
         'description' => $form_state['values']['description'],
+        'private' => $form_state['values']['private'] == '1' ? 'TRUE' : 'FALSE',
       );
 
       // Add the collection.
