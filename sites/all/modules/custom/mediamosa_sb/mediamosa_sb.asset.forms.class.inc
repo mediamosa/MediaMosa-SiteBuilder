@@ -809,7 +809,12 @@ class mediamosa_sb_asset_forms {
     else {
       // Check if there is a running job for the asset.
       try {
-        $xml = MediaMosaCkConnectorWrapper::get_asset_jobs($values['asset_id']);
+        $options = array();
+        if (user_access(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS)) {
+          $options['is_app_admin'] = 'TRUE';
+        }
+        $options['cql'] = 'job_type == "^STILL^" AND (status == "^INPROGRESS^" OR status =="^WAITING^")';
+        $xml = MediaMosaCkConnectorWrapper::get_asset_jobs($values['asset_id'], FALSE, $options);
       }
       catch (Exception $e) {
         mediamosa_ck::watchdog_error('Unable to get jobs; !message.',
