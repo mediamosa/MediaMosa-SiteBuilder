@@ -102,6 +102,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     '#type' => 'submit',
     '#description' => t('Upload your file'),
     '#value' => t('Upload'),
+    '#attributes' => array('class' => array('mmsbDisableSubmitButton')),
   );
 
   // Add javascript to disable double click.
@@ -112,6 +113,7 @@ function mediamosa_sb_asset_upload_form($form, &$form_state) {
     'type' => 'file',
     'weight' => 10,
   );
+
 
   $form['#validate'][] = array('mediamosa_sb_asset_upload_form_validate');
 
