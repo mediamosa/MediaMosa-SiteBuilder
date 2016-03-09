@@ -54,14 +54,34 @@
     <?php endif; ?>
   </div>
 
+  <?php if (!empty($fields['mediafiles']) && !empty($fields['mediafiles']->content)): ?>
   <div class="information-row asset-formats">
     <h3><?php print t('Additional format(s)'); ?></h3>
-
-
     <p><?php print t('This video is available in the following additional format(s)'); ?>:</p>
-
     <?php print $fields['mediafiles']->content; ?>
   </div>
+  <?php endif; ?>
+
+  <?php if (isset($fields['download']) && isset($fields['download']->content)): ?>
+  <div class="information-row asset-download">
+    <h3><?php print t('Download'); ?></h3>
+    <?php print $fields['download']->content; ?>
+  </div>
+  <?php endif; ?>
+
+  <?php if (function_exists('virtualcutter_presentation_load')) : ?>
+    <div class="information-row asset-formats">
+      <?php print l(t('Virtual Cutter'), 'virtualcutter/' . $fields['asset_id']->raw); ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if (isset($fields['share']) && isset($fields['share']->content)): ?>
+  <div class="information-row asset-download">
+    <h3><?php print t('Embed'); ?></h3>
+    <?php print token_replace($fields['share']->content); ?>
+  </div>
+  <?php endif; ?>
+
 </div>
 
 <div class="asset-technical-information">

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the comment RSS row style plugin.
@@ -15,7 +16,7 @@ class views_plugin_row_comment_rss extends views_plugin_row {
     $options = parent::option_definition();
 
     $options['item_length'] = array('default' => 'default');
-    $options['links'] = FALSE;
+    $options['links'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
@@ -106,7 +107,7 @@ class views_plugin_row_comment_rss extends views_plugin_row {
       ),
       array(
         'key' => 'dc:creator',
-        'value' => $comment->name,
+        'value' => format_username($comment),
       ),
       array(
         'key' => 'guid',

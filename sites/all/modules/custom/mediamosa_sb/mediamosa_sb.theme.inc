@@ -145,6 +145,8 @@ function theme_mediamosa_sb_quota_bar($variables) {
  * @param $variables
  *   Theme variables.
  *
+ * @see theme_mediamosa_sb_quota_bar()
+ *
  * @return
  *   The rendered HTML.
  */
@@ -153,29 +155,26 @@ function theme_mediamosa_sb_upload_quota($variables) {
   // Shortcut to element.
   $element = $variables['element'];
 
-  $quota_bar_options = array(
-    'percent' => min(round($element['#options']['user_used'] / $element['#options']['user_total'] * 1000), 100),
-    'message' => t('You have no more quota for upload'),
-    'used' => format_size($element['#options']['user_used'] * 1048576),
-    'total' => format_size($element['#options']['user_total'] * 1048576),
-  );
-
-  // Clear the message when user still has quota.
-  if (empty($element['#options']['user_over_quota'])) {
-    $quota_bar_options['message'] = '';
+  // Calculate percentage used, prevent div by 0 error.
+  if ($element['#options']['user_total'] > 0) {
+    $percent = round(($element['#options']['user_used'] / $element['#options']['user_total']) * 100, 2);
+  }
+  else {
+    $percent = 0;
   }
 
-  $quota_bar = theme('mediamosa_sb_quota_bar', $quota_bar_options);
+  // Set message variable.
+  $message = empty($element['#options']['user_over_quota']) ? '' : t('You have no more quota for upload');
 
-  $form = array();
-  $form['file'] = array(
-    '#type' => 'item',
-    '#markup' => $quota_bar,
-    '#title' => $element['#title'],
-    '#description' => empty($element['#description']) ? '' : $element['#description'],
-    '#attributes' => array('class' => array('file-quota'))
+  $quota_bar_options = array(
+    'percent' => $percent,
+    'message' => $message,
+    'used' => format_size($element['#options']['user_used'] * 1024 * 1024), // converted from Megabytes to bytes for format_size.
+    'total' => format_size($element['#options']['user_total'] * 1024 * 1024), // converted from Megabytes to bytes for format_size.
   );
-  return drupal_render_children($form);
+
+  // Return themed upload bar.
+  return theme('mediamosa_sb_quota_bar', $quota_bar_options);
 }
 
 /**

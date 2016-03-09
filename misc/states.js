@@ -373,7 +373,7 @@ states.Trigger.states = {
 
   checked: {
     'change': function () {
-      return this.attr('checked');
+      return this.is(':checked');
     }
   },
 
@@ -482,8 +482,8 @@ $(document).bind('state:disabled', function(e) {
   if (e.trigger) {
     $(e.target)
       .attr('disabled', e.value)
-      .filter('.form-element')
-        .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value);
+        .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value)
+        .find('select, input, textarea').attr('disabled', e.value);
 
     // Note: WebKit nightlies don't reflect that change correctly.
     // See https://bugs.webkit.org/show_bug.cgi?id=23789
@@ -493,7 +493,11 @@ $(document).bind('state:disabled', function(e) {
 $(document).bind('state:required', function(e) {
   if (e.trigger) {
     if (e.value) {
-      $(e.target).closest('.form-item, .form-wrapper').find('label').append('<span class="form-required">*</span>');
+      var $label = $(e.target).closest('.form-item, .form-wrapper').find('label');
+      // Avoids duplicate required markers on initialization.
+      if (!$label.find('.form-required').length) {
+        $label.append('<span class="form-required">*</span>');
+      }
     }
     else {
       $(e.target).closest('.form-item, .form-wrapper').find('label .form-required').remove();

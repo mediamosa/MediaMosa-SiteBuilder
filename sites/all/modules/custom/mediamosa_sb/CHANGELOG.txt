@@ -1,5 +1,79 @@
-Mediamosa SiteBuilder 1.1, 10/24/2012
--------------------------------------
+MediaMosa SiteBuilder 7.x-1.3
+-----------------------------
+- /asset/player/[id] supports ?t parameter. (?t=5,15)
+- added /asset/player/[id] option.
+- Added embed option in asset/detail
+- Default started transcodes are a ck setting.
+- Master Style guide fixes in module file.
+- Fixed the fallback images audio, notfound, notgranted.
+- Made the additional format configurable.
+- Improved asset detail form protected switch.
+- Made protected field emails 2 rows.
+- Made links to more info open in new window.
+- Fixed issue 'thumbnail in asset search results not clickable'
+- Changed protected form to use visible/not visible.
+- Added extra info button to license field.
+- Fixed download option.
+- Removed step 4 of upload.
+- A registered user may upload assets.
+- Upgraded Drupal core to 7.23.
+- Added a view player template.
+- Added a creative commons license field.
+- By Chris Flink: Fixed issue with quota bar used percentage calculation.
+- Added a link to virtualcutter if enabled.
+- Fixed Minor code style.
+- Added download option to views.
+- Asset updates should update, not replace.
+- Added Transfer option.
+- fixed minor codestyle issues.
+- Added [owner:mail] as filter token to myassets/mycoll.
+- Themed list of downloads on asset detail page.
+- Fixed asset delete cancel bug (issue #2 on github).
+- Fixed cancel button on asset delete page.
+- Fixed permission bug.
+- Added Sitebuilder (upload related) settings.
+- Upgraded ctools, views, wysiwyg, libraries.
+- Fixed date_popup fields to be saved and convert dc:date to multivalue.
+- Initial implementation for multivalue fields.
+- Fixed cancel button in upload form.
+- Allow to update fields with an empty value.
+- Rename 'video' to the more generic 'media item'.
+- Remove the default isprivate value, as this is now an option in CK.
+- Upgraded Drupal to 7.26.
+- Set default admin theme to Seven.
+- Updated MediaMosa CK submodule. Please use 'git submodule update' to get
+  latest version.
+- Added disabled for upload button once the button is pressed.
+- Updated contrib ctools, media.
+- Updated Drupal core to 7.39.
+- Allow admin to generate stills.
+- Themed 'private:TRUE' to 'private'.
+- Added private option to collection.
+- Improved layout of asset view page.
+- Fixed small typo error.
+- Added an option to edit CZP fields on media form.
+- Support for asset-published field.
+- Added an image picker for thumbnails.
+- Upload description now accepts html.
+- Changed to transfer ownership.
+- Updated sitebuilder features,
+- Updated core 7.38 and views module.
+- Merge pull request #16 from arjenk/feature/update-core-and-modules
+- Updated Core and contrib modules.
+- Updated CHANGELOG.txt.
+- Update MediaMosa CK submodule. Please use 'git submodule update' to get latest version.
+- Merge pull request #15 from chrisflink/master
+- updated to drupal core 7.32 (security update)
+- Merge branch 'master' of https://github.com/mediamosa/MediaMosa-SiteBuilder
+- removed error message, the error is already set by MediaMosaSbConnectorWrapper::delete_asset.
+- Fixes untranslatable Javascript alert
+- Updated submodule MediaMosa CK to latest, use git submodule update to retrieve latest.
+- Updated submodule MediaMosa SDK to latest, use git submodule update to retrieve latest.
+- Upgraded Drupal to 7.43.
+
+
+MediaMosa SiteBuilder 7.x-1.x-dev
+---------------------------------
 - Fixed edit form asset, returned wrong error on collection not found when
   editing asset with owner.
 - Added template to default SiteBuilder theme for display of single player. Use
@@ -8,6 +82,6 @@ Mediamosa SiteBuilder 1.1, 10/24/2012
 - Removed surfconext module from release. Make sure its turned off before
   upgrading to 1.1.
 
-Mediamosa SiteBuilder 1.0, 05/01/2012
--------------------------------------
-- Initial release
+MediaMosa SiteBuilder 7.x-1.0, 05/01/2012
+-----------------------------------------
+- Initial release.

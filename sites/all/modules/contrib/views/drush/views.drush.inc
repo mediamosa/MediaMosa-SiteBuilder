@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @file
  * Drush integration of views.
  *
- * * drush cache-clear views - Clears the views specific caches.
- * * views-revert - Drush command to revert views overridden in the system.
+ * drush cache-clear views - Clears the views specific caches.
+ * views-revert - Drush command to revert views overridden in the system.
  */
 
 /**
@@ -41,16 +42,20 @@ function views_drush_command() {
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
     'aliases' => array('vr'),
+    'options' => array(
+      'all' => 'If provided, all views will be reverted.',
+    ),
     'examples' => array(
       'drush vr archive' => 'Reverts the "archive" view.',
       'drush rln archive frontpage' => 'Reverts the "archive" and "frontpage" view.',
       'drush vr' => 'Will present you with a list of overridden views to choose from, and an option to revert all overridden views.',
+      'drush vr --all' => 'Will revert all overridden views.',
     ),
   );
   $items['views-dev'] = array(
     'callback' => 'views_development_settings',
     'drupal dependencies' => array('views'),
-    'description' => 'Setup the views settings to a more developer oriented value..',
+    'description' => 'Set the Views settings to more developer-oriented values.',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
     'aliases' => array('vd'),
   );
@@ -125,15 +130,21 @@ function views_revert_views() {
     }
   }
 
-  // Return early if there are no overridden views in the system.
+  // If there are no overridden views in the system, report it.
   if (empty($overridden)) {
-    return drush_set_error(dt('There are no overridden views in the system.'));
+    drush_log(dt('There are no overridden views in the system.'), 'ok');
   }
 
-  // If the user specified in the command the views to be overridden.
-  if (!empty($viewnames)) {
+  // If the user provided the "--all" option, revert all views.
+  if (drush_get_option('all')) {
+    $i = views_revert_allviews($views);
+  }
+
+  // If the user specified a list of views on the CLI, revert those.
+  elseif (!empty($viewnames)) {
     foreach ($viewnames as $key => $viewname) {
       $is_overridden = key_exists($viewname, $overridden);
+
       // Check if the provided view name is in the system
       if ($viewname && !key_exists($viewname, $views)) {
         drush_set_error(dt("'@viewname' view is not present in the system.", array('@viewname' => $viewname)));
@@ -143,18 +154,22 @@ function views_revert_views() {
         drush_set_error(dt("The view specified '@viewname' is not overridden.", array('@viewname' => $viewname)));
       }
       // If the view is overriden, revert it.
-      elseif ($is_overridden){
+      elseif ($is_overridden) {
         views_revert_view($views[$viewname]);
         $i++;
       }
       // We should never get here but well...
       else {
-        drush_set_error(dt("The view specified '@viewname' is not provided in code, and thus cannot be reverted.", array('@viewname' => $viewname)));
+        drush_set_error(dt(
+          "The view specified '@viewname' is not provided in code, and thus cannot be reverted.",
+          array('@viewname' => $viewname)
+        ));
       }
     }
   }
 
-  // The user did not specify any views in the command, prompt the user
+  // The user neither selected the "--all" option, nor provided a list of views to revert.
+  // Prompt the user.
   else {
     // list of choices for the user
     $overridden['all'] = dt('Revert all overridden views'); // add a choice at the end
@@ -236,6 +251,7 @@ function views_development_settings() {
   variable_set('views_ui_show_listing_filters', TRUE);
   variable_set('views_ui_show_master_display', TRUE);
   variable_set('views_ui_show_advanced_column', TRUE);
+  variable_set('views_ui_always_live_preview', FALSE);
   variable_set('views_ui_always_live_preview_button', TRUE);
   variable_set('views_ui_show_preview_information', TRUE);
   variable_set('views_ui_show_sql_query', TRUE);
@@ -455,8 +471,8 @@ function drush_views_disable() {
   _views_drush_changestatus($viewnames, TRUE);
 }
 
-/*
-* Helper function to enable / disable views
+/**
+ * Helper function to enable / disable views
  * @param $viewnames: array of viewnames to process
  * @param $status: TRUE to disable or FALSE to enable the view
  */
@@ -481,8 +497,7 @@ function _views_drush_changestatus($viewnames = array(), $status = NULL) {
       variable_set('views_defaults', $views_status);
       views_invalidate_cache();
       drush_log(dt("Views cache was cleared"), 'ok');
-      menu_rebuild();
-      drush_log(dt("Menu cache was cleared"), 'ok');
+      drush_log(dt("Menu cache is set to be rebuilt on the next request."), 'ok');
     }
   }
 }

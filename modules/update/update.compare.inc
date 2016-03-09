@@ -417,14 +417,15 @@ function update_calculate_project_data($available) {
  * version (e.g., 5.x-1.5-beta1, 5.x-1.5-beta2, and 5.x-1.5). Development
  * snapshots for a given major version are always listed last.
  *
- * @param $project
- *   An array containing information about a specific project.
+ * @param $unused
+ *   Input is not being used, but remains in function for API compatibility
+ *   reasons.
  * @param $project_data
  *   An array containing information about a specific project.
  * @param $available
  *   Data about available project releases of a specific project.
  */
-function update_calculate_project_update_status($project, &$project_data, $available) {
+function update_calculate_project_update_status($unused, &$project_data, $available) {
   foreach (array('title', 'link') as $attribute) {
     if (!isset($project_data[$attribute]) && isset($available[$attribute])) {
       $project_data[$attribute] = $available[$attribute];
@@ -592,7 +593,10 @@ function update_calculate_project_update_status($project, &$project_data, $avail
 
     // See if this is a higher major version than our target and yet still
     // supported. If so, record it as an "Also available" release.
-    if ($release['version_major'] > $target_major) {
+    // Note: some projects have a HEAD release from CVS days, which could
+    // be one of those being compared. They would not have version_major
+    // set, so we must call isset first.
+    if (isset($release['version_major']) && $release['version_major'] > $target_major) {
       if (in_array($release['version_major'], $supported_majors)) {
         if (!isset($project_data['also'])) {
           $project_data['also'] = array();

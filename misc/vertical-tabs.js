@@ -50,8 +50,8 @@ Drupal.behaviors.verticalTabs = {
       if (!tab_focus) {
         // If the current URL has a fragment and one of the tabs contains an
         // element that matches the URL fragment, activate that tab.
-        if (window.location.hash && $(window.location.hash, this).length) {
-          tab_focus = $(window.location.hash, this).closest('.vertical-tabs-pane');
+        if (window.location.hash && $(this).find(window.location.hash).length) {
+          tab_focus = $(this).find(window.location.hash).closest('.vertical-tabs-pane');
         }
         else {
           tab_focus = $('> .vertical-tabs-pane:first', this);
@@ -134,6 +134,8 @@ Drupal.verticalTab.prototype = {
   tabShow: function () {
     // Display the tab.
     this.item.show();
+    // Show the vertical tabs.
+    this.item.closest('.vertical-tabs').show();
     // Update .first marker for items. We need recurse from parent to retain the
     // actual DOM element order as jQuery implements sortOrder, but not as public
     // method.
@@ -163,6 +165,10 @@ Drupal.verticalTab.prototype = {
     var $firstTab = this.fieldset.siblings('.vertical-tabs-pane:not(.vertical-tab-hidden):first');
     if ($firstTab.length) {
       $firstTab.data('verticalTab').focus();
+    }
+    // Hide the vertical tabs (if no tabs remain).
+    else {
+      this.item.closest('.vertical-tabs').hide();
     }
     return this;
   }

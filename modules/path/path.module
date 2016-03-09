@@ -137,8 +137,6 @@ function path_form_node_form_alter(&$form, $form_state) {
     '#title' => t('URL alias'),
     '#default_value' => $path['alias'],
     '#maxlength' => 255,
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
     '#description' => t('Optionally specify an alternative URL by which this content can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
   );
   $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
@@ -187,7 +185,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
  * Implements hook_node_insert().
  */
 function path_node_insert($node) {
-  if (isset($node->path)) {
+  if (isset($node->path) && isset($node->path['alias'])) {
     $path = $node->path;
     $path['alias'] = trim($path['alias']);
     // Only save a non-empty alias.
@@ -207,9 +205,9 @@ function path_node_insert($node) {
 function path_node_update($node) {
   if (isset($node->path)) {
     $path = $node->path;
-    $path['alias'] = trim($path['alias']);
+    $path['alias'] = isset($path['alias']) ? trim($path['alias']) : '';
     // Delete old alias if user erased it.
-    if (!empty($path['pid']) && empty($path['alias'])) {
+    if (!empty($path['pid']) && !$path['alias']) {
       path_delete($path['pid']);
     }
     path_node_insert($node);

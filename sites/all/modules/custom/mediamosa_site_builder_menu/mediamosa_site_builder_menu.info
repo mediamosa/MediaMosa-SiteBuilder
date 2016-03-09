@@ -1,0 +1,15 @@
+name = MediaMosa Site Builder Menu
+description = MediaMosa Site Builder Menu
+core = 7.x
+package = Mediamosa - Site Builder
+php = 5.2.4
+version = 7.x-1.0
+project = mediamosa_site_builder_menu
+dependencies[] = features
+dependencies[] = mediamosa_sb_feature
+dependencies[] = menu
+features[features_api][] = api:1
+features[menu_custom][] = main-menu
+features[menu_links][] = main-menu:<front>
+features[menu_links][] = main-menu:assets
+features[menu_links][] = main-menu:collections

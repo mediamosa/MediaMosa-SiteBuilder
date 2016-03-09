@@ -5,6 +5,16 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function mediamosa_sb_feature_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
+}
+
+/**
  * Implements hook_views_api().
  */
 function mediamosa_sb_feature_views_api() {
@@ -17,7 +27,7 @@ function mediamosa_sb_feature_views_api() {
 function mediamosa_sb_feature_image_default_styles() {
   $styles = array();
 
-  // Exported image style: mediamosa_sb_large
+  // Exported image style: mediamosa_sb_large.
   $styles['mediamosa_sb_large'] = array(
     'name' => 'mediamosa_sb_large',
     'effects' => array(
@@ -37,9 +47,10 @@ function mediamosa_sb_feature_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'mediamosa_sb_large',
   );
 
-  // Exported image style: mediamosa_sb_normal
+  // Exported image style: mediamosa_sb_normal.
   $styles['mediamosa_sb_normal'] = array(
     'name' => 'mediamosa_sb_normal',
     'effects' => array(
@@ -59,9 +70,10 @@ function mediamosa_sb_feature_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'mediamosa_sb_normal',
   );
 
-  // Exported image style: mediamosa_sb_small
+  // Exported image style: mediamosa_sb_small.
   $styles['mediamosa_sb_small'] = array(
     'name' => 'mediamosa_sb_small',
     'effects' => array(
@@ -81,6 +93,7 @@ function mediamosa_sb_feature_image_default_styles() {
         'weight' => '1',
       ),
     ),
+    'label' => 'mediamosa_sb_small',
   );
 
   return $styles;

@@ -1,9 +1,20 @@
 <?php
 
 /**
- * The base plugin to handle caching.
+ * @file
+ * Definition of views_plugin_cache.
+ */
+
+/**
+ * @defgroup views_cache_plugins Views cache plugins
+ * @{
+ * @todo.
  *
- * @ingroup views_cache_plugins
+ * @see hook_views_plugins()
+ */
+
+/**
+ * The base plugin to handle caching.
  */
 class views_plugin_cache extends views_plugin {
   /**
@@ -174,6 +185,7 @@ class views_plugin_cache extends views_plugin {
     $this->storage['head'] = drupal_add_html_head();
     $this->storage['css'] = drupal_add_css();
     $this->storage['js'] = drupal_add_js();
+    $this->storage['headers'] = drupal_get_http_header();
   }
 
   /**
@@ -188,34 +200,60 @@ class views_plugin_cache extends views_plugin {
       $this->storage['head'] = '';
     }
 
+    // Check if the advanced mapping function of D 7.23 is available.
+    $array_mapping_func = function_exists('drupal_array_diff_assoc_recursive') ? 'drupal_array_diff_assoc_recursive' : 'array_diff_assoc';
+
     // Slightly less simple for CSS:
     $css = drupal_add_css();
-    $start = isset($this->storage['css']) ? $this->storage['css'] : array();
-    $this->storage['css'] = array();
+    $css_start = isset($this->storage['css']) ? $this->storage['css'] : array();
+    $this->storage['css'] = $this->assetDiff($css, $css_start, $array_mapping_func);
 
-    foreach ($css as $file => $data) {
-      if (!isset($this->storage['css'][$file])) {
-        $this->storage['css'][$file] = $data;
-      }
-    }
-
-    // Get javascript after views renders
+    // Get javascript after/before views renders.
     $js = drupal_add_js();
-
-    // Get javascript before views renders.
-    $start = isset($this->storage['js']) ? $this->storage['js'] : array();
-    $this->storage['js'] = array();
-
+    $js_start = isset($this->storage['js']) ? $this->storage['js'] : array();
     // If there are any differences between the old and the new javascript then
     // store them to be added later.
-    if ($diff = array_diff_assoc($js, $start)) {
-      $this->storage['js'] = $diff;
-    }
+    $this->storage['js'] = $this->assetDiff($js, $js_start, $array_mapping_func);
 
     // Special case the settings key and get the difference of the data.
-    if ($settings_diff = array_diff_assoc($js['settings']['data'], $start['settings']['data'])) {
-      $this->storage['js']['settings'] = $settings_diff;
+    $settings = isset($js['settings']['data']) ? $js['settings']['data'] : array();
+    $settings_start = isset($js_start['settings']['data']) ? $js_start['settings']['data'] : array();
+    $this->storage['js']['settings'] = $array_mapping_func($settings, $settings_start);
+
+    // Get difference of HTTP headers.
+    $this->storage['headers'] = $array_mapping_func(drupal_get_http_header(), $this->storage['headers']);
+  }
+
+  /**
+   * Computes the differences between two JS/CSS asset arrays.
+   *
+   * @param array $assets
+   *   The current asset array.
+   * @param array $start_assets
+   *   The original asset array.
+   * @param string $diff_function
+   *   The function that should be used for computing the diff.
+   *
+   * @return array
+   *   A CSS or JS asset array that contains all entries that are new/different
+   *   in $assets.
+   */
+  protected function assetDiff(array $assets, array $start_assets, $diff_function) {
+    $diff = $diff_function($assets, $start_assets);
+
+    // Cleanup the resulting array since drupal_array_diff_assoc_recursive() can
+    // leave half populated arrays behind.
+    foreach ($diff as $key => $entry) {
+      // If only the weight was different we can remove this entry.
+      if (count($entry) == 1 && isset($entry['weight'])) {
+        unset($diff[$key]);
+      }
+      // If there are other differences we override with the latest entry.
+      elseif ($entry != $assets[$key]) {
+        $diff[$key] = $assets[$key];
+      }
     }
+    return $diff;
   }
 
   /**
@@ -232,7 +270,7 @@ class views_plugin_cache extends views_plugin {
     }
     if (!empty($this->storage['js'])) {
       foreach ($this->storage['js'] as $key => $args) {
-        if ($key != 'settings') {
+        if ($key !== 'settings') {
           drupal_add_js($args['data'], $args);
         }
         else {
@@ -242,59 +280,71 @@ class views_plugin_cache extends views_plugin {
         }
       }
     }
+    if (!empty($this->storage['headers'])) {
+      foreach ($this->storage['headers'] as $name => $value) {
+        drupal_add_http_header($name, $value);
+      }
+    }
   }
 
   function get_results_key() {
-    global $user;
-
     if (!isset($this->_results_key)) {
-
-      $build_info = $this->view->build_info;
-
-      $query_plugin = $this->view->display_handler->get_plugin('query');
-
-      foreach (array('query','count_query') as $index) {
-        // If the default query back-end is used generate SQL query strings from
-        // the query objects.
-        if ($build_info[$index] instanceof SelectQueryInterface) {
-          $query = clone $build_info[$index];
-          $query->preExecute();
-          $build_info[$index] = (string)$query;
-        }
-      }
-      $key_data = array(
-        'build_info' => $build_info,
-        'roles' => array_keys($user->roles),
-        'super-user' => $user->uid == 1, // special caching for super user.
-        'language' => $GLOBALS['language']->language,
-      );
-      foreach (array('exposed_info', 'page', 'sort', 'order') as $key) {
-        if (isset($_GET[$key])) {
-          $key_data[$key] = $_GET[$key];
-        }
-      }
-
-      $this->_results_key = $this->view->name . ':' . $this->display->id . ':results:' . md5(serialize($key_data));
+      $this->_results_key = $this->view->name . ':' . $this->display->id . ':results:' . $this->get_cache_key();
     }
 
     return $this->_results_key;
   }
 
   function get_output_key() {
-    global $user;
     if (!isset($this->_output_key)) {
       $key_data = array(
-        'result' => $this->view->result,
-        'roles' => array_keys($user->roles),
-        'super-user' => $user->uid == 1, // special caching for super user.
         'theme' => $GLOBALS['theme'],
-        'language' => $GLOBALS['language']->language,
       );
-
-      $this->_output_key = $this->view->name . ':' . $this->display->id . ':output:' . md5(serialize($key_data));
+      $this->_output_key = $this->view->name . ':' . $this->display->id . ':output:' . $this->get_cache_key($key_data);
     }
 
     return $this->_output_key;
   }
 
+  /**
+   * Returns cache key.
+   *
+   * @param array $key_data
+   *   Additional data for cache segmentation and/or overrides for default
+   *   segmentation.
+   *
+   * @return string
+   */
+  function get_cache_key($key_data = array()) {
+    global $user;
+
+    $key_data += array(
+      'roles' => array_keys($user->roles),
+      'super-user' => $user->uid == 1, // special caching for super user.
+      'language' => $GLOBALS['language']->language,
+      'base_url' => $GLOBALS['base_url'],
+    );
+
+    if (empty($key_data['build_info'])) {
+      $build_info = $this->view->build_info;
+      foreach (array('query','count_query') as $index) {
+        // If the default query back-end is used generate SQL query strings from
+        // the query objects.
+        if ($build_info[$index] instanceof SelectQueryInterface) {
+          $query = clone $build_info[$index];
+          $query->preExecute();
+          $key_data['build_info'][$index] = array(
+            'sql' => (string) $query,
+            'arguments' => $query->getArguments(),
+          );
+        }
+      }
+    }
+    $key = md5(serialize($key_data));
+    return $key;
+  }
 }
+
+/**
+ * @}
+ */

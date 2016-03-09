@@ -247,6 +247,23 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
   }
 
   /**
+   * Delete asset.
+   *
+   * @param $asset_id
+   *   The asset ID.
+   * @param $user_id
+   *   The user ID.
+   */
+  static public function delete_asset($asset_id, $user_id) {
+    // Need delete asset right.
+    if (mediamosa_sb::access_asset_delete($asset_id)) {
+      $user_id = mediamosa_sb::get_owner_asset($asset_id);
+    }
+
+    return parent::delete_asset($asset_id, $user_id);
+  }
+
+  /**
    * Delete still(s) from a asset.
    *
    * @param $asset_id
@@ -257,7 +274,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    *   The REST call options.
    */
   static public function delete_asset_still($asset_id, $user_id, array $options = array()) {
-    // Need edit right.
+    // Need edit right (delete still = edit asset).
     if (mediamosa_sb::access_asset_edit($asset_id)) {
       $user_id = mediamosa_sb::get_owner_asset($asset_id);
     }
@@ -268,7 +285,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
   /**
    * Mediafile delete.
    *
-    * @param $asset_id
+   * @param $asset_id
    *   The asset ID.
    * @param $mediafile_id
    *   The ID of the mediafile.
@@ -302,7 +319,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    */
   static public function delete_collection($coll_id, $user_id, $options = array()) {
     // Need edit right.
-    if (mediamosa_sb::access_asset_edit($coll_id)) {
+    if (mediamosa_sb::access_collection_edit($coll_id)) {
       $user_id = mediamosa_sb::get_owner_collection($coll_id);
     }
 
@@ -321,7 +338,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    */
   static public function delete_collection_asset_relations($coll_id, $user_id, array $asset_ids, array $options = array()) {
     // Need edit right.
-    if (mediamosa_sb::access_asset_edit($coll_id)) {
+    if (mediamosa_sb::access_collection_edit($coll_id)) {
       $user_id = mediamosa_sb::get_owner_collection($coll_id);
     }
 
@@ -343,7 +360,7 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
    * @return mediamosa_connector_response
    *   Returns FALSE when failure or mediamosa_connector_response.
    */
-  static public function create_mediafile_still_asset($asset_id, $mediafile_id, $user_id, $data = array()) {
+  static public function create_mediafile_still_asset($asset_id, $mediafile_id, $data = array()) {
     // Need edit right.
     if (mediamosa_sb::access_asset_edit($asset_id)) {
       $user_id = mediamosa_sb::get_owner_mediafile($mediafile_id);
@@ -372,5 +389,97 @@ class MediaMosaSbConnectorWrapper extends MediaMosaCkConnectorWrapper {
     }
 
     return parent::create_transcode($mediafile_id, $options);
+  }
+
+  /**
+   * Change ownership.
+   *
+   * @param string $asset_id
+   *   The asset ID to transfer.
+   * @param string $owner_id
+   *   Current owner
+   * @param string $new_owner_id
+   *   New owner.
+   *
+   * @return bool
+   *   Returns FALSE for failure.
+   */
+  static public function change_asset_owner($asset_id, $owner_id, $new_owner_id) {
+
+    try {
+      // Get the asset.
+      $asset = parent::get_asset($asset_id, array('show_stills' => FALSE, 'get_original_only' => TRUE));
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
+    if (!isset($asset)) {
+      return FALSE;
+    }
+
+    // Or user = owner, or user has elevated rights.
+    if (!(($owner_id == (string) $asset->xml->items->item->owner_id) || (user_access(mediamosa_sb::MEDIAMOSA_SB_PERMISSION_EDIT_ASSETS)))) {
+      return FALSE;
+    }
+
+    $options = array(
+      'is_app_admin' => 'TRUE',
+      'owner_id' => $new_owner_id,
+      'isprivate' => 'FALSE',
+    );
+    try {
+      // Update the asset.
+      return parent::update_asset($asset_id, $options);
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Publish an asset.
+   *
+   * @param array $options
+   *   The options for the asset.
+   *
+   * @return array
+   *   returns rest call output.
+   */
+  static public function asset_publish($asset_id, array $options = array()) {
+    // Need edit right.
+    if (mediamosa_sb::access_asset_edit($asset_id)) {
+      $options += array('user_id' => mediamosa_sb::get_owner_asset($asset_id));
+    }
+    try {
+      return mediamosa_ck::request_post_fatal('asset/' . rawurlencode($asset_id) . '/publish', array('data' => $options));
+    }
+    catch (Exception $e) {
+      mediamosa_ck::watchdog_error('Unable to update asset; !message.', array('!message' => $e->getMessage()));
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Publish an asset.
+   *
+   * @param array $options
+   *   The options for the asset.
+   *
+   * @return array
+   *   returns rest call output.
+   */
+  static public function asset_unpublish($asset_id, array $options = array()) {
+    // Need edit right.
+    if (mediamosa_sb::access_asset_edit($asset_id)) {
+      $options += array('user_id' => mediamosa_sb::get_owner_asset($asset_id));
+    }
+    try {
+      return mediamosa_ck::request_post_fatal('asset/' . rawurlencode($asset_id) . '/unpublish', array('data' => $options));
+    }
+    catch (Exception $e) {
+      mediamosa_ck::watchdog_error('Unable to update asset; !message.', array('!message' => $e->getMessage()));
+    }
+    return FALSE;
   }
 }

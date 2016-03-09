@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the attachment display plugin.
@@ -19,10 +20,10 @@ class views_plugin_display_attachment extends views_plugin_display {
 
     $options['displays'] = array('default' => array());
     $options['attachment_position'] = array('default' => 'before');
-    $options['inherit_arguments'] = array('default' => TRUE);
-    $options['inherit_exposed_filters'] = array('default' => FALSE);
-    $options['inherit_pager'] = array('default' => FALSE);
-    $options['render_pager'] = array('default' => FALSE);
+    $options['inherit_arguments'] = array('default' => TRUE, 'bool' => TRUE);
+    $options['inherit_exposed_filters'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['inherit_pager'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['render_pager'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
@@ -226,6 +227,8 @@ class views_plugin_display_attachment extends views_plugin_display {
 
     $args = $this->get_option('inherit_arguments') ? $this->view->args : array();
     $view->set_arguments($args);
+    $exposed_input = $this->get_option('inherit_exposed_filters') ? $this->view->exposed_input : array();
+    $view->set_exposed_input($exposed_input);
     $view->set_display($this->display->id);
     if ($this->get_option('inherit_pager')) {
       $view->display_handler->use_pager = $this->view->display[$display_id]->handler->use_pager();

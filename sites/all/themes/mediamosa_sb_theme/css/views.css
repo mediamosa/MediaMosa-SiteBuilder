@@ -109,6 +109,13 @@
   font-size: 12px;
 }
 
+#page_content .view .asset-information .views-field-published {
+  position: absolute;
+  right: 10px;
+  bottom: 24px;
+  font-size: 12px;
+}
+
 #page_content .view .asset-information .views-field-owner-id .field-content,
 #page_content .view .asset-information .views-field-videotimestamp span {
   color: #686868;
@@ -297,8 +304,9 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
 
 .page-asset .view .asset-video-player,
 .page-collection .view .collection-videos {
-  width: 640px;
-  margin-right: 20px;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 0 15px 15px;
   float: left;
 }
 
@@ -341,11 +349,16 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
 
 .page-asset .asset-detail-information,
 .page-collection .collection-detail-information {
-  width: 274px;
-  float: left;
-  border-width: 7px 7px 1px 7px;
-  border-color: #eaeaf3;
+  background-color: #fff;
+  width: 265px;
+  float: right;
+  margin-right: 7px;
+  margin-left: 8px;
+  margin-bottom: 15px;
+  border-width: 5px 5px 1px 5px;
+  border-color: #999999;
   border-style: solid;
+  overflow: hidden;
 }
 
 .page-asset .asset-detail-information strong,
@@ -395,30 +408,35 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
  *********************************************************/
 
 .asset-detail-information .asset-collections,
-.asset-detail-information .asset-formats {
+.asset-detail-information .asset-formats,
+.asset-detail-information .asset-download {
   padding: 12px 25px;
 }
 
 .asset-detail-information .asset-collections h3,
-.asset-detail-information .asset-formats h3 {
+.asset-detail-information .asset-formats h3,
+.asset-detail-information .asset-download h3 {
   margin-bottom: 11px;
   font-size: 18px;
   /* background declaration in sprite.css */
 }
 
 .asset-detail-information .asset-collections p,
-.asset-detail-information .asset-formats p {
+.asset-detail-information .asset-formats p,
+.asset-detail-information .asset-download p {
   color: #000;
   font-size: 12px;
 }
 
 .asset-detail-information .asset-collections ul,
-.asset-detail-information .asset-formats ul {
+.asset-detail-information .asset-formats ul,
+.asset-detail-information .asset-download ul {
   margin: 10px 0;
 }
 
 .asset-detail-information .asset-collections ul li,
-.asset-detail-information .asset-formats ul li {
+.asset-detail-information .asset-formats ul li,
+.asset-detail-information .asset-download ul li {
   padding-left: 12px;
   margin-bottom: 5px;
   font-size: 12px;
@@ -426,7 +444,8 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
 }
 
 .asset-detail-information .asset-collections ul li a,
-.asset-detail-information .asset-formats ul li a {
+.asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download ul li a {
   margin-top: 2px;
   padding-right: 20px;
   font-size: 12px;
@@ -437,11 +456,11 @@ html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
  *********************************************************/
 
 .asset-technical-information {
-  width: 640px;
-  margin-top: 20px;
-  float: left;
+  max-width: 640px;
+  margin: auto;
+  margin: 0px 15px 15px 15px;
+  clear: left;
   overflow: hidden;
-  clear: both;
 }
 
 .asset-technical-information #asset-tabs {

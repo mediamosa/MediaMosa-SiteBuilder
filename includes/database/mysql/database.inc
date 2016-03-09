@@ -13,11 +13,11 @@
 class DatabaseConnection_mysql extends DatabaseConnection {
 
   /**
-   * Flag to indicate if we have registered the nextID cleanup function.
+   * Flag to indicate if the cleanup function in __destruct() should run.
    *
    * @var boolean
    */
-  protected $shutdownRegistered = FALSE;
+  protected $needsCleanup = FALSE;
 
   public function __construct(array $connection_options = array()) {
     // This driver defaults to transaction support, except if explicitly passed FALSE.
@@ -36,6 +36,10 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       // Default to TCP connection on port 3306.
       $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . (empty($connection_options['port']) ? 3306 : $connection_options['port']);
     }
+    // Character set is added to dsn to ensure PDO uses the proper character
+    // set when escaping. This has security implications. See
+    // https://www.drupal.org/node/1201452 for further discussion.
+    $dsn .= ';charset=utf8';
     $dsn .= ';dbname=' . $connection_options['database'];
     // Allow PDO options to be overridden.
     $connection_options += array(
@@ -47,6 +51,11 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       PDO::ATTR_EMULATE_PREPARES => TRUE,
     );
+    if (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+      // An added connection option in PHP 5.5.21+ to optionally limit SQL to a
+      // single statement like mysqli.
+      $connection_options['pdo'] += array(PDO::MYSQL_ATTR_MULTI_STATEMENTS => FALSE);
+    }
 
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
@@ -72,10 +81,18 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       'init_commands' => array(),
     );
     $connection_options['init_commands'] += array(
-      'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER'",
+      'sql_mode' => "SET sql_mode = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER'",
     );
-    // Set connection options.
-    $this->exec(implode('; ', $connection_options['init_commands']));
+    // Execute initial commands.
+    foreach ($connection_options['init_commands'] as $sql) {
+      $this->exec($sql);
+    }
+  }
+
+  public function __destruct() {
+    if ($this->needsCleanup) {
+      $this->nextIdDelete();
+    }
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
@@ -84,7 +101,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {
     $tablename = $this->generateTemporaryTableName();
-    $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY SELECT', $query), $args, $options);
+    $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY ' . $query, $args, $options);
     return $tablename;
   }
 
@@ -115,12 +132,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       $this->query('INSERT INTO {sequences} (value) VALUES (:value) ON DUPLICATE KEY UPDATE value = value', array(':value' => $existing_id));
       $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
     }
-    if (!$this->shutdownRegistered) {
-      // Use register_shutdown_function() here to keep the database system
-      // independent of Drupal.
-      register_shutdown_function(array($this, 'nextIdDelete'));
-      $shutdownRegistered = TRUE;
-    }
+    $this->needsCleanup = TRUE;
     return $new_id;
   }
 

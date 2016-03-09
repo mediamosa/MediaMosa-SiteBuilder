@@ -62,13 +62,12 @@ function mediamosa_sb_kickstart_install() {
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
 
-
   // Enable default theme, disable bartik, garland.
   theme_enable(array('mediamosa_sb_theme'));
   theme_disable(array('bartik'));
 
   $default_theme = 'mediamosa_sb_theme';
-  $admin_theme = 'garland';
+  $admin_theme = 'seven';
   variable_set('theme_default', $default_theme);
   variable_set('admin_theme', $admin_theme);
   variable_set('node_admin_theme', 1);
@@ -184,7 +183,7 @@ function mediamosa_sb_kickstart_install() {
       'title' => '',
       'cache' => -1,
     ),
-    // Main-menu in header
+    // Main-menu in header.
     array(
       'module' => 'system',
       'delta' => 'main-menu',
@@ -239,10 +238,10 @@ function mediamosa_sb_kickstart_install() {
     // Footer menu in footer block.
     array(
       'module' => 'menu',
-      'delta' => 'menu-footer',
+      'delta' => 'footer-menu',
       'theme' => $default_theme,
       'status' => 1,
-      'weight' => -16,
+      'weight' => 11,
       'region' => 'footer',
       'visibility' => 0,
       'pages' => '',
@@ -381,7 +380,6 @@ function mediamosa_sb_kickstart_install() {
   );
   field_create_instance($instance);
 
-
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
   // See http://api.drupal.org/api/function/field_create_field/7
@@ -454,7 +452,11 @@ function mediamosa_sb_kickstart_install() {
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', 'search content', $filtered_html_permission));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval', 'search content', $filtered_html_permission));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID,
+    array('access content', 'access comments', 'post comments', 'skip comment approval', 'search content', $filtered_html_permission)
+  );
+  // Add upload rights to authenticated user.
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('mediamosa-sb upload media'));
 
   // Create a default role for site administrators, with all available permissions assigned.
   $admin_role = new stdClass();
@@ -482,7 +484,7 @@ function mediamosa_sb_kickstart_install() {
   menu_rebuild();
 
   // Set the Slogan.
-  variable_set('site_slogan', 'MediaMosa Video Channel');
+  variable_set('site_slogan', '');
 
   // Set the SB search engine as default. Turn off others.
   variable_set('search_active_modules', array('node' => 'node', 'user' => 'user', 'mediamosa_sb' => 'mediamosa_sb'));

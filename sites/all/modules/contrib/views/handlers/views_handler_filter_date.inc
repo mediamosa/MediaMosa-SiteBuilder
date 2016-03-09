@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Definition of views_handler_filter_date.
+ */
+
+/**
  * Filter to handle dates stored as a timestamp.
  *
  * @ingroup views_filter_handlers
@@ -90,6 +95,34 @@ class views_handler_filter_date extends views_handler_filter_numeric {
     }
   }
 
+  /**
+   * Validate the build group options form.
+   */
+  function build_group_validate($form, &$form_state) {
+    // Special case to validate grouped date filters, this is because the
+    // $group['value'] array contains the type of filter (date or offset)
+    // and therefore the number of items the comparission has to be done
+    // against 'one' instead of 'zero'.
+    foreach ($form_state['values']['options']['group_info']['group_items'] as $id => $group) {
+      if (empty($group['remove'])) {
+        // Check if the title is defined but value wasn't defined.
+        if (!empty($group['title'])) {
+          if ((!is_array($group['value']) && empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) == 1)) {
+            form_error($form['group_info']['group_items'][$id]['value'], t('The value is required if title for this item is defined.'));
+          }
+        }
+
+        // Check if the value is defined but title wasn't defined.
+        if ((!is_array($group['value']) && !empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) > 1)) {
+          if (empty($group['title'])) {
+            form_error($form['group_info']['group_items'][$id]['title'], t('The title is required if value for this item is defined.'));
+          }
+        }
+      }
+    }
+  }
+
+
   function accept_exposed_input($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
@@ -125,13 +158,11 @@ class views_handler_filter_date extends views_handler_filter_numeric {
   }
 
   function op_between($field) {
-    $a = intval(strtotime($this->value['min'], 0));
-    $b = intval(strtotime($this->value['max'], 0));
+    // Use the substitutions to ensure a consistent timestamp.
+    $query_substitutions = views_views_query_substitutions($this->view);
+    $a = intval(strtotime($this->value['min'], $query_substitutions['***CURRENT_TIME***']));
+    $b = intval(strtotime($this->value['max'], $query_substitutions['***CURRENT_TIME***']));
 
-    if ($this->value['type'] == 'offset') {
-      $a = '***CURRENT_TIME***' . sprintf('%+d', $a); // keep sign
-      $b = '***CURRENT_TIME***' . sprintf('%+d', $b); // keep sign
-    }
     // This is safe because we are manually scrubbing the values.
     // It is necessary to do it this way because $a and $b are formulas when using an offset.
     $operator = strtoupper($this->operator);
@@ -139,10 +170,10 @@ class views_handler_filter_date extends views_handler_filter_numeric {
   }
 
   function op_simple($field) {
-    $value = intval(strtotime($this->value['value'], 0));
-    if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
-      $value = '***CURRENT_TIME***' . sprintf('%+d', $value); // keep sign
-    }
+    // Use the substitutions to ensure a consistent timestamp.
+    $query_substitutions = views_views_query_substitutions($this->view);
+    $value = intval(strtotime($this->value['value'], $query_substitutions['***CURRENT_TIME***']));
+
     // This is safe because we are manually scrubbing the value.
     // It is necessary to do it this way because $value is a formula when using an offset.
     $this->query->add_where_expression($this->options['group'], "$field $this->operator $value");

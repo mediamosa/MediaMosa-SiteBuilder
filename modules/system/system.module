@@ -242,6 +242,7 @@ function system_permission() {
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
+      'restrict access' => TRUE,
     ),
     'block IP addresses' => array(
       'title' => t('Block IP addresses'),
@@ -358,7 +359,7 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form'),
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
@@ -373,6 +374,9 @@ function system_element_info() {
     '#element_validate' => array('form_validate_machine_name'),
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
+    // Use the same value callback as for textfields; this ensures that we only
+    // get string values.
+    '#value_callback' => 'form_type_textfield_value',
   );
   $types['password'] = array(
     '#input' => TRUE,
@@ -381,6 +385,9 @@ function system_element_info() {
     '#process' => array('ajax_process_form'),
     '#theme' => 'password',
     '#theme_wrappers' => array('form_element'),
+    // Use the same value callback as for textfields; this ensures that we only
+    // get string values.
+    '#value_callback' => 'form_type_textfield_value',
   );
   $types['password_confirm'] = array(
     '#input' => TRUE,
@@ -1740,16 +1747,27 @@ function _system_themes_access($theme) {
 /**
  * Setup a given callback to run via authorize.php with elevated privileges.
  *
- * To use authorize.php, certain variables must be stashed into $_SESSION.
- * This function sets up all the necessary $_SESSION variables, then returns
- * the full path to authorize.php so the caller can redirect to authorize.php.
- * That initiates the workflow that will eventually lead to the callback being
- * invoked. The callback will be invoked at a low bootstrap level, without all
- * modules being invoked, so it needs to be careful not to assume any code
- * exists.
+ * To use authorize.php, certain variables must be stashed into $_SESSION. This
+ * function sets up all the necessary $_SESSION variables. The calling function
+ * should then redirect to authorize.php, using the full path returned by
+ * system_authorized_get_url(). That initiates the workflow that will eventually
+ * lead to the callback being invoked. The callback will be invoked at a low
+ * bootstrap level, without all modules being invoked, so it needs to be careful
+ * not to assume any code exists. Example (system_authorized_run()):
+ * @code
+ *   system_authorized_init($callback, $file, $arguments, $page_title);
+ *   drupal_goto(system_authorized_get_url());
+ * @endcode
+ * Example (update_manager_install_form_submit()):
+ * @code
+ *  system_authorized_init('update_authorize_run_install',
+ *    drupal_get_path('module', 'update') . '/update.authorize.inc',
+ *    $arguments, t('Update manager'));
+ *  $form_state['redirect'] = system_authorized_get_url();
+ * @endcode
  *
  * @param $callback
- *   The name of the function to invoke one the user authorizes the operation.
+ *   The name of the function to invoke once the user authorizes the operation.
  * @param $file
  *   The full path to the file where the callback function is implemented.
  * @param $arguments
@@ -1785,11 +1803,13 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
  * @param array $options
  *   Optional array of options to pass to url().
  * @return
- *   The full URL to authorize.php, using https if available.
+ *   The full URL to authorize.php, using HTTPS if available.
+ *
+ * @see system_authorized_init()
  */
 function system_authorized_get_url(array $options = array()) {
   global $base_url;
-  // Force https if available, regardless of what the caller specifies.
+  // Force HTTPS if available, regardless of what the caller specifies.
   $options['https'] = TRUE;
   // We prefix with $base_url so we get a full path even if clean URLs are
   // disabled.
@@ -1894,17 +1914,18 @@ function system_init() {
 
   // Ignore slave database servers for this request.
   //
-  // In Drupal's distributed database structure, new data is written to the master
-  // and then propagated to the slave servers.  This means there is a lag
-  // between when data is written to the master and when it is available on the slave.
-  // At these times, we will want to avoid using a slave server temporarily.
-  // For example, if a user posts a new node then we want to disable the slave
-  // server for that user temporarily to allow the slave server to catch up.
-  // That way, that user will see their changes immediately while for other
-  // users we still get the benefits of having a slave server, just with slightly
-  // stale data.  Code that wants to disable the slave server should use the
-  // db_set_ignore_slave() function to set $_SESSION['ignore_slave_server'] to
-  // the timestamp after which the slave can be re-enabled.
+  // In Drupal's distributed database structure, new data is written to the
+  // master and then propagated to the slave servers.  This means there is a
+  // lag between when data is written to the master and when it is available on
+  // the slave. At these times, we will want to avoid using a slave server
+  // temporarily. For example, if a user posts a new node then we want to
+  // disable the slave server for that user temporarily to allow the slave
+  // server to catch up. That way, that user will see their changes immediately
+  // while for other users we still get the benefits of having a slave server,
+  // just with slightly stale data.  Code that wants to disable the slave
+  // server should use the db_ignore_slave() function to set
+  // $_SESSION['ignore_slave_server'] to the timestamp after which the slave
+  // can be re-enabled.
   if (isset($_SESSION['ignore_slave_server'])) {
     if ($_SESSION['ignore_slave_server'] >= REQUEST_TIME) {
       Database::ignoreTarget('default', 'slave');
@@ -2009,7 +2030,6 @@ function system_user_timezone(&$form, &$form_state) {
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
   if (!isset($account->timezone) && $account->uid == $user->uid && empty($form_state['input']['timezone'])) {
-    $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
     drupal_add_js('misc/timezone.js');
   }
@@ -2348,14 +2368,14 @@ function _system_rebuild_module_data() {
   // Find modules
   $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
 
-  // Include the install profile in modules that are loaded.
+  // Include the installation profile in modules that are loaded.
   $profile = drupal_get_profile();
   $modules[$profile] = new stdClass();
   $modules[$profile]->name = $profile;
   $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
   $modules[$profile]->filename = $profile . '.profile';
 
-  // Install profile hooks are always executed last.
+  // Installation profile hooks are always executed last.
   $modules[$profile]->weight = 1000;
 
   // Set defaults for module info.
@@ -2384,8 +2404,16 @@ function _system_rebuild_module_data() {
       continue;
     }
 
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering module lists.
+    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info');
+
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
+
+    // The "name" key is required, but to avoid a fatal error in the menu system
+    // we set a reasonable default if it is not provided.
+    $modules[$key]->info += array('name' => $key);
 
     // Prefix stylesheets and scripts with module path.
     $path = dirname($module->uri);
@@ -2396,7 +2424,7 @@ function _system_rebuild_module_data() {
       $module->info['scripts'] = _system_info_add_path($module->info['scripts'], $path);
     }
 
-    // Install profiles are hidden by default, unless explicitly specified
+    // Installation profiles are hidden by default, unless explicitly specified
     // otherwise in the .info file.
     if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
       $modules[$key]->info['hidden'] = TRUE;
@@ -2409,7 +2437,7 @@ function _system_rebuild_module_data() {
   }
 
   if (isset($modules[$profile])) {
-    // The install profile is required, if it's a valid module.
+    // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;
     // Add a default distribution name if the profile did not provide one. This
     // matches the default value used in install_profile_info().
@@ -2521,6 +2549,14 @@ function _system_rebuild_theme_data() {
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+
+    // The "name" key is required, but to avoid a fatal error in the menu system
+    // we set a reasonable default if it is not provided.
+    $themes[$key]->info += array('name' => $key);
+
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering theme lists.
+    $themes[$key]->info['mtime'] = filemtime($theme->uri);
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
@@ -2716,7 +2752,17 @@ function system_default_region($theme) {
 }
 
 /**
- * Add default buttons to a form and set its prefix.
+ * Sets up a form to save information automatically.
+ *
+ * This function adds a submit handler and a submit button to a form array. The
+ * submit function saves all the data in the form, using variable_set(), to
+ * variables named the same as the keys in the form array. Note that this means
+ * you should normally prefix your form array keys with your module name, so
+ * that they are unique when passed into variable_set().
+ *
+ * If you need to manipulate the data in a custom manner, you can either put
+ * your own submission handler in the form array before calling this function,
+ * or just use your own submission handler instead of calling this function.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -2725,6 +2771,7 @@ function system_default_region($theme) {
  *   The form structure.
  *
  * @see system_settings_form_submit()
+ *
  * @ingroup forms
  */
 function system_settings_form($form) {
@@ -2743,7 +2790,7 @@ function system_settings_form($form) {
 }
 
 /**
- * Execute the system_settings_form.
+ * Form submission handler for system_settings_form().
  *
  * If you want node type configure style handling of your checkboxes,
  * add an array_filter value to your form.
@@ -2768,7 +2815,7 @@ function system_settings_form_submit($form, &$form_state) {
 function _system_sort_requirements($a, $b) {
   if (!isset($a['weight'])) {
     if (!isset($b['weight'])) {
-      return strcmp($a['title'], $b['title']);
+      return strcasecmp($a['title'], $b['title']);
     }
     return -$b['weight'];
   }
@@ -3009,8 +3056,20 @@ function system_cron() {
     }
   }
 
-  $core = array('cache', 'cache_path', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
-  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
+  // Delete expired cache entries.
+  // Avoid invoking hook_flush_cashes() on every cron run because some modules
+  // use this hook to perform expensive rebuilding operations (which are only
+  // designed to happen on full cache clears), rather than just returning a
+  // list of cache tables to be cleared.
+  $cache_object = cache_get('system_cache_tables');
+  if (empty($cache_object)) {
+    $core = array('cache', 'cache_path', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
+    $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
+    cache_set('system_cache_tables', $cache_tables);
+  }
+  else {
+    $cache_tables = $cache_object->data;
+  }
   foreach ($cache_tables as $table) {
     cache_clear_all(NULL, $table);
   }
@@ -3360,7 +3419,7 @@ function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_t
  * @ingroup themeable
  */
 function theme_system_powered_by() {
-  return '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'http://drupal.org')) . '</span>';
+  return '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'https://www.drupal.org')) . '</span>';
 }
 
 /**
@@ -3397,30 +3456,32 @@ function system_image_toolkits() {
 /**
  * Attempts to get a file using drupal_http_request and to store it locally.
  *
- * @param $url
+ * @param string $url
  *   The URL of the file to grab.
- *
- * @param $destination
+ * @param string $destination
  *   Stream wrapper URI specifying where the file should be placed. If a
  *   directory path is provided, the file is saved into that directory under
  *   its original name. If the path contains a filename as well, that one will
  *   be used instead.
  *   If this value is omitted, the site's default files scheme will be used,
  *   usually "public://".
- *
- * @param $managed boolean
+ * @param bool $managed
  *   If this is set to TRUE, the file API hooks will be invoked and the file is
  *   registered in the database.
- *
- * @param $replace boolean
+ * @param int $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE: Replace the existing file.
  *   - FILE_EXISTS_RENAME: Append _{incrementing number} until the filename is
  *     unique.
  *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  *
- * @return
- *   On success the location the file was saved to, FALSE on failure.
+ * @return mixed
+ *   One of these possibilities:
+ *   - If it succeeds and $managed is FALSE, the location where the file was
+ *     saved.
+ *   - If it succeeds and $managed is TRUE, a \Drupal\file\FileInterface
+ *     object which describes the file.
+ *   - If it fails, FALSE.
  */
 function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
   $parsed_url = parse_url($url);
@@ -3759,7 +3820,7 @@ function _system_date_formats_build() {
   }
 
   // Get custom formats added to the database by the end user.
-  $result = db_query('SELECT df.dfid, df.format, df.type, df.locked, dfl.language FROM {date_formats} df LEFT JOIN {date_format_type} dft ON df.type = dft.type LEFT JOIN {date_format_locale} dfl ON df.format = dfl.format AND df.type = dfl.type ORDER BY df.type, df.format');
+  $result = db_query('SELECT df.dfid, df.format, df.type, df.locked, dfl.language FROM {date_formats} df LEFT JOIN {date_format_locale} dfl ON df.format = dfl.format AND df.type = dfl.type ORDER BY df.type, df.format');
   foreach ($result as $record) {
     // If this date type isn't set, initialise the array.
     if (!isset($date_formats[$record->type])) {
