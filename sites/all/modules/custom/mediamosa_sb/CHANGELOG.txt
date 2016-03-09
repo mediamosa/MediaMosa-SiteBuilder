@@ -1,5 +1,5 @@
-MediaMosa SiteBuilder 7.x-1.3-rc1
----------------------------------
+MediaMosa SiteBuilder 7.x-1.3
+-----------------------------
 - /asset/player/[id] supports ?t parameter. (?t=5,15)
 - added /asset/player/[id] option.
 - Added embed option in asset/detail
@@ -67,8 +67,9 @@ MediaMosa SiteBuilder 7.x-1.3-rc1
 - Merge branch 'master' of https://github.com/mediamosa/MediaMosa-SiteBuilder
 - removed error message, the error is already set by MediaMosaSbConnectorWrapper::delete_asset.
 - Fixes untranslatable Javascript alert
-- Updated MediaMosa SDK submodule. Please use 'git submodule update' to get
-  latest version.
+- Updated submodule MediaMosa CK to latest, use git submodule update to retrieve latest.
+- Updated submodule MediaMosa SDK to latest, use git submodule update to retrieve latest.
+- Upgraded Drupal to 7.43.
 
 
 MediaMosa SiteBuilder 7.x-1.x-dev
