@@ -1,0 +1,120 @@
+/* TEMP EXAMPLES */
+#toolbar {display: none;}body{padding-top:0 !important;}
+.video img {
+  height: 100%;
+  width: 100%;
+}
+
+
+/* START STYLESHEET */
+body {
+  font-family: Arial;
+}
+
+h1 {
+  font-size: 24px;
+  color: #989898;
+}
+
+.page-search h1 {
+  color: #000;
+}
+
+h2 {
+  margin-bottom: 15px;
+  border-bottom: 1px #6aede8 solid;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 9px 0 9px 0;
+}
+
+/* Content */
+#container {
+  padding-bottom: 20px ;
+  overflow: hidden;
+}
+
+#page_content {
+  padding: 0px 0px 50px 0px;
+  overflow: hidden;
+}
+
+#container .slogan {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+#container .slogan h1,
+#container .slogan p {
+  width: 960px;
+  margin: auto;
+  font-size: 20px;
+}
+
+#content #page_content {
+  width: 960px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+#content #page_content .block-views {
+  float: left;
+  width: 470px;
+}
+
+#content #page_content #block-views-mediamosa-asset-new-block {
+  float: left;
+  width: 470px;
+}
+
+#content #page_content #block-views-mediamosa-asset-popular-block {
+  float: right;
+  width: 470px;
+}
+
+#content #page_content .block-views .video {
+  padding: 10px;
+}
+
+#content #page_content #block-views-mediamosa-asset-new-block .video {
+  margin-right: 0;
+}
+
+#content #page_content #block-views-mediamosa-asset-popular-block .video {
+  margin-left: 0;
+}
+
+#content #page_content .block-views .video .views-field {
+  float: left;
+}
+
+#content #page_content .block-views .video .views-field-still-url {
+  width: 211px;
+  height: 132px;
+}
+
+/* Footer */
+#footer {
+  width: 950px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-color: #e2e2e2;
+  border-width: 4px 0px 0px 0px;
+  border-style: solid;
+}
+
+#footer .site_logo {
+  padding: 5px 10px;
+  float: left;
+}
+#footer .mediamosa_logo {
+  padding: 5px 10px;
+  float: left;
+  vertical-align: top;
+}
+#footer .mediamosa_logo div {
+  float: left;
+}
+#footer .mediamosa_logo small {
+  font-size: 90%;
+}

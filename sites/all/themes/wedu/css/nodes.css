@@ -1,0 +1,36 @@
+/**********************************************************
+ * Nodes
+ *********************************************************/
+
+.node-page p {
+  margin-bottom: 1em;
+}
+
+.node-page strong {
+  font-weight: bold;
+}
+
+.node-page ul {
+  margin-left: 15px;
+  margin-bottom: 1em;
+  list-style: circle;
+}
+
+.node-page ol {
+  margin-left: 21px;
+  margin-bottom: 1em;
+  list-style: decimal;
+}
+
+.node-page code {
+  margin: 10px;
+  padding: 10px;
+  display: block;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+}
+
+.node-page cite,
+.node-page em {
+  font-style: italic;
+}

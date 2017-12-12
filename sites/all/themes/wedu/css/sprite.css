@@ -1,0 +1,103 @@
+/**********************************************************
+ * sprite.css
+ *********************************************************/
+
+.asset-detail-information .asset-view-count,
+.asset-detail-information .asset-uploaded-info,
+.asset-detail-information .asset-collections,
+.asset-detail-information .asset-collections ul li,
+.asset-detail-information .asset-formats,
+.asset-detail-information .asset-formats ul li,
+.asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download,
+.asset-detail-information .asset-download ul li,
+.asset-detail-information .asset-download ul li a,
+.collection-detail-information .collection-view-count,
+.collection-detail-information .collection-uploaded-info,
+.collection-detail-information .collection-collections,
+.collection-detail-information .collection-formats,
+.collection-detail-information .collection-collections ul li,
+.collection-detail-information .collection-formats ul li,
+.collection-detail-information .collection-formats ul li a,
+.item-navigation li,
+.item-navigation li span,
+.item-navigation li span a,
+.item-navigation .view,
+.item-navigation .edit,
+.asset-technical-information .tab h2,
+#breadcrumbs .breadcrumb li {
+  background-image: url('../images/sprite.png');
+  background-repeat: no-repeat;
+}
+
+.asset-detail-information .asset-view-count {
+  background-position: -480px -554px;
+}
+
+.collection-detail-information .collection-view-count {
+  background-position: -405px -652px;
+}
+
+.asset-detail-information .asset-uploaded-info,
+.collection-detail-information .collection-uploaded-info {
+  background-position: -454px -597px;
+}
+
+.asset-detail-information .asset-collections {
+  background-position: -430px -611px;
+}
+
+.asset-detail-information .asset-collections ul li,
+.asset-detail-information .asset-formats ul li,
+.asset-detail-information .asset-download ul li {
+  background-position: -495px -1446px;
+}
+
+.asset-detail-information .asset-formats,
+.asset-detail-information .asset-download {
+  background-position: -405px -661px;
+}
+
+.asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download ul li a {
+   background-position: 100% -1400px;
+   display: inline-block;
+ }
+
+.item-navigation li {
+  background-position: 0 -200px;
+}
+
+.item-navigation li span {
+  padding: 9px;
+  margin-top: -1px;
+  margin-left: 4px;
+  display: block;
+  background-position: 100% -300px;
+}
+
+.item-navigation li:hover {
+  background-position: 0 -251px;
+}
+
+.item-navigation li:hover span {
+  background-position: 100% -350px;
+}
+
+.item-navigation .view {
+  padding-left: 27px;
+  background-position: 0 -488px;
+}
+
+.item-navigation .edit {
+  padding-left: 18px;
+  background-position: 0 -550px;
+}
+
+.asset-technical-information .tab h2 {
+  background-position: 10px -733px;
+}
+
+#breadcrumbs .breadcrumb li {
+  background-position: 100% -489px;
+}
