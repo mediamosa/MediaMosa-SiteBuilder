@@ -1,0 +1,23 @@
+name = Wedu
+description = A new theme that is compatible with mediamosa-sb!
+version = 1.0
+core = 7.x
+
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/defaults.css
+stylesheets[all][] = css/layout.css
+stylesheets[all][] = css/views.css
+stylesheets[all][] = css/nodes.css
+stylesheets[all][] = css/sprite.css
+stylesheets[all][] = css/menus.css
+stylesheets[all][] = css/forms.css
+stylesheets[all][] = css/misc.css
+stylesheets[all][] = css/colors.css
+
+regions[header] = Header
+regions[highlighted] = Highlighted
+regions[content] = Content
+regions[footer] = Footer
+
+scripts[] = js/mediamosa_sb_theme.js
+scripts[] = js/asset_detail.js

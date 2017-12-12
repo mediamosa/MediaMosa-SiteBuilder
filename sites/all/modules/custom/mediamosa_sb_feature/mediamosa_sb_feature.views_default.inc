@@ -107,6 +107,30 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $translatables['collections'] = array(
+    t('Master'),
+    t('All Collections'),
+    t('more'),
+    t('Filter'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('Collection'),
+    t('Description'),
+    t('Items'),
+    t('Owner'),
+    t('Date'),
+    t('Page'),
+    t('Block'),
+  );
   $export['collections'] = $view;
 
   $view = new view();
@@ -349,6 +373,35 @@ function mediamosa_sb_feature_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $translatables['mediamosa_asset_detail'] = array(
+    t('Master'),
+    t('Media detail'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Mediafiles'),
+    t('Media player'),
+    t('Collections'),
+    t('Metadata block for Dublin Core'),
+    t('Metadata block for Qualified Dublin Core'),
+    t('Technical metadata'),
+    t('MediaMosa Asset Detail'),
+    t('Show a single asset. First contextual filter is the asset_id.'),
+    t('Embed'),
+    t('<p><form>
+<input type=text value="[site:url]/asset/player/[asset_id]"></p>
+<p>object code:
+<div class="embed_iframe">
+<textarea title="Click and press CTRL+C to copy..." onclick="this.style.borderColor = \'lightred\'; this.select();" style="min-width:50%; height:4em; cursor:pointer;" height="1">
+&lt;iframe width="640" height="360" src="[site:url]asset/player/[asset_id]" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+</textarea>
+</div></form>
+</p>'),
+    t('Block'),
+  );
   $export['mediamosa_asset_detail'] = $view;
 
   $view = new view();
@@ -455,6 +508,27 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '3';
+  $translatables['mediamosa_asset_featured'] = array(
+    t('Master'),
+    t('Featured media'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('No title available'),
+    t('[played] views'),
+    t('Page'),
+    t('Block'),
+  );
   $export['mediamosa_asset_featured'] = $view;
 
   $view = new view();
@@ -572,6 +646,27 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '4';
   $handler->display->display_options['pager']['options']['offset'] = '0';
+  $translatables['mediamosa_asset_new'] = array(
+    t('Master'),
+    t('New Media'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('[played] views'),
+    t('Page'),
+    t('Block'),
+    t('New'),
+  );
   $export['mediamosa_asset_new'] = $view;
 
   $view = new view();
@@ -688,6 +783,27 @@ function mediamosa_sb_feature_views_default_views() {
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '4';
+  $translatables['mediamosa_asset_popular'] = array(
+    t('Master'),
+    t('Popular Media'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('[played] views'),
+    t('Page'),
+    t('Block'),
+    t('Popular'),
+  );
   $export['mediamosa_asset_popular'] = $view;
 
   $view = new view();
@@ -806,6 +922,32 @@ Consider loosening your query with OR. bike OR shed will often show more results
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'mediamosa_asset_search_block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $translatables['mediamosa_asset_search_page'] = array(
+    t('Master'),
+    t('Search media'),
+    t('more'),
+    t('Search'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('Your search yielded no results'),
+    t('<h2>Your search yielded no results</h2>
+Check if your spelling is correct.
+Remove quotes around phrases to search for each word individually. bike shed will often show more results than "bike shed".
+Consider loosening your query with OR. bike OR shed will often show more results than bike shed.
+'),
+    t('[played] views'),
+    t('Page'),
+    t('Block'),
+  );
   $export['mediamosa_asset_search_page'] = $view;
 
   $view = new view();
@@ -897,6 +1039,10 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['mediafile_duration']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['mediafile_duration']['date_format'] = 'mediamosa_ck_mf_duration';
   $handler->display->display_options['fields']['mediafile_duration']['custom_date_format'] = 's:i';
+  /* Field: MediaMosa: Description */
+  $handler->display->display_options['fields']['description']['id'] = 'description';
+  $handler->display->display_options['fields']['description']['table'] = 'mediamosa_asset_search';
+  $handler->display->display_options['fields']['description']['field'] = 'description';
   /* Sort criterion: MediaMosa: Created */
   $handler->display->display_options['sorts']['videotimestamp']['id'] = 'videotimestamp';
   $handler->display->display_options['sorts']['videotimestamp']['table'] = 'mediamosa_asset_search';
@@ -935,6 +1081,29 @@ Consider loosening your query with OR. bike OR shed will often show more results
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $translatables['mediamosa_assets'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('[played] views'),
+    t('<span class="stamp">[videotimestamp]</span> by <span class="owner">[owner_id]</span>'),
+    t('Description'),
+    t('Page'),
+    t('Collection'),
+    t('User'),
+    t('Block'),
+  );
   $export['mediamosa_assets'] = $view;
 
   $view = new view();
@@ -1147,6 +1316,27 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['played']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['played']['alter']['text'] = '[played] views';
   $handler->display->display_options['fields']['played']['element_label_colon'] = FALSE;
+  $translatables['mediamosa_assets_in_collection'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('<span class="stamp">[videotimestamp]</span> by <span class="owner">[owner_id]</span>'),
+    t('All'),
+    t('Page'),
+    t('Block'),
+    t('[played] views'),
+  );
   $export['mediamosa_assets_in_collection'] = $view;
 
   $view = new view();
@@ -1262,6 +1452,26 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['arguments']['coll_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['coll_id']['limit'] = '0';
   $handler->display->display_options['block_description'] = 'Mediamosa Collection Detail Block';
+  $translatables['mediamosa_collection_detail'] = array(
+    t('Master'),
+    t('Collection Detail'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Collection ID'),
+    t('Title'),
+    t('Description'),
+    t('Changed'),
+    t('Created'),
+    t('All'),
+    t('Page'),
+    t('Block'),
+    t('MediaMosa Collection Detail Block'),
+    t('Mediamosa Collection Detail Block'),
+  );
   $export['mediamosa_collection_detail'] = $view;
 
   $view = new view();
@@ -1423,6 +1633,27 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['fields']['published']['label'] = '';
   $handler->display->display_options['fields']['published']['element_label_colon'] = FALSE;
   $handler->display->display_options['path'] = 'myassets';
+  $translatables['mediamosa_my_assets'] = array(
+    t('Master'),
+    t('My media'),
+    t('more'),
+    t('Search'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('[played] <span>views</span>'),
+    t('Mediafile duration'),
+    t('Page'),
+    t('[played] views'),
+  );
   $export['mediamosa_my_assets'] = $view;
 
   $view = new view();
@@ -1475,6 +1706,17 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler = $view->new_display('page', 'Asset Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['path'] = 'asset/player';
+  $translatables['mediamosa_player_block'] = array(
+    t('Master'),
+    t('Viewer'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Asset Page'),
+  );
   $export['mediamosa_player_block'] = $view;
 
   $view = new view();
@@ -1577,6 +1819,32 @@ Consider loosening your query with OR. bike OR shed will often show more results
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $translatables['my_collections'] = array(
+    t('Master'),
+    t('My Collections'),
+    t('more'),
+    t('Filter'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('Collection ID'),
+    t('Description'),
+    t('Items'),
+    t('User'),
+    t('Date'),
+    t('private'),
+    t('Actions'),
+    t('Page'),
+    t('Block'),
+  );
   $export['my_collections'] = $view;
 
   return $export;

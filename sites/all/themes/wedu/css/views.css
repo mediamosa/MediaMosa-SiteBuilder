@@ -1,0 +1,995 @@
+
+/**********************************************************
+ * Views defaults
+ *********************************************************/
+
+.page-assets h1,
+.page-collections h1,
+.page-mycollections h1,
+.page-myassets h1 {
+  margin-bottom: 15px;
+  font-size: 32px;
+  color: #000;
+}
+
+.view .views-field-title .field-content {
+  font-size: 14px;
+}
+
+.view .views-field-description .field-content {
+  font-size: 12px;
+}
+
+
+/**********************************************************
+ * Div voor videos - hover on - tijd
+ *********************************************************/
+
+.view .views-row:hover .views-field-mediafile-duration {
+  padding: 5px;
+  position: absolute;
+  top: 9%;
+  left: 3%;
+  font-size: 12px;
+  font-weight: bold;
+  background: #000;
+  border: 1px solid #000;
+}
+/**********************************************************
+ * Div voor videos - hover on - tijd
+ *********************************************************/
+
+.view .views-row {
+  margin-bottom: 11px;
+  padding: 10px;
+  border: 1px solid #d9d9d9;
+  overflow: hidden;
+  clear: both;
+  position: relative;
+}
+
+.view .views-field-still-url {
+  float: left;
+  margin-right: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+/**********************************************************
+ * Hover on video img. - scherm voorpagina - 
+ *********************************************************/
+
+.view .views-row:hover .views-field-still-url:after  {
+  content: url('../images/sprite.png');
+  position: absolute;
+  left: 85%;
+  top: -37%;
+}
+
+
+.view .views-field-still-url:after {
+  content: url('../images/sprite.png');
+  position: absolute;
+  left: -60%;
+  top: -5%;
+}
+
+/**********************************************************
+ * Hover on video img. - scherm voorpagina - 
+ *********************************************************/
+
+/**********************************************************
+ * Tijd videos plaatsing scherm voorpagina - 
+ *********************************************************/
+
+
+.view .views-field-mediafile-duration {
+  left: 2%;
+  font-size: 0%;
+  position: absolute;
+  font-weight: lighter;
+  color: transparent;
+  background: transparent;
+}
+
+/**********************************************************
+ * Tijd videos plaatsing scherm voorpagina - 
+ *********************************************************/
+
+
+/*.not-front .view .views-field-mediafile-duration {
+  top: 0%;
+  left: 0%;
+}*/
+
+.page-search .view .views-field-mediafile-duration {
+  top: 103px;
+  left: 182px;
+}
+
+.view .views-field-mediafile-duration .field-content {
+  color: #fff;
+}
+
+#page_content .block-views .view {
+  padding-right: 10px;
+}
+
+#page_content .block-views:first-child .view {
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+.view .asset-information {
+  width: 198px;
+  float: left;
+}
+
+.view .asset-information .views-field-nothing {
+  font-size: 12px;
+}
+
+.view .asset-information .views-field-title .field-content a {
+  font-size: 14px;
+}
+
+.view .asset-information .views-field-played .field-content {
+  color: #686868;
+  font-size: 12px;
+}
+
+.view .asset-information .views-field-description .field-content {
+  font-size: 12px;
+}
+
+.view .asset-information .views-field-owner-id .field-content {
+  position: absolute;
+  font-size: 12px;
+}
+
+#page_content .view .asset-information .views-field-owner-id {
+  position: absolute;
+  bottom: 24px;
+  left: 250px;
+  font-size: 12px;
+}
+
+#page_content .view .asset-information .views-field-videotimestamp {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+}
+
+#page_content .view .asset-information .views-field-published {
+  position: absolute;
+  right: 10px;
+  bottom: 24px;
+  font-size: 12px;
+}
+
+#page_content .view .asset-information .views-field-owner-id .field-content,
+#page_content .view .asset-information .views-field-videotimestamp span {
+  color: #686868;
+}
+
+.view .asset-information .views-field-played {
+  position: absolute;
+  bottom: 10px;
+  font-size: 12px;
+}
+
+.view .views-field-owner-id {
+  padding-left: 15px;
+  background: url('../images/sprite.png') no-repeat -463px -598px;
+  height: 30px;
+  width: 125px;
+}
+
+
+
+/**********************************************************
+ * Views exposed forms
+ *********************************************************/
+
+.views-exposed-form {
+  margin-bottom: 11px;
+  padding: 12px 10px;
+  border: 2px solid;
+}
+
+.views-exposed-form .form-item {
+  margin: 0;
+}
+
+.views-exposed-form label {
+  margin-right: 10px;
+  float: left;
+  color: #404040;
+  font-size: 14px;
+  line-height: 35px;
+}
+
+.views-exposed-form input[type="text"] {
+  padding: 8px;
+  width: 224px;
+  border: 1px solid #ccc;
+  box-shadow: inset -1px 1px 3px 0 #c3c3c3;
+}
+
+.views-exposed-form .views-exposed-widget {
+  overflow: hidden;
+  float: left;
+  margin-right: 10px;
+}
+
+.views-exposed-form .views-exposed-widget select {
+  margin-top: 5px;
+}
+
+.views-exposed-form .views-exposed-widget .form-autocomplete {
+  margin-top: 3px;
+  padding: 4px;
+}
+
+html.js .views-exposed-form .views-exposed-widget .form-autocomplete {
+  background-position: 98% 8px;
+}
+
+html.js .views-exposed-form .views-exposed-widget .form-autocomplete.throbbing {
+  background-position: 98% -12px;
+}
+
+.views-exposed-form .views-exposed-widget .views-widget {
+  float: left;
+}
+
+.views-exposed-form .views-submit-button {
+  margin-top: 8px;
+  float: right;
+}
+
+
+/**********************************************************
+ * Featured assets
+ *********************************************************/
+
+#spotlight .view {
+  padding-left: 10px;
+  overflow: hidden;
+}
+
+#spotlight .view .views-field-title .field-content {
+  font-size: 18px;
+}
+
+#spotlight .view .views-row {
+  width: 298px;
+  margin-right: 20px;
+  border: 1px solid #ccc;
+  padding: 0;
+  float: left;
+  clear: none;
+  background: #fff;
+}
+
+/**********************************************************
+ * Deze zorgt voor de hover on functie bij de filmpjes (Tijd)
+ *********************************************************/
+
+#spotlight .view .views-row:hover .views-field-mediafile-duration{
+  padding: 5px;
+  position: absolute;
+  top: -196%;
+  left: 1%;
+  font-size: 12px;
+  font-weight: bold;
+  background: #000;
+}
+
+/**********************************************************
+ * Deze zorgt voor de hover on functie bij de filmpjes (Tijd)
+ *********************************************************/
+
+/**********************************************************
+ * Hover on (Playbutton) 
+ *********************************************************/
+
+#spotlight .view .views-row:hover .views-field-still-url:after  {
+  height: 25px;
+  overflow: hidden;
+  content: url('../images/sprite.png');
+  position: absolute;
+  left: -205px;
+  top: -150px;
+}
+
+/**********************************************************
+ * Hover on (Playbutton) 
+ *********************************************************/
+
+
+#spotlight .view .views-row-last {
+  margin-right: 0;
+}
+
+#spotlight .view .views-field-still-url {
+  float: none;
+  margin-right: 0;
+  position: relative;
+}
+
+#spotlight .view .views-field-still-url:after  {
+  position: absolute;
+  left: -20px;
+  top: 0px;
+}
+
+
+#spotlight .views-field-mediafile-duration {
+  padding: 0px;
+  position: absolute;
+  top: -175px;
+  left: 0px;
+  font-size: 0px;
+  font-weight: bold;
+  background: #000;
+}
+
+
+/**********************************************************
+ * #spotlight .views-field-mediafile-duration {
+  padding: 5px;
+  position: absolute;
+  top: -170px;
+  left: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  background: #000;
+}
+
+ *********************************************************/
+ 
+
+#spotlight .view .asset-information {
+  width: 280px;
+}
+
+#spotlight .views-field-mediafile-duration .field-content {
+  color: #fff;
+}
+
+#spotlight .view .asset-information {
+  min-height: 60px;
+  padding: 9px;
+  position: relative;
+}
+
+#spotlight .view .asset-information .views-field-title a {
+  font-size: 18px;
+}
+
+#spotlight .view .asset-information .views-field-videotimestamp {
+  float: right;
+  clear: both;
+}
+
+#spotlight .view .asset-information .views-field-played {
+  left: 10px;
+}
+
+#spotlight .view .asset-information .views-field-videotimestamp .field-content,
+#spotlight .view .asset-information .views-field-owner-id .field-content {
+  font-size: 12px;
+  color: #666;
+}
+
+#spotlight .view .asset-information .views-field-owner-id {
+  background: url('../images/sprite.png') no-repeat -463px -595px;
+}
+
+
+/**********************************************************
+ * Asset / collection detail Page
+ *********************************************************/
+
+.page-asset .view,
+.page-collection .view {
+  position: relative;
+}
+
+.page-asset .view .views-row,
+.page-collection .view-mediamosa-collection-detail .views-row {
+  padding: 0;
+  border: none;
+  position: relative;
+}
+
+.page-asset .view .asset-video-player,
+.page-collection .view .collection-videos {
+  max-width: 960px;
+  width: 100%;
+  margin: 0 0 15px 15px;
+  float: left;
+}
+
+.page-asset .view .asset-video-player  div.video-js {
+  width: 960px !important;
+}
+
+/**********************************************************
+ * Item navigation
+ *********************************************************/
+
+.item-navigation {
+  margin-top: 15px;
+  position: absolute;
+  right: 5px;
+  z-index: 2;
+}
+
+.item-navigation li {
+  margin-right: 7px;
+  float: left;
+  /* background declaration in sprite.css */
+}
+
+.item-navigation li a {
+  padding-right: 4px;
+  font-size: 14px;
+  color: #000;
+}
+
+
+/**********************************************************
+ * Asset detail information block
+ *********************************************************/
+
+.page-asset h1,
+.page-collection h1 {
+  float: left;
+  max-width: 750px;
+  margin-bottom: 20px;
+  font-size: 32px;
+  color: #000;
+}
+
+.page-asset .asset-detail-information,
+.page-collection .collection-detail-information {
+  background-color: #fff;
+  width: 965px;
+  border-width: 5px 5px 1px 5px;
+  border-color: #999999;
+  border-style: solid;
+  overflow: hidden;
+}
+
+.page-asset .asset-detail-information strong,
+.page-collection .collection-detail-information strong {
+  color: #000;
+}
+
+.asset-detail-information .information-row,
+.collection-detail-information .information-row {
+  border-bottom: 6px solid #eaeaf3;
+}
+
+
+.asset-detail-information .asset-view-count {
+  margin-top: 1%;
+  left: 75%;
+  position: absolute;
+}
+
+.asset-detail-information .asset-uploaded-info {
+  margin-top: 8%;
+  left: 75%;
+  position: absolute;
+}
+
+.asset-detail-information .asset-view-count,
+.collection-detail-information .collection-view-count {
+  padding: 10px 0 10px 25px;
+  font-size: 18px;
+  border-bottom: 2px solid #eaeaf3;
+  /* background declaration in sprite.css */
+}
+
+.asset-detail-information .asset-uploaded-info,
+.collection-detail-information .collection-uploaded-info {
+/*  margin: 10px 0; */
+  padding: 0 0 0 25px;
+  font-size: 14px;
+  /* background declaration in sprite.css */
+}
+
+.collection-detail-information .collection-description h3 {
+  color: #8e8e8e;
+  font-size: 18px;
+}
+
+.collection-detail-information .collection-description p .field-content {
+  color: #000;
+  font-size: 12px;
+}
+
+.asset-detail-information .asset-view-count .count .field-content,
+.collection-detail-information .collection-view-count .count {
+  font-size: 28px;
+  color: #000;
+}
+
+/**********************************************************
+ * Asset collections & formats
+ *********************************************************/
+
+.asset-detail-information .asset-collections,
+.asset-detail-information .asset-formats,
+.asset-detail-information .asset-download {
+  padding: 12px 25px;
+  left: 5%;
+}
+
+.asset-detail-information .asset-collections h3,
+.asset-detail-information .asset-formats h3,
+.asset-detail-information .asset-download h3 {
+  margin-bottom: 11px;
+  font-size: 18px;
+  /* background declaration in sprite.css */
+}
+
+.asset-detail-information .asset-collections p,
+.asset-detail-information .asset-formats p,
+.asset-detail-information .asset-download p {
+  color: #000;
+  font-size: 12px;
+}
+
+.asset-detail-information .asset-collections ul,
+.asset-detail-information .asset-formats ul,
+.asset-detail-information .asset-download ul {
+  margin: 10px 0;
+}
+
+.asset-detail-information .asset-collections ul li,
+.asset-detail-information .asset-formats ul li,
+.asset-detail-information .asset-download ul li {
+  padding-left: 12px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  /* background declaration in sprite.css */
+}
+
+.asset-detail-information .asset-collections ul li a,
+.asset-detail-information .asset-formats ul li a,
+.asset-detail-information .asset-download ul li a {
+  margin-top: 2px;
+  padding-right: 20px;
+  font-size: 12px;
+}
+
+/**********************************************************
+ * Asset information
+ *********************************************************/
+
+.asset-technical-information {
+  
+  max-width: 640px;
+  margin: auto;
+  margin: 0px 15px 15px 15px;
+  clear: left;
+  overflow: hidden;
+}
+
+.asset-technical-information #asset-tabs {
+  clear: both;
+  height: 38px;
+  overflow: visible;
+  padding-left: 10px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.asset-technical-information #asset-tabs li {
+  float: left;
+  margin-right: 5px;
+}
+
+.asset-technical-information #asset-tabs li.active {
+  border-top: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid #fff;
+  background: #fff;
+}
+
+.asset-technical-information #asset-tabs li a {
+  display: block;
+  color: #000;
+  font-size: 12px;
+  padding: 13px 15px;
+}
+
+.asset-technical-information #asset-tabs li.active a {
+  padding: 12px 14px 12px 14px;
+}
+
+.asset-technical-information .tab {
+  border-top: 7px solid;
+  border-bottom: 7px solid;
+  border-left: 6px solid;
+  border-right: 6px solid;
+}
+
+.asset-technical-information .tab h2 {
+  margin-bottom: 0;
+  padding-left: 27px;
+  color: #8e8e8e;
+  border-bottom: 6px solid;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.asset-technical-information .tab table {
+  width: 100%;
+  border-collapse: separate;
+}
+
+.asset-technical-information .tab table tr td {
+  vertical-align: top;
+  padding: 9px;
+  font-size: 12px;
+  border-collapse: collapse;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  background: #fff;
+}
+
+.asset-technical-information .tab table tr td:first-child {
+  color: #000;
+}
+
+/**********************************************************
+ * Asset / video overview
+ *********************************************************/
+
+.page-assets .view .view-content,
+.page-myassets .view .view-content {
+  margin-left: 9px;
+  display: block;
+}
+
+.page-assets .view .item-list,
+.page-myassets .view .item-list {
+  overflow: hidden;
+  clear: both;
+  position: relative;
+  margin-top: 34px;
+  padding-top: 14px;
+  border-top: 2px solid #eaeaf3;
+}
+
+.page-assets .views-row {
+  width: 220px;
+  height: 200px;
+  padding: 0;
+  margin-right: 18px;
+  float: left;
+  clear: none;
+  position: relative;
+}
+
+.page-assets .view .views-row:nth-child(4n+4),
+.page-myassets .view .views-row:nth-child(4n+4) {
+  margin-right: 8px;
+}
+
+.view .views-row.fourth-child {
+  margin-right: 8px;
+  /* IE fix through jquery */
+}
+
+.page-assets .view .views-field-still-url:after,
+.page-myassets .view .views-field-still-url:after {
+  left: 188px;
+}
+
+.page-assets .views-row .asset-information,
+.page-myassets .views-row .asset-information {
+  width: 206px;
+  padding: 8px 7px;
+}
+
+.page-assets .views-row .asset-information .views-field-title,
+.page-myassets .views-row .asset-information .views-field-title {
+  max-width: 170px;
+}
+
+.page-assets .views-row .asset-information .views-field-played,
+.page-myassets .views-row .asset-information .views-field-played {
+  float: right;
+  text-align: right;
+  display: block;
+}
+
+.page-assets .views-row .asset-information .views-field-played .field-content,
+.page-myassets .views-row .asset-information .views-field-played .field-content {
+  color: #000;
+  font-size: 12px;
+}
+
+.page-assets .views-row .asset-information .views-field-played .field-content span,
+.page-myassets .views-row .asset-information .views-field-played .field-content span {
+  margin-top: -3px;
+  display: block;
+  color: #9f9f9f;
+}
+
+.page-assets .views-row .asset-information .views-field-videotimestamp,
+.page-myassets .views-row .asset-information .views-field-videotimestamp {
+  position: absolute;
+  bottom: 4px;
+  right: 7px;
+}
+
+/* my assets options */
+
+.page-myassets .views-row {
+  width: 220px;
+  height: 200px;
+  margin-bottom: 50px;
+  overflow: visible;
+  padding: 0;
+  margin-right: 18px;
+  float: left;
+  clear: none;
+  position: relative;
+}
+
+.page-myassets .views-row .asset-options {
+  width: 100%;
+  position: absolute;
+  left: -1px;
+  bottom: -22px;
+}
+
+.page-myassets .views-row .asset-options li {
+  float: left;
+  margin-right: 1px;
+}
+
+.page-myassets .views-row .asset-options li a {
+  padding: 7px 12px;
+  color: #000;
+  font-size: 12px;
+  background: #f3f3f3;
+}
+
+/**********************************************************
+ * Asset search overview
+ *********************************************************/
+.views-row #asset-search .asset-information {
+  width: 690px;
+}
+
+/**********************************************************
+ * Collection overview
+ *********************************************************/
+
+.page-collections .view .views-table,
+.page-mycollections .view .views-table {
+  width: 100%;
+}
+
+.page-collections .view .views-table tr th,
+.page-mycollections .view .views-table tr th {
+  padding: 11px 0 11px 11px;
+  color: #000;
+  font-size: 12px;
+  background: #eaeaf3;
+}
+
+/* my collections custom widths for table columns */
+.page-mycollections .view .views-table tr th.views-field-title,
+.page-collections .view .views-table tr th.views-field-title {
+  width: 300px;
+}
+
+.page-mycollections .view .views-table tr th.views-field-description,
+.page-collections .view .views-table tr th.views-field-description {
+  width: 240px;
+}
+
+.page-mycollections .view .views-table tr th.views-field-actions {
+  width: 112px;
+}
+
+.page-collections .view .views-table tr td,
+.page-mycollections .view .views-table tr td {
+  vertical-align: top;
+}
+
+.page-collections .view .views-table tr td,
+.page-mycollections .view .views-table tr td {
+  padding: 11px 0 11px 11px;
+  font-size: 12px;
+  border-bottom: 2px solid #eaeaf3;
+  background: #fff;
+}
+
+.page-collections .view .views-table tr td.views-field-title a,
+.page-mycollections .view .views-table tr td.views-field-title a {
+  font-size: 18px;
+}
+
+.page-collections .view .views-table tr td.views-field-description,
+.page-mycollections .view .views-table tr td.views-field-description {
+  color: #000;
+}
+
+.page-collections .view .views-table tr td.views-field-numofvideos,
+.page-mycollections .view .views-table tr td.views-field-numofvideos {
+  color: #000;
+  font-size: 14px;
+}
+
+/* my collections / my assets add buttons + navigational tab */
+
+#page_content .navigation-tab {
+  clear: both;
+  height: 38px;
+  overflow: visible;
+  padding-left: 10px;
+  margin-top: -3px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#page_content .navigation-tab ul {
+  float: right;
+}
+
+#page_content .navigation-tab li {
+  float: left;
+  margin-right: 5px;
+}
+
+#page_content .navigation-tab li.active {
+  border-top: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid #fff;
+  background: #fff;
+}
+
+#page_content .navigation-tab li a {
+  display: block;
+  color: #000;
+  font-size: 12px;
+  padding: 13px 15px;
+  background-color: #eaeaf3;
+}
+
+#page_content .navigation-tab li.active a {
+  padding: 12px 14px 12px 14px;
+  border-bottom: 1px solid #fff;
+  background-color: #fff;
+}
+
+#page_content .add-collection {
+  margin-bottom: 20px;
+  background: url('../images/sprite.png') no-repeat 0 -200px;
+}
+
+/* add button */
+
+#page_content .add-collection a {
+  padding: 9px;
+  margin-top: -1px;
+  margin-left: 4px;
+  display: inline-block;
+  background: url('../images/sprite.png') no-repeat 100% -300px;
+}
+
+#page_content .add-collection a span {
+  padding-left: 20px;
+  font-size: 14px;
+  color: #000;
+  background: url('../images/sprite.png') no-repeat 0 -800px;
+}
+
+#page_content .add-collection:hover {
+  background-position: 0 -251px;
+}
+
+#page_content .add-collection:hover a {
+  background-position: 100% -350px;
+}
+
+#page_content .add-collection a:hover {
+  text-decoration: none;
+}
+
+/* my collections edit / delete buttons */
+
+.page-mycollections .view .views-table .views-field-actions ul {
+  float: right;
+}
+
+.page-mycollections .view .views-table .views-field-actions li {
+  float: left;
+  margin-right: 1px;
+}
+
+.page-mycollections .view .views-table .views-field-actions li a {
+  padding: 6px 14px;
+  color: #000;
+  background: #f3f3f3;
+}
+
+/**********************************************************
+ * Collection detail
+ *********************************************************/
+
+.page-collection-detail #page_content .collection-detail-information {
+  width: 320px;
+  float: right;
+}
+
+.page-collection-detail .view .collection-videos {
+  width: 620px;
+  margin-right: 0;
+  float: left;
+}
+
+
+.page-collection-detail .view-mediamosa-collection-detail .collection-videos .views-row {
+  border: 1px solid #eee;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .views-row {
+  width: 298px;
+  margin-right: 19px;
+  padding: 0;
+  clear: none;
+  float: left;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .views-row .asset-information {
+  min-height: 70px;
+  padding: 9px;
+  position: relative;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .views-row:nth-child(2n+2) {
+  margin-right: 0;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .asset-information,
+.page-collection-detail .view-mediamosa-assets-in-collection .views-field-still-url {
+  float: none;
+  position: relative;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .views-row .views-field-still-url:after {
+  left: -205px;
+  top: -150px;
+}
+
+.page-collection-detail .asset-information {
+  width: 280px;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .views-field-mediafile-duration {
+  left: 251px;
+  top: -34px;
+}
+
+.page-collection-detail .view-mediamosa-assets-in-collection .views-field-title .field-content a {
+  font-size: 18px;
+}
+
+
+.collection-detail-information .collection-description {
+  padding: 10px 10px 10px 7px;
+}
